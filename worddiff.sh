@@ -16,7 +16,7 @@
 #
 #####################################################
 
-# Gewenst aantal woorden tot regelafbreking (default geen regel-afbreking):
+# Standaard aantal woorden tot regelafbreking (default geen regel-afbreking):
 wordcount=30000
 
 options(){
@@ -26,7 +26,11 @@ options(){
             h) helptext
                exit 0
                ;;
-            w) (( OPTARG > 0 )) && wordcount=$OPTARG || wordcount=30000
+            w) if grep -q [^0-9] <<< "$OPTARG"; then
+                   echo "Invalid option argument to -w"
+                   exit 1
+               fi
+               (( OPTARG > 0 )) && wordcount=$OPTARG || wordcount=30000
                ;;
             *) helptext
                exit 1

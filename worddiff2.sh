@@ -106,7 +106,7 @@
 #
 #######################################################
 
-# Gewenst aantal woorden tot regel-afbreking:
+# Standaard aantal woorden tot regel-afbreking:
 wordcount=10
 
 
@@ -117,7 +117,11 @@ options(){
             h) helptext
                exit 0
                ;;
-            w) (( OPTARG > 0 )) && wordcount=$OPTARG || wordcount=30000
+            w) if grep -q [^0-9] <<< "$OPTARG"; then
+                   echo "Invalid option argument to -w"
+                   exit 1
+               fi
+               (( OPTARG > 0 )) && wordcount=$OPTARG || wordcount=30000
                ;;
             *) helptext
                exit 1
@@ -136,7 +140,7 @@ helptext()
 Usage: worddiff2.sh [-hw] textfile1 textfile2
 
 -h       Help (this output)
--w NUM   Wrap lines after each series of NUM words (default = 10). NUM = 0 disables line-wrap.
+-w NUM   Wrap lines after each series of NUM words instead of 10. NUM = 0 disables line-wrap.
 EOF
 }
 
