@@ -48,9 +48,9 @@ Usage: worddiff.sh [-hw] textfile1 textfile2
 EOF
 }
 
+# Voer de opties uit:
 options $@
 shift $(( OPTIND - 1 ))
-
 
 # De kleuren-diff maken:
 wdiff -w "$(tput bold;tput setaf 1)" -x "$(tput sgr0)" -y "$(tput bold;tput setaf 2)" -z "$(tput sgr0)" "$1" "$2" |
