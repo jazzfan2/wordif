@@ -1,4 +1,4 @@
-# Name: worddiff.sh
+# Name: worddiff.sh and worddiff.sh
 worddiff.sh - compares two flat text files word-for-word, and produces a colored diff-file in .html format.
 
 # Description:
@@ -12,15 +12,22 @@ Color-marking is used for text fragments not common in both files AT THE INDICAT
 - GREEN text is ABSENT in the 1st file and PRESENT THERE in the 2nd file;
 - BLACK text (i.e. without color-marking) is PRESENT THERE in both files.
 
-# How to use worddiff.sh:
+worddiff2.sh is similar to worddiff.sh, with following difference:
+- It acts on two DIRECTORIES of text files, by comparing each pair of corresponding text files common to both directories;
+- It creates a './diff/' directory containing diff-files, one for each pair of compared text files;
+- As an alternative for .html output, .pdf output is provided as an option.
+
+# How to use worddiff.sh and worddiff.sh:
 Usage:
 
-	worddiff.sh  <text_file1> <text_file1>
+	worddiff.sh   <text_file1> <text_file1>
+	worddiff2.sh  <path_to_directory1> <path_to_directory2>
 
 Options:
 
-	-h     Help (this output)
-	-w     Wrap lines after each series of NUM words. NUM = 0 disables line-wrap.
+	-h       Help (this output)
+    -p       Output as .pdf- instead of .html-files (worddiff2.sh only)
+	-w NUM   Wrap lines after each series of NUM words. NUM = 0 disables line-wrap.
 
 # Author:
 Written by Rob Toscani (rob_toscani@yahoo.com).
