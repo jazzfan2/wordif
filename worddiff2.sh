@@ -67,7 +67,7 @@
 # Let op:
 # - Het aantal genummerde bestanden in <MAP1> moet gelijk zijn aan dat in <MAP2>.
 # - Per map mag elke waarde van <NUMMER> maar één keer voorkomen.
-# - In bestandsnamen mogen na de "_" spaties voorkomen, maar vermijd het bij voorkeur.
+# - In bestandsnamen mogen na de '_' spaties voorkomen, maar vermijd het bij voorkeur.
 #
 #
 # 2. Werking van het programma:
@@ -78,7 +78,7 @@
 #
 #     worddiff2.sh <bestandspad_naar_MAP1> <bestandspad_naar_MAP2>
 #
-# Als <MAP1> overeenkomt met "oud", dan wordt deze dus als eerste opgegeven.
+# Als <MAP1> overeenkomt met 'oud', dan wordt deze dus als eerste opgegeven.
 #
 # Met optie -w (gevolgd door aantal woorden per regel) kan de regel-afbreking
 # in de te leveren output worden beïnvloed.
@@ -87,7 +87,7 @@
 # mappen af en genereert hieruit verschil-bestanden.
 #
 # Deze worden elk als apart .html-bestand in de map './diff/' geplaatst, met als
-# bestandsnaam: "<DATUM>_<TIJD>_diff_<NUMMER>.html".
+# bestandsnaam: '<DATUM>_<TIJD>_diff_<NUMMER>.html'.
 #
 # Het <NUMMER> komt overeen met het <NUMMER> in de namen van de vergeleken
 # tekstbestanden.
@@ -101,11 +101,11 @@
 # In elk van de resulterende .html-bestanden in de map './diff/' is:
 # - Zwarte tekst: WEL aanwezig in BEIDE vergeleken tekstbestanden in <MAP1> en <MAP2>
 #
-# - Rode tekst:   WEL aanwezig in het tekstbestand in <MAP1> ("oud");
-#                 NIET in het vergeleken tekstbestand in <MAP2> ("nieuw")
+# - Rode tekst:   WEL aanwezig in het tekstbestand in <MAP1> ('oud');
+#                 NIET in het vergeleken tekstbestand in <MAP2> ('nieuw')
 #
-# - Groene tekst: NIET aanwezig in het tekstbestand in <MAP1> ("oud");
-#                 WEL in het vergeleken tekstbestand in <MAP2> ("nieuw")
+# - Groene tekst: NIET aanwezig in het tekstbestand in <MAP1> ('oud');
+#                 WEL in het vergeleken tekstbestand in <MAP2> ('nieuw')
 #
 # Vanuit elk van deze html-bestanden kan b.v. geprint worden naar pdf.
 # Optie -p resulteert rechtstreeks in een (reeks) .pdf- i.p.v. .html-bestand(en).
