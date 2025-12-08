@@ -213,6 +213,9 @@ makediff()
 options $@
 shift $(( OPTIND - 1 ))
 
+# Check of de twee opgegeven mappen bestaan:
+([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Geef bestaande mappen op." && exit 1
+
 # Maak de ./diff/-directory aan, tenzij deze al bestaat:
 [[ ! -d ./diff ]] && mkdir ./diff
 
