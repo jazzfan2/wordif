@@ -8,7 +8,7 @@ worddiff.sh is a wrapper script around 'wdiff()'.
 It does a word-by-word comparison between two flat text files.
 The result is stored into a color-marked difference-file in .html format.
 
-In this difference-file, the text is ONE combined version of the two input text files, preserving the original text sequence.
+In this difference-file, the text is ONE COMBINED version of the two input text files, preserving the original text sequence.
 Color-marking is used for text fragments not common in both files AT THE INDICATED POSITION, as follows:
 - RED text is PRESENT in the 1st file and ABSENT THERE in the 2nd file;
 - GREEN text is ABSENT in the 1st file and PRESENT THERE in the 2nd file;
