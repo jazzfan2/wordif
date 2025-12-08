@@ -45,7 +45,7 @@ helptext()
     while read "line"; do
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
-Usage: worddiff.sh [-hw] textfile1 textfile2
+Usage: worddiff.sh [-hw NUM] textfile1 textfile2
 
 -h       Help (this output)
 -w NUM   Wrap lines after each series of NUM words. NUM = 0 disables line-wrap.

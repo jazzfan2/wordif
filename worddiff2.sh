@@ -137,7 +137,7 @@ helptext()
     while read "line"; do
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
-Usage: worddiff2.sh [-hw] directory1 directory2
+Usage: worddiff2.sh [-hw NUM] directory1 directory2
 
 -h       Help (this output)
 -w NUM   Wrap lines after each series of NUM words instead of 10. NUM = 0 disables line-wrap.
