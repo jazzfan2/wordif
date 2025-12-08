@@ -1,14 +1,15 @@
 #!/bin/bash
 # Naam: worddiff2.sh
 # Bron: Rob Toscani
-# Datum: 04-12-2025
+# Datum: 08-12-2025
 # Dit programma doet een woord-voor-woord vergelijking in kleur tussen de
 # genummerde platte tekstbestanden in de 1ste opgegeven directory en die
 # in de 2de opgegeven directory. Het is een wrapper-script rondom 'wdiff'.
 #
 # Het nummer in de bestandsnaam bepaalt welke bestanden onderling worden
 # vergeleken. De resultaten worden weggeschreven naar kleur-gemarkeerde
-# verschil-bestanden in .html-formaat, verzameld in directory ./diff/.
+# verschil-bestanden in .html- of (optioneel) .pdf-formaat, verzameld in
+# directory ./diff/.
 #
 # Vooraf moeten de volgende programma's op het systeem zijn geïnstalleerd:
 # - wdiff
@@ -109,13 +110,17 @@
 # Standaard aantal woorden tot regel-afbreking:
 wordcount=10
 
+# Standaard output-formaat:
+format="html"
 
 options(){
 # Specify options:
-    while getopts "hw:" OPTION; do
+    while getopts "hpw:" OPTION; do
         case $OPTION in
             h) helptext
                exit 0
+               ;;
+            p) format="pdf"
                ;;
             w) if grep -q [^0-9] <<< "$OPTARG"; then
                    echo "Invalid option argument to -w"
@@ -137,9 +142,10 @@ helptext()
     while read "line"; do
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
-Usage: worddiff2.sh [-hw NUM] directory1 directory2
+Usage: worddiff2.sh [-hpw NUM] directory1 directory2
 
 -h       Help (this output)
+-p       Output as .pdf- instead of .html-files
 -w NUM   Wrap lines after each series of NUM words instead of 10. NUM = 0 disables line-wrap.
 EOF
 }
@@ -197,15 +203,27 @@ makediff()
     # Alle eventuele niet-utf-8 karakters eruit verwijderen:
     iconv -f utf-8 -t utf-8 -c              |
 
-    # Tijdelijk de spatie verwijderen uit de '<span style=xxx>'-tag (i.v.m regel-afbreking):
+    # Tijdelijk spatie verwijderen uit '<span style=xxx>'-tag (i.v.m regel-afbreking):
     sed 's/<span style=/<span_style=/g'     |
 
-    # Alle regels afbreken bij de spatie of tab na elke serie woorden met aantal = 'wordcount'
+    # Alle regels afbreken bij spatie of tab na elke serie woorden met aantal = 'wordcount'
     # (Dit doet ansifilter helaas niet zelf, ook niet met optie -w !):
     sed -E "s/(([^ 	]+[ 	]+){$wordcount})/\1\n/g" |
 
-    # De spatie in de '<span style=xxx>'-tag herstellen, en het resultaat wegschrijven naar .html:
-    sed 's/<span_style=/<span style=/g'    >| ./diff/"$(date +"%Y%m%d_%H%M")_diff_$NUMMER.html"
+    # Spatie in '<span style=xxx>'-tag herstellen, en output wegschrijven naar gewenst formaat:
+    sed 's/<span_style=/<span style=/g'    | postprocess - $NUMMER
+}
+
+postprocess()
+# Html-tekst wegschrijven naar (.html-)file, of (in geval van optie -p) omzetten naar pdf-file:
+{
+    file="$1"
+    NUMMER="$2"
+    if [[ $format == "html" ]]; then
+        cat "$file" >| ./diff/"$(date +"%Y%m%d_%H%M")_diff_$NUMMER.html"
+    else
+        wkhtmltopdf "$file" ./diff/"$(date +"%Y%m%d_%H%M")_diff_$NUMMER.pdf" 2>/dev/null
+    fi
 }
 
 
