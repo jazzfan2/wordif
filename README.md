@@ -22,7 +22,7 @@ worddiff2.sh is similar to worddiff.sh, but does MULTIPLE comparing, as follows:
 # How to use worddiff.sh and worddiff.sh:
 Usage:
 
-	worddiff.sh   <text_file1> <text_file1>
+	worddiff.sh   <text-file1> <text-file2>
 	worddiff2.sh  <path_to_directory1> <path_to_directory2>
 
 Options:
