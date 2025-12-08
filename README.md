@@ -1,5 +1,6 @@
 # Name: worddiff.sh and worddiff.sh
 worddiff.sh  - compares a given pair of flat text-files word-for-word, resulting into a colored difference-file in .html format.
+
 worddiff2.sh - does the same for two given directories, by comparing all shared pairs of flat text files.
 
 # Description:
