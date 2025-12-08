@@ -11,7 +11,7 @@ The result is stored into a color-marked difference-file in .html format.
 In this difference-file, the text is ONE COMBINED version of the two input text files, preserving the original text sequence.
 Color-marking is used for text fragments not common in both files AT THE INDICATED POSITION, as follows:
 - RED text is PRESENT in the 1st file and ABSENT THERE in the 2nd file;
-- GREEN text is ABSENT in the 1st file and PRESENT THERE in the 2nd file;
+- GREEN text is PRESENT in the 2nd file and ABSENT THERE in the 1st file;
 - BLACK text (i.e. without color-marking) is PRESENT THERE in both files.
 
 worddiff2.sh is similar to worddiff.sh, but does MULTIPLE comparing, as follows:
