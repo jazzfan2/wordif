@@ -9,7 +9,7 @@ It does a word-by-word comparison between two flat text files.
 The result is stored into a color-marked difference-file in .html format.
 
 This difference-file is a united version of the two input text files in the original text sequence.
-Text equal in both files is printed in black. (Series of) words not appearing in one of the two files
+Text present in both files is printed in black. (Series of) words not appearing in one of the two files
 (at the indicated position) are color-marked as follows:
 - red text is present in the 1st file, and not present there in the 2nd file;
 - green text is present in the 2nd file and not present there in the 1st file;
