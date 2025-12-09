@@ -238,7 +238,7 @@ store2file()
 options $@
 shift $(( OPTIND - 1 ))
 
-# Vervang karakters die een mogelijke bug voor het programma betekenen:
+# Vervang karakters die kwetsbaar zijn voor een mogelijke bug in ansifilter():
 regexstring="s/ß/ss/g; s/ß/ss/g"
 
 # Check of de twee opgegeven mappen bestaan:

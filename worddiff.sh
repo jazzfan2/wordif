@@ -57,12 +57,12 @@ EOF
 options $@
 shift $(( OPTIND - 1 ))
 
-# Vervang karakters die een mogelijke bug voor het programma betekenen:
+# Vervang karakters die kwetsbaar zijn voor een mogelijke bug in ansifilter():
 regexstring="s/ß/ss/g; s/ß/ss/g"
 
 # De kleuren-diff maken:
 wdiff -w "$(tput bold;tput setaf 1)" -x "$(tput sgr0)" -y "$(tput bold;tput setaf 2)" -z "$(tput sgr0)" \
-         <(sed "$regexstring" "$1") <(sed "$regexstring" "$2")  |
+          <(sed "$regexstring" "$1") <(sed "$regexstring" "$2")  |
 
 # En deze omzetten naar HTML-formaat:
 ansifilter -H --encoding=utf8           |
