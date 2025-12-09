@@ -12,15 +12,15 @@ This difference-file is a united version of the two input text files in the orig
 Text fragments not common in both files (at the indicated position) are color-marked as follows:
 - red text is present in the 1st file, and not present there in the 2nd file;
 - green text is present in the 2nd file and not present there in the 1st file;
-- black text (i.e. without color-marking) is present there in both files.
+- black text (i.e. without color-marking) is equal in both files.
 
-worddiff2.sh is similar to worddiff.sh, but does multiple comparing, as follows:
+worddiff2.sh is similar to worddiff.sh, but does multiple comparison, as follows:
 - it acts on two directories, by comparing each pair of equally numbered text-files in both directories;
 - It stores all resulting files into a difference-directory;
 - As an alternative for .html-output, it can also provide .pdf-output as an option.
 
 Name-convention for worddiff2.sh:
-Text-file names in the given directories must start with a number common to both directories,
+In order to be compared, text-file names in either directory must start with a the same unique number,
 followed by an underscore.
 
 # How to use worddiff.sh and worddiff2.sh:
