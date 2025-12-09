@@ -202,7 +202,7 @@ makediff()
 
     # De kleuren-diff maken:
     wdiff -w "$(tput bold;tput setaf 1)" -x "$(tput sgr0)" -y "$(tput bold;tput setaf 2)" -z "$(tput sgr0)" \
-    "$file1" "$file2"           |
+    <(sed "$regexstring" "$file1") <(sed "$regexstring" "$file2")  |
 
     # En deze omzetten naar HTML-formaat:
     ansifilter -H --encoding=utf8           |
@@ -237,6 +237,9 @@ store2file()
 # Voer de opties uit:
 options $@
 shift $(( OPTIND - 1 ))
+
+# Vervang karakters die een mogelijke bug voor het programma betekenen:
+regexstring="s/ß/ss/g; s/ß/ss/g"
 
 # Check of de twee opgegeven mappen bestaan:
 ([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Geef bestaande mappen op." && exit 1

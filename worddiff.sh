@@ -52,12 +52,17 @@ Usage: worddiff.sh [-hw NUM] textfile1 textfile2
 EOF
 }
 
+
 # Voer de opties uit:
 options $@
 shift $(( OPTIND - 1 ))
 
+# Vervang karakters die een mogelijke bug voor het programma betekenen:
+regexstring="s/ß/ss/g; s/ß/ss/g"
+
 # De kleuren-diff maken:
-wdiff -w "$(tput bold;tput setaf 1)" -x "$(tput sgr0)" -y "$(tput bold;tput setaf 2)" -z "$(tput sgr0)" "$1" "$2" |
+wdiff -w "$(tput bold;tput setaf 1)" -x "$(tput sgr0)" -y "$(tput bold;tput setaf 2)" -z "$(tput sgr0)" \
+         <(sed "$regexstring" "$1") <(sed "$regexstring" "$2")  |
 
 # En deze omzetten naar HTML-formaat:
 ansifilter -H --encoding=utf8           |
