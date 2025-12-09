@@ -22,8 +22,8 @@ worddiff2.sh is similar to worddiff.sh, but does MULTIPLE comparing, as follows:
 # How to use worddiff.sh and worddiff2.sh:
 Usage:
 
-	worddiff.sh  [OPTIONS] FILE(1) FILE(2)
-	worddiff2.sh [OPTIONS] DIR(1)  DIR(2)
+	worddiff.sh  [OPTION]... FILE1 FILE2
+	worddiff2.sh [OPTION]... DIR1  DIR2
 
 Options:
 
