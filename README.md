@@ -18,6 +18,8 @@ worddiff2.sh is similar to worddiff.sh, but does multiple comparing, as follows:
 - it acts on two directories, by comparing each pair of equally numbered text-files in both directories;
 - It stores all resulting files into a difference-directory;
 - As an alternative for .html-output, it can also provide .pdf-output as an option.
+
+Name-convention for worddiff2.sh:
 Text-file names in the given directories must start with a number common to both directories,
 followed by an underscore.
 
