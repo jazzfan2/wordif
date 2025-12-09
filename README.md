@@ -9,10 +9,10 @@ It does a word-by-word comparison between two flat text files.
 The result is stored into a color-marked difference-file in .html format.
 
 This difference-file is a united version of the two input text files in the original text sequence.
-Text fragments not common in both files (at the indicated position) are color-marked as follows:
+Text equal in both files is printed in black. (Series of) words not appearing in one of the two files
+(at the indicated position) are color-marked as follows:
 - red text is present in the 1st file, and not present there in the 2nd file;
 - green text is present in the 2nd file and not present there in the 1st file;
-- black text (i.e. without color-marking) is equal in both files.
 
 worddiff2.sh is similar to worddiff.sh, but does multiple comparison, as follows:
 - it acts on two directories, by comparing each pair of equally numbered text-files in both directories;
