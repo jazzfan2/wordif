@@ -4,8 +4,10 @@
 # Datum: 08-12-2025
 # Dit programma doet een woord-voor-woord vergelijking in kleur tussen de
 # genummerde platte tekstbestanden in de 1ste opgegeven directory en die
-# in de 2de opgegeven directory. Het is een wrapper-script rondom 'wdiff'.
-#
+# in de 2de opgegeven directory.
+# Het is een wrapper-script rondom 'wdiff' (https://www.gnu.org/software/wdiff/),
+# met uitvoer naar html- of optioneel naar pdf-formaat.
+
 # Het nummer in de bestandsnaam bepaalt welke bestanden onderling worden
 # vergeleken. De resultaten worden weggeschreven naar kleur-gemarkeerde
 # verschil-bestanden in .html- of (optioneel) .pdf-formaat, verzameld in
@@ -13,13 +15,9 @@
 #
 # Vooraf moeten de volgende programma's op het systeem zijn geïnstalleerd:
 # - wdiff
-# - ansifilter
 # - wkhtmltopdf (indien optie -p gewenst is)
 #
-# Zie ook:
-# https://unix.stackexchange.com/questions/25199/how-can-i-get-the-most-bang-for-my-buck-with-the-diff-command
-#
-#######################################################
+################################################################################
 #
 #
 # HOE DIT PROGRAMMA TE GEBRUIKEN:
@@ -81,9 +79,6 @@
 #
 # Als <MAP1> overeenkomt met 'oud', dan wordt deze dus als eerste opgegeven.
 #
-# Met optie -w (gevolgd door aantal woorden per regel) kan de regel-afbreking
-# in de te leveren output worden beïnvloed.
-#
 # Het programma werkt nu één-voor-één alle paren van tekstbestanden in genoemde
 # mappen af en genereert hieruit verschil-bestanden.
 #
@@ -114,26 +109,53 @@
 #
 #######################################################
 
-# Standaard aantal woorden tot regel-afbreking:
-wordcount=10
-
-# Standaard output-formaat:
+# Stel html als output-formaat in:
 format="html"
+
+# De kleurmarkeringen:
+delete_start="<span style=\"font-weight:bold;color:#ff0000;\">"
+insert_start="<span style=\"font-weight:bold;color:#00ff00;\">"
+end="</span>"
+
+# De html-tags die voor en achter de tekst worden geplakt:
+html_intro="
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=\"utf8\">
+<style type=\"text/css\">
+pre {
+  font-family:Courier New;
+  font-size:12pt;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: -webkit-pre-wrap;
+  word-wrap: break-word;
+}
+</style>
+<title>$2</title>
+</head>
+<body>
+<pre>"
+
+html_coda="
+</pre>
+</body>
+</html>"
+
+# De functies:
+# ============
 
 options(){
 # Specify options:
-    while getopts "hpw:" OPTION; do
+    while getopts "hp" OPTION; do
         case $OPTION in
             h) helptext
                exit 0
                ;;
             p) format="pdf"
-               ;;
-            w) if grep -q [^0-9] <<< "$OPTARG"; then
-                   echo "Invalid option argument to -w"
-                   exit 1
-               fi
-               (( OPTARG > 0 )) && wordcount=$OPTARG || wordcount=30000
                ;;
             *) helptext
                exit 1
@@ -142,21 +164,18 @@ options(){
     done
 }
 
-
 helptext()
 # Text printed if -h option (help) or a non-existent option has been given:
 {
     while read "line"; do
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
-Usage: worddiff2.sh [-hpw NUM] directory1 directory2
+Usage: worddiff2.sh [-hp] directory1 directory2
 
 -h       Help (this output)
 -p       Output as .pdf- instead of .html-files
--w NUM   Wrap lines after each series of NUM words instead of 10. NUM = 0 disables line-wrap.
 EOF
 }
-
 
 numberlist()
 # Een (horizontale) lijst printen van nummers waarmee de bestanden in de gegeven map beginnen:
@@ -169,7 +188,6 @@ numberlist()
     sed 's/ $//'
 }
 
-
 checkrepeat()
 # Eventuele herhalingen in een gesorteerde nummerlijst signaleren en hiervan een melding maken:
 {
@@ -181,7 +199,6 @@ checkrepeat()
         echo "SLECHTS ÉÉN BESTAND met $num is vergeleken met een (MOGELIJK VERKEERD) bestand in de $3"
     fi
 }
-
 
 makediff()
 # Alle genummerde tekstbestanden in <MAP1> met die in <MAP2> vergelijken en de output opslaan:
@@ -200,25 +217,11 @@ makediff()
         return
     fi
 
-    # De kleuren-diff maken:
-    wdiff -w "$(tput bold;tput setaf 1)" -x "$(tput sgr0)" -y "$(tput bold;tput setaf 2)" -z "$(tput sgr0)" \
-    <(sed "$regexstring" "$file1") <(sed "$regexstring" "$file2")  |
+    # De kleur-gemarkeerde difference-file maken:
+    wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" "$file1" "$file2" |
 
-    # En deze omzetten naar HTML-formaat:
-    ansifilter -H --encoding=utf8           |
-
-    # Alle eventuele niet-utf-8 karakters eruit verwijderen:
-    iconv -f utf-8 -t utf-8 -c              |
-
-    # Tijdelijk spatie verwijderen uit '<span style=xxx>'-tag (i.v.m regel-afbreking):
-    sed 's/<span style=/<span_style=/g'     |
-
-    # Alle regels afbreken bij spatie of tab na elke serie woorden met aantal = 'wordcount'
-    # (Dit doet ansifilter helaas niet zelf, ook niet met optie -w !):
-    sed -E "s/(([^ 	]+[ 	]+){$wordcount})/\1\n/g" |
-
-    # Spatie in '<span style=xxx>'-tag herstellen, en output wegschrijven naar gewenst formaat:
-    sed 's/<span_style=/<span style=/g'    | store2file - $NUMMER
+    # En wegschrijven naar het gewenste formaat (default .html):
+    cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMMER
 }
 
 store2file()
@@ -234,12 +237,12 @@ store2file()
 }
 
 
+# Main functie:
+# =============
+
 # Voer de opties uit:
 options $@
 shift $(( OPTIND - 1 ))
-
-# Vervang karakters die kwetsbaar zijn voor een mogelijke bug in ansifilter():
-regexstring="s/ß/ss/g; s/ß/ss/g"
 
 # Check of de twee opgegeven mappen bestaan:
 ([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Geef bestaande mappen op." && exit 1
