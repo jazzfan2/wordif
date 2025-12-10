@@ -31,8 +31,9 @@ Usage:
 Options:
 
 	-h       Help (this output)
-    -p       Output as .pdf- instead of .html-files (worddiff2.sh only)
-	-w NUM   Wrap lines after each series of NUM words. NUM = 0 disables line-wrap.
+    -p       Output as .pdf- instead of .html-files
+	-w NUM   Wrap lines after each series of NUM words (worddiff2.sh only).
+             NUM = 0 disables line-wrap.
 
 # Author:
 Written by Rob Toscani (rob_toscani@yahoo.com).

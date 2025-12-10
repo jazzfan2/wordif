@@ -1,36 +1,29 @@
 #!/bin/bash
 # Naam: worddiff.sh
 # Bron: Rob Toscani
-# Datum: 02-12-2025
-# Dit programma doet een woord-voor-woord vergelijking in kleur tussen de
-# twee opgegeven platte tekstbestanden.
-# Het is een wrapper-script rondom 'wdiff', met uitvoer naar html.
-# Van daaruit kan b.v. geprint worden naar PDF.
+# Datum: 08-12-2025
+# Dit programma doet een woord-voor-woord vergelijking in kleur tussen de twee
+# opgegeven platte tekstbestanden.
+# Het is een wrapper-script rondom 'wdiff' (https://www.gnu.org/software/wdiff/),
+# met uitvoer naar html. Van daaruit kan b.v. geprint worden naar PDF.
 #
-# Benodigde vooraf geïnstalleerde programma's:
+# Benodigd vooraf geïnstalleerd programma:
 # - wdiff
-# - ansifilter
+# - wkhtmltopdf (in geval dat output naar pdf-formaat gewenst is)
 #
-# Zie ook:
-# https://unix.stackexchange.com/questions/25199/how-can-i-get-the-most-bang-for-my-buck-with-the-diff-command
-#
-#####################################################
+################################################################################
 
-# Standaard aantal woorden tot regelafbreking (default "geen" regel-afbreking):
-wordcount=30000
+# Standaard output-formaat:
+format="html"
 
 options(){
 # Specify options:
-    while getopts "hw:" OPTION; do
+    while getopts "hp" OPTION; do
         case $OPTION in
             h) helptext
                exit 0
                ;;
-            w) if grep -q [^0-9] <<< "$OPTARG"; then
-                   echo "Invalid option argument to -w"
-                   exit 1
-               fi
-               (( OPTARG > 0 )) && wordcount=$OPTARG || wordcount=30000
+            p) format="pdf"
                ;;
             *) helptext
                exit 1
@@ -45,11 +38,21 @@ helptext()
     while read "line"; do
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
-Usage: worddiff.sh [-hw NUM] textfile1 textfile2
+Usage: worddiff.sh [-hp] textfile1 textfile2
 
 -h       Help (this output)
--w NUM   Wrap lines after each series of NUM words. NUM = 0 disables line-wrap.
+-p       Output as .pdf- instead of .html-file
 EOF
+}
+
+store2file()
+# Html-tekst wegschrijven naar (.html-)file, of (in geval van optie -p) omzetten naar pdf-file:
+{
+    if [[ $format == "html" ]]; then
+        cat "$1" >| out.html
+    else
+        wkhtmltopdf "$1" out.pdf 2>/dev/null
+    fi
 }
 
 
@@ -57,28 +60,37 @@ EOF
 options $@
 shift $(( OPTIND - 1 ))
 
-# Vervang karakters die kwetsbaar zijn voor een mogelijke bug in ansifilter():
-regexstring="s/ß/ss/g; s/ß/ss/g"
+html_intro="
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=\"utf8\">
+<style type=\"text/css\">
+pre {
+  font-family:Courier New;
+  font-size:12pt;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+</style>
+<title>$2</title>
+</head>
+<body>\n<pre>"
 
-# De kleuren-diff maken:
-wdiff -w "$(tput bold;tput setaf 1)" -x "$(tput sgr0)" -y "$(tput bold;tput setaf 2)" -z "$(tput sgr0)" \
-          <(sed "$regexstring" "$1") <(sed "$regexstring" "$2")  |
+html_coda="</pre>\n</body>\n</html>"
 
-# En deze omzetten naar HTML-formaat:
-ansifilter -H --encoding=utf8           |
+delete_start="<span style=\"font-weight:bold;color:#ff0000;\">"
+insert_start="<span style=\"font-weight:bold;color:#00ff00;\">"
+end="</span>"
 
-# Alle eventuele niet-utf-8 karakters eruit verwijderen:
-iconv -f utf-8 -t utf-8 -c              |
+# De kleur-gemarkeerde difference-file maken:
+wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" "$1" "$2" |
 
-# Tijdelijk spatie verwijderen uit '<span style=xxx>'-tag (in verband met regel-afbreking):
-sed 's/<span style=/<span_style=/g'     |
-
-# Alle regels afbreken bij spatie of tab na elke serie woorden met aantal = 'wordcount'
-# (Dit doet ansifilter helaas niet zelf, ook niet met optie -w !):
-sed -E "s/(([^ 	]+[ 	]+){$wordcount})/\1\n/g" |
-
-# Spatie in '<span style=xxx>'-tag weer terugbrengen, en resultaat wegschrijven naar .html-file:
-sed 's/<span_style=/<span style=/g'    >| out.html
+# En wegschrijven naar het gewenste formaat (default .html):
+cat <(echo -e "$html_intro") - <(echo -e "$html_coda") | store2file -
 
 
 #####################################################################################
