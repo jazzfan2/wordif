@@ -1,12 +1,12 @@
 # Name: worddiff.sh and worddiff2.sh
-worddiff.sh  - compares two flat text-files word-by-word, and outputs a colored difference-file in html-format.
+worddiff.sh  - compares two flat text-files word-by-word, and outputs a colored difference-file in HTML-format.
 
 worddiff2.sh - does same for two directories containing multiple flat text-files, by comparing all shared pairs.
 
 # Description:
 worddiff.sh is a wrapper script around 'wdiff()' (see https://www.gnu.org/software/wdiff/).
 It does a word-by-word comparison between two flat text files.
-The result is stored into a color-marked difference-file in .html format.
+The result is stored into a color-marked difference-file in HTML format.
 
 This difference-file is a united version of the two input text files in the original text sequence.
 Text present in both files is printed in black. (Series of) words not appearing in one of the two files
@@ -17,7 +17,7 @@ Text present in both files is printed in black. (Series of) words not appearing 
 worddiff2.sh is similar to worddiff.sh, but does multiple comparison, as follows:
 - it acts on two directories, by comparing each pair of equally numbered text-files in both directories;
 - It stores all resulting files into a difference-directory;
-- As an alternative for .html-output, it can also provide .pdf-output as an option.
+- As an alternative for HTML-output, it can also provide PDF-output as an option.
 
 In order to be compared by worddiff2.sh, text-file names in either directory must start with the same
 unique number, followed by an underscore.
@@ -31,7 +31,7 @@ Usage:
 Options:
 
 	-h       Help (this output)
-    -p       Output as .pdf- instead of .html-files
+    -p       Output as PDF- instead of HTML-files
 
 # Author:
 Written by Rob Toscani (rob_toscani@yahoo.com).
