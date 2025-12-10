@@ -78,9 +78,13 @@ pre {
 </style>
 <title>$2</title>
 </head>
-<body>\n<pre>"
+<body>
+<pre>"
 
-html_coda="</pre>\n</body>\n</html>"
+html_coda="
+</pre>
+</body>
+</html>"
 
 delete_start="<span style=\"font-weight:bold;color:#ff0000;\">"
 insert_start="<span style=\"font-weight:bold;color:#00ff00;\">"
@@ -90,7 +94,7 @@ end="</span>"
 wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" "$1" "$2" |
 
 # En wegschrijven naar het gewenste formaat (default .html):
-cat <(echo -e "$html_intro") - <(echo -e "$html_coda") | store2file -
+cat <(echo "$html_intro") - <(echo "$html_coda") | store2file -
 
 
 #####################################################################################
