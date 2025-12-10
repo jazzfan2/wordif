@@ -73,7 +73,7 @@ html_coda="
 </html>"
 
 # Escape < and > in case literal html-tags appear in the text:
-regex="s/</\&lt;/g; s/>/\&gt;/g" 
+esc_html="s/</\&lt;/g; s/>/\&gt;/g" 
 
 
 # De functies:
@@ -150,7 +150,7 @@ makediff()
 
     # De kleur-gemarkeerde difference-file maken:
     wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-              <(sed "$regex" "$file1") <(sed "$regex" "$file2") |
+              <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
     # En wegschrijven naar het gewenste formaat (default .html):
     cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMMER
