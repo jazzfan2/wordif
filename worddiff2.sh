@@ -222,7 +222,7 @@ makediff()
 }
 
 store2file()
-# Html-tekst wegschrijven naar (.html-)file, of (in geval van optie -p) omzetten naar pdf-file:
+# Html-tekst wegschrijven naar (html-)file, of (in geval van optie -p) omzetten naar pdf-file:
 {
     file="$1"
     NUMMER="$2"

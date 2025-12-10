@@ -46,7 +46,7 @@ EOF
 }
 
 store2file()
-# Html-tekst wegschrijven naar (.html-)file, of (in geval van optie -p) omzetten naar pdf-file:
+# Html-tekst wegschrijven naar (html-)file, of (in geval van optie -p) omzetten naar pdf-file:
 {
     if [[ $format == "html" ]]; then
         cat "$1" >| out.html
