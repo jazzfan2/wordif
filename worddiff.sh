@@ -84,6 +84,7 @@ store2file()
 options $@
 shift $(( OPTIND - 1 ))
 
+# The html-tags to be pasted above the text:
 html_intro="
 <!DOCTYPE html>
 <html>
@@ -106,11 +107,13 @@ pre {
 <body>
 <pre>"
 
+# The html-tags to be pasted underneath the text:
 html_coda="
 </pre>
 </body>
 </html>"
 
+# The color markings:
 delete_start="<span style=\"font-weight:bold;color:#ff0000;\">"
 insert_start="<span style=\"font-weight:bold;color:#00ff00;\">"
 end="</span>"
