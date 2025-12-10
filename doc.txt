@@ -1,0 +1,85 @@
+HOE DIT PROGRAMMA TE GEBRUIKEN:
+
+1. Voorbereiding:
+=================
+
+Maak van te voren twee mappen onder de projectmap aan, hier verder aangeduid
+als <MAP1> en <MAP2>.
+
+Als "oude" met "nieuwe" teksten moeten worden vergeleken, dan kan de naam
+van <MAP1> bijvoorbeeld zijn 'oud', en die van <MAP2> 'nieuw'.
+
+Leid nu platte tekstbestanden af van de te vergelijken bronteksten, bij
+voorkeur één bestand per hoofdstuk of artikel.
+
+B.v. tekst van een InDesign-artikel selecteren met 'Ctrl-A', kopiëren met
+'Ctrl-C' en in een platte editor plakken met 'Ctrl-V'.
+
+Sla deze platte tekstbestanden zodanig op in <MAP1> en <MAP2> dat voor elk bestand
+in <MAP1> er een daarmee te vergelijken bestand bestaat in <MAP2>.
+
+Om twee bestanden in verschillende mappen aan elkaar te kunnen relateren moeten
+hun bestandsnamen beginnen met hetzelfde <NUMMER> gevolgd door een <UNDERSCORE>,
+eventueel gevolgd door een vrij te kiezen gedeelte (dat onderling verschillend
+mag zijn).
+
+Als b.v. in <MAP1> (b.v. genaamd 'oud') de volgende bestanden zijn weggeschreven:
+- '1_voorwoord.txt'
+- '2_highlights.txt'
+- '3_tips.txt'
+
+En in <MAP2> (b.v. genaamd 'nieuw') de volgende bestanden:
+- '1_inleiding.txt'
+- '2_highlights.txt'
+- '3_tips&tricks.txt'
+
+Dan zal programma de tekstbestanden in <MAP1> met die in <MAP2> vergelijken
+waarvan de naam met hetzelfde <NUMMER> begint.
+
+Dus hier:
+- '1_voorwoord.txt'   met  '1_inleiding.txt'
+- '2_highlights.txt'  met  '2_highlights.txt'
+- '3_tips.txt'        met  '3_tips&tricks.txt'
+
+Let op:
+- Het aantal genummerde bestanden in <MAP1> moet gelijk zijn aan dat in <MAP2>.
+- Per map mag elke waarde van <NUMMER> maar één keer voorkomen.
+- In bestandsnamen mogen na de '_' spaties voorkomen, maar vermijd het bij voorkeur.
+
+
+2. Werking van het programma:
+=============================
+
+Om het programma te starten, typ in een terminal het volgende commando in,
+en druk daarna op <ENTER>:
+
+worddiff2.sh <bestandspad_naar_MAP1> <bestandspad_naar_MAP2>
+
+Als <MAP1> overeenkomt met 'oud', dan wordt deze dus als eerste opgegeven.
+
+Het programma werkt nu één-voor-één alle paren van tekstbestanden in genoemde
+mappen af en genereert hieruit verschil-bestanden.
+
+Deze worden elk als apart .html-bestand in de map './diff/' geplaatst, met als
+bestandsnaam: '<DATUM>_<TIJD>_diff_<NUMMER>.html'.
+
+Het <NUMMER> komt overeen met het <NUMMER> in de namen van de vergeleken
+tekstbestanden.
+
+Indien het programma doublures en/of in één map ontbrekende waarden van <NUMMER>
+tegenkomt, dan geeft het daarvan waarschuwingen in de terminal, maar vervolgt wel
+zo goed mogelijk zijn taak.
+
+Zodra het programma klaar is, geeft het hiervan een melding in dezelfde terminal.
+
+In elk van de resulterende .html-bestanden in de map './diff/' is:
+- Zwarte tekst: WEL aanwezig in BEIDE vergeleken tekstbestanden in <MAP1> en <MAP2>
+
+- Rode tekst:   WEL aanwezig in het tekstbestand in <MAP1> ('oud');
+                NIET in het vergeleken tekstbestand in <MAP2> ('nieuw')
+
+- Groene tekst: NIET aanwezig in het tekstbestand in <MAP1> ('oud');
+                WEL in het vergeleken tekstbestand in <MAP2> ('nieuw')
+
+Vanuit elk van deze html-bestanden kan b.v. geprint worden naar pdf.
+Optie -p resulteert rechtstreeks in een (reeks) .pdf- i.p.v. .html-bestand(en).
