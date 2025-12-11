@@ -2,7 +2,7 @@
 wordif.sh  - compares flat text-files word-by-word, and stores color-marked results in HTML-format.
 
 # Description:
-wordif.sh is a wrapper script around 'wdiff()' (see https://www.gnu.org/software/wdiff/).
+wordif.sh is a wrapper script around 'wdiff()' (see: https://www.gnu.org/software/wdiff/).
 
 It performs word-by-word comparison of one or multiple pair(s) of flat-text files.
 Results are stored as color-marked difference-files in HTML-format, or in PDF-format if option -p is given.
