@@ -1,36 +1,36 @@
-# Name: worddiff.sh and worddiff2.sh
-worddiff.sh  - compares two flat text-files word-by-word, and outputs a colored difference-file in HTML-format.
-
-worddiff2.sh - does same for two directories containing multiple flat text-files, by comparing all shared pairs.
+# Name: worddiff.sh
+worddiff.sh  - compares pair(s) of flat text-files word-by-word, and stores color-marked results in HTML-format.
 
 # Description:
 worddiff.sh is a wrapper script around 'wdiff()' (see https://www.gnu.org/software/wdiff/).
-It does a word-by-word comparison between two flat text files.
-The result is stored into a color-marked difference-file in HTML format.
 
-This difference-file is a united version of the two input text files in the original text sequence.
+It performs word-by-word comparison of one or multiple pair(s) of flat-text files.
+Results are stored as color-marked difference-files in HTML format, or (if option -p is given) in PDF format.
+
+A difference-file is a union of the two input text files, following the their combined text sequence.
 Text present in both files is printed in black. (Series of) words not appearing in one of the two files
 (at the indicated position) are color-marked as follows:
 - red text is present in the 1st file, and not present (there) in the 2nd file;
 - green text is present in the 2nd file and not present (there) in the 1st file;
 
-worddiff2.sh is similar to worddiff.sh, but does multiple comparison, as follows:
-- it acts on two directories, by comparing each pair of equally numbered text-files in both directories;
-- It stores all resulting files into a difference-directory;
-- As an alternative for HTML-output, it can also provide PDF-output as an option.
+With option -d, worddiff.sh acts on two directories instead of two text-files.
+It then compares each text-file in the 1st directory to its associated text-file in the 2nd directory.
+The resulting difference-files are collected in a difference-directory.
 
-In order to be compared by worddiff2.sh, text-file names in either directory must start with the same
-unique number, followed by an underscore.
+On order to correctly associate two files in either directory to each other, their respective file names must
+start with same unique number, followed by an underscore.
 
-# How to use worddiff.sh and worddiff2.sh:
+# How to use worddiff.sh:
 Usage:
 
-	worddiff.sh  [OPTION]... FILE1 FILE2
-	worddiff2.sh [OPTION]... DIR1  DIR2
+	worddiff.sh   [-p]  FILE1       FILE2
+	            -d[-p]  DIRECTORY1  DIRECTORY2
 
 Options:
 
 	-h       Help (this output)
+	-d       Specify two directories as arguments instead of two text-files;
+	         Compare all file-pairs of equally numbered name shared by both directories
     -p       Output as PDF- instead of HTML-files
 
 # Author:

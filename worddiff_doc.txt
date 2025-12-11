@@ -41,13 +41,16 @@ Let op:
 Om het programma te starten, typ in een terminal het volgende commando in,
 en druk daarna op <ENTER>: [code]
 
-	worddiff2.sh oud nieuw
+	worddiff.sh  -d  oud  nieuw
 
 [/code]
+De optie '-d' impliceert dat er - zoals hierboven - twee mappen worden opgegegeven
+(niet twee tekstbestanden).
+
 Het programma werkt nu één-voor-één alle paren van tekstbestanden in genoemde
 mappen af en genereert hieruit verschil-bestanden.
 
-Deze worden elk als apart .html-bestand in de map 'diff/' geplaatst.
+Deze worden elk als apart HTML-bestand in de map 'diff/' geplaatst.
 De bestandsnaam is als volgt opgebouwd: [code]
 
 	DATUM_TIJD_'diff'_NUMMER'.html'.
@@ -72,7 +75,12 @@ In elk van de resulterende .html-bestanden in de map 'diff/' is:
 - Groene tekst: WEL in het vergeleken bestand in 'nieuw/';
                 NIET op die plaats aanwezig in het bestand in 'oud/'.
 
-Vanuit elk van deze html-bestanden kan b.v. geprint worden naar pdf.
+Vanuit elk van deze html-bestanden kan b.v. geprint worden naar PDF.
+Verder zijn er nog de volgende mogelijkheden:
 
-Als tussen 'worddiff2.sh' en 'oud' nog (de optie) -p wordt opgegeven, dan resulteert
-dit rechtstreeks in een (reeks) .pdf- i.p.v. .html-bestand(en).
+* Indien tussen 'worddiff.sh' en 'oud' ook nog de optie '-p' wordt opgegeven, dan
+  worden de verschilbestanden direct naar PDF in plaats van naar HTML weggeschreven.
+
+* Indien optie '-d' wordt weggelaten, dan moeten er twee tekstbestanden worden
+opgegegeven in plaats van twee mappen. Er volgt dan slechts één vergelijking
+in plaats van een reeks vergelijkingen, en één verschilbestand.
