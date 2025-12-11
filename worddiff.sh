@@ -14,8 +14,8 @@
 # The results are stored as color-marked difference-files in HTML-,
 # or (optionally) PDF-format.
 #
-# Usage:  worddiff.sh [-p]   FILE1       FILE2
-#         worddiff.sh -d[p]  DIRECTORY1  DIRECTORY2
+# Usage:  worddiff.sh   [-p]  FILE1       FILE2
+#         worddiff.sh -d[-p]  DIRECTORY1  DIRECTORY2
 # Options:
 #   -h    Help (this output)
 #   -d    Specify two directories as arguments instead of two files;
