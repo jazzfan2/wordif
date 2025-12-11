@@ -126,10 +126,21 @@ checkrepeat()
     if [[ -n "$repeatnum" ]]; then
         qty=$(wc -w <<< "$repeatnum")
         num=${repeatnum/ */}
-        echo "Warning: number $num appears in $qty file-names in the $2."
+        echo "WARNING: Number $num appears in $qty file-names in the $2."
         echo "Only one file with $num was compared with a (possibly wrong) file in the $3."
     fi
 }
+
+flat_text()
+# Verify if both files contain flat text only, and if not issue an error message:
+{
+    if [[ -z "$(file "$1" | grep text)" ]] || [[ -z "$(file "$2" | grep text)" ]]; then
+        echo "ERROR: Other than flat text in $1 and/or $2, skipping."
+        return 1
+    fi
+    return 0
+}
+
 
 makediff()
 # Perform the comparison (default one single pair of text files), and store the output as desired:
@@ -143,15 +154,21 @@ makediff()
         # Do nothing if a number is missing. and issue warning if appearing in one directory only:
         if ([[ -z "$file1" ]] || [[ -z "$file2" ]]); then
             if [[ -n "$file1" ]]; then
-                echo "Warning: nummer $NUMBER appears in 1st directory only, not in 2nd directory."
+                echo "WARNING: Number $NUMBER appears in 1st directory only, not in 2nd directory."
             elif [[ -n "$file2" ]]; then
-                echo "Warning: nummer $NUMBER appears in 2nd directory only, not in 1st directory."
+                echo "WARNING: Number $NUMBER appears in 2nd directory only, not in 1st directory."
             fi
             return
         fi
     else
-        file1="$1"
-        file2="$2"
+        # In case of files instead of directories:
+        if [[ -f "$1" ]] && [[ -f "$2" ]]; then
+            file1="$1"
+            file2="$2"
+        else
+            echo "ERROR: Specify files instead of directories"
+            return
+        fi
     fi
 
 # The html-tags to be pasted above the text:
@@ -177,12 +194,14 @@ pre {
 <body>
 <pre>"
 
-    # Generate the color-marked difference-file:
-    wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-              <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
+    if flat_text "$file1" "$file2"; then
+        # Generate the color-marked difference-file:
+        wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
+                  <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
-    # And save results in desired format (default .html):
-    cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMBER
+        # And save results in desired format (default .html):
+        cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMBER
+    fi
 }
 
 store2file()
@@ -235,8 +254,9 @@ if [[ $args == "dir" ]]; then
     done
 
     # Conclusion:
-    echo "Ready! - Please find all results in $(pwd)/diff/"
+    echo "READY! - Please find all results in $(pwd)/diff/"
 
 else
+    # In case of files instead of directories:
     makediff "$1" "$2"
 fi
