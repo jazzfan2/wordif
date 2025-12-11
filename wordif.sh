@@ -1,7 +1,7 @@
 #!/bin/bash
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 8th December 2024
+# Date: 8th December 2025
 # Description: This program is a wrapper-script around 'wdiff()'
 # (https://www.gnu.org/software/wdiff/), performing word-by-word
 # comparison between two flat-text files.
