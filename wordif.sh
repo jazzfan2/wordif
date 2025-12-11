@@ -70,7 +70,7 @@ outputdir="./"
 format="html"
 
 
-# Functions:
+# FUNCTIONS:
 # ==========
 
 options(){
@@ -218,7 +218,7 @@ store2file()
 }
 
 
-# Main function:
+# MAIN FUNCTION:
 # ==============
 
 # Execute the options:
