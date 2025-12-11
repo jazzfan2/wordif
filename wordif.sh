@@ -54,10 +54,10 @@ delete_start="<span style=\"font-weight:bold;color:#ff0000;\">"
 insert_start="<span style=\"font-weight:bold;color:#00ff00;\">"
 end="</span>"
 
-# Escape < and > to prevent interpretation as html-syntax (tags):
+# Escape < and > to prevent interpretation as HTML-syntax (tags):
 esc_html="s/</\&lt;/g; s/>/\&gt;/g"
 
-# The html-tags to be pasted underneath the text:
+# The HTML-tags to be pasted underneath the text:
 html_coda="
 </pre>
 </body>
@@ -171,7 +171,7 @@ makediff()
         fi
     fi
 
-# The html-tags to be pasted above the text:
+# The HTML-tags to be pasted above the text:
     html_intro="
 <!DOCTYPE html>
 <html>
