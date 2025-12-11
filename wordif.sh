@@ -199,13 +199,13 @@ pre {
         wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
                   <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
-        # And save results in desired format (default .html):
+        # And save results in desired format (default HTML):
         cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMBER
     fi
 }
 
 store2file()
-# Store html-text to (html-)file, or (if option -p is given) convert to pdf-file:
+# Store text stream to HTML-file, or (if option -p is given) convert to PDF-file:
 {
     file="$1"
     NUMBER="$2"
