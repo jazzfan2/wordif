@@ -98,8 +98,8 @@ helptext()
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
 Usage: 
-|        wordif.sh [-p]   FILE1       FILE2
-|        wordif.sh -d[p]  DIRECTORY1  DIRECTORY2
+|        wordif.sh   [-p]  FILE1       FILE2
+|        wordif.sh -d[-p]  DIRECTORY1  DIRECTORY2
 |
 |-h      Help (this output)
 |-d      Specify two directories as arguments instead of two files;
