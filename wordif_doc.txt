@@ -1,4 +1,4 @@
-HOE DIT PROGRAMMA TE GEBRUIKEN:
+HOE HET PROGRAMMA 'WORDIF.SH' TE GEBRUIKEN:
 
 1. Voorbereiding:
 =================
