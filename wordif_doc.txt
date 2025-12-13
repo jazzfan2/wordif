@@ -3,11 +3,11 @@ HOE HET PROGRAMMA 'WORDIF.SH' TE GEBRUIKEN:
 1. Voorbereiding:
 =================
 
-Maak van te voren twee mappen onder de projectmap aan, noem ze bijvoorbeeld
-'oud' en 'nieuw' (ook andere namen zijn toegestaan.)
+Maak van te voren twee (sub-)mappen aan in de projectmap, en noem die 
+bijvoorbeeld 'oud' en 'nieuw' (ook andere namen zijn toegestaan.)
 
-Leid nu platte-tekstbestanden af van de te vergelijken bronteksten, bij
-voorkeur één bestand per hoofdstuk of artikel.
+Leid nu platte-tekstbestanden af van de te vergelijken bronteksten (in b.v. InDesign),
+bij voorkeur één bestand per hoofdstuk of artikel.
 
 B.v. tekst van een InDesign-artikel selecteren met 'Ctrl-A', kopiëren met
 'Ctrl-C' en in een platte editor plakken met 'Ctrl-V'.
