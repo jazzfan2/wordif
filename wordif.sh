@@ -4,7 +4,7 @@
 # Date: 8th December 2025
 # Description: This program is a wrapper-script around 'wdiff()'
 # (https://www.gnu.org/software/wdiff/), performing word-by-word
-# comparison between two flat-text-files.
+# comparison between two plain-text-files.
 #
 # It does either:
 # a. one single comparison between given two text-files, or
@@ -131,11 +131,11 @@ checkrepeat()
     fi
 }
 
-flat_text()
-# Verify if both files contain flat text only, and if not issue an error message:
+is_plain_text()
+# Verify if both files contain plain text only, and if not issue an error message:
 {
     if [[ -z "$(file "$1" | grep text)" ]] || [[ -z "$(file "$2" | grep text)" ]]; then
-        echo "ERROR: Other than flat text in $1 and/or $2, skipping."
+        echo "ERROR: Other than plain text in $1 and/or $2, skipping."
         return 1
     fi
     return 0
@@ -193,8 +193,8 @@ pre {
 <body>
 <pre>"
 
-    # If both files are indeed flat text, compare them to each other:
-    if flat_text "$file1" "$file2"; then
+    # If both files are indeed plain text, compare them to each other:
+    if is_plain_text "$file1" "$file2"; then
         # Generate the color-marked difference-file:
         wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
                   <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
