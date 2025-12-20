@@ -24,7 +24,7 @@ To correctly associate two files in either directory to each other, their respec
 start with same unique number, followed by an underscore.
 
 wdiffer.py is a private version of wdiff() that is run as Python3 script, mimicking the UNIX wdiff() utility.
-It can be run by wordif.sh as an alternative for wdiff() in case the latter is not available for installation.
+It can be called by wordif.sh as an alternative for wdiff() in case the latter is not available for installation.
 
 Developed for fun as a personal project in order to achieve a 'self-supporting' version of wordif.sh.
 A version in AWK is in the makings as well.
