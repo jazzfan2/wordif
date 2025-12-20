@@ -7,7 +7,7 @@
 #
 #     Usage: wdiffer.py [OPTIONS] textfile1 textfile2
 #
-# Following options are available: -w, -x, -y and -z (see man wdiff)
+# Following options are available: -h, -w, -x, -y and -z (see man wdiff)
 # pypy can be used to further enhance speed.
 #
 # This program is based on the Longest Common Subsequence (LCS) algorithm
