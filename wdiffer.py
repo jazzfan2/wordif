@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Name: wdiffer.py
-# Author: Rob Toscani + LeChat Mistral
+# Author: Rob Toscani
 # Date: 19-12-2025
 # Description: Private version of wdiff() as a Python3 script.
 # Alternative for the standard UNIX wdiff() utility.
