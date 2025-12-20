@@ -1,7 +1,7 @@
 # Name: wordif.sh
 wordif.sh  - compares plain-text-files word-by-word, and stores color-marked results in HTML-format.
 
-wdiffer.py - Private version of wdiff() as a Python3 script, mimicking the UNIX wdiff() utility.
+wdiffer.py - private version of wdiff() as a Python3 script, mimicking the UNIX wdiff() utility.
 
 # Description:
 wordif.sh is a wrapper script around 'wdiff()' (see: https://www.gnu.org/software/wdiff/).
@@ -22,10 +22,10 @@ The resulting difference-files are collected in a difference-directory.
 To correctly associate two files in either directory to each other, their respective file names must
 start with same unique number, followed by an underscore.
 
-wdiffer.py - Is a private version of wdiff() that is run as Python3 script, mimicking the UNIX wdiff() utility.
+wdiffer.py is a private version of wdiff() that is run as Python3 script, mimicking the UNIX wdiff() utility.
 It can be run by wordif.sh as an alternative for wdiff() in case the latter is not available for installation.
 
-Developed for fun as a personal project in order to achieve a self-supporting version of wordif.sh.
+Developed for fun as a personal project in order to achieve a 'self-supporting' version of wordif.sh.
 A version in AWK is in the makings as well.
 
 Options to wdiffer.py are limited to -w, -x, -y and -z as of now.
