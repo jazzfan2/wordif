@@ -1,5 +1,6 @@
 # Name: wordif.sh
 wordif.sh  - compares plain-text-files word-by-word, and stores color-marked results in HTML-format.
+wdiffer.py - Private version of wdiff() as a Python3 script, mimicking the UNIX wdiff() utility.
 
 # Description:
 wordif.sh is a wrapper script around 'wdiff()' (see: https://www.gnu.org/software/wdiff/).
@@ -20,6 +21,15 @@ The resulting difference-files are collected in a difference-directory.
 To correctly associate two files in either directory to each other, their respective file names must
 start with same unique number, followed by an underscore.
 
+wdiffer.py - Is a private version of wdiff() that is run as Python3 script, mimicking the UNIX wdiff() utility.
+It can be run by wordif.sh as an alternative for wdiff() in case the latter is not available for installation.
+
+Developed for fun as a personal project in order to achieve a self-supporting version of wordif.sh
+A version in AWK is in the makings as well.
+
+Options to wdiffer.py are limited to -w, -x, -y and -z as of now.
+
+
 # How to use wordif.sh:
 Usage:
 
@@ -33,5 +43,20 @@ Options:
 	         Compare each file in 1st directory to equally unique-numbered file in 2nd directory
     -p       Output as PDF- instead of HTML-files
 
+# How to use wdiffer.py:
+Usage:
+
+	wdiffer.py   [OPTIONS]  FILE1       FILE2
+
+Options:
+
+    -h         Help (this output)
+    -w STRING  String to mark beginning of delete region
+    -x STRING  String to mark end of delete region
+    -y STRING  String to mark beginning of insert region
+    -z STRING  String to mark end of insert region
+
+
 # Author:
-Written by Rob Toscani (rob_toscani@yahoo.com).
+wordif.sh and wdiffer.py have been written by Rob Toscani (rob_toscani@yahoo.com).
+If you find any bugs or want to comment otherwise, please let me know.
