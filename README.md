@@ -28,7 +28,7 @@ It can be run by wordif.sh as an alternative for wdiff() in case the latter is n
 Developed for fun as a personal project in order to achieve a 'self-supporting' version of wordif.sh.
 A version in AWK is in the makings as well.
 
-Options to wdiffer.py are limited to -w, -x, -y and -z as of now.
+Options to wdiffer.py are limited to -h, -w, -x, -y and -z as of now.
 
 
 # How to use wordif.sh:
