@@ -115,7 +115,7 @@ def initializeMatrix(words1, words2):
             else:
                 M[i][j] = max(M[i][j-1], M[i-1][j])
 
-# Execute the LCS algorithm and store the diff to diff-words list in reverse reading order:
+# Execute the LCS algorithm and store results to diff-words list in reverse reading order:
 def printDiff(M, words1, words2):
     stack = []
     stack.append((len(words1)-1, len(words2)-1))  # Start from the end of both strings
