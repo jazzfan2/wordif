@@ -29,7 +29,7 @@ It can be called by wordif.sh as an alternative for wdiff() in case the latter i
 Developed as a fun project in order to achieve a 'self-supporting' version of wordif.sh.
 An AWK equivalent of wdiffer.py is in the making as well.
 
-Options to wdiffer.py are limited to -h, -w, -x, -y and -z as of now.
+Options for wdiffer.py are limited to -h, -w, -x, -y and -z as of now.
 
 
 # How to use wordif.sh:
