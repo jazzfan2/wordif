@@ -1,0 +1,68 @@
+Rob Toscani:
+============
+
+Convert following recursive function to an iterative function:
+
+def printDiff(C, X, Y, i, j):
+    if i >= 0 and j >= 0 and X[i] == Y[j]:
+        printDiff(C, X, Y, i-1, j-1)
+        print("  " + X[i])
+    elif j > 0 and (i == 0 or C[i][j-1] >= C[i-1][j]):
+        printDiff(C, X, Y, i, j-1)
+        print("+ " + Y[j])
+    elif i > 0 and (j == 0 or C[i][j-1] < C[i-1][j]):
+        printDiff(C, X, Y, i-1, j)
+        print("- " + X[i])
+    else:
+        print("")
+
+
+Le Chat Mistral:
+================
+
+Here’s how you can convert the recursive printDiff function to an iterative version using a stack to simulate the call stack:
+
+
+def printDiff_iterative(C, X, Y):
+    stack = []
+    stack.append((len(X), len(Y)))  # Start from the end of both strings
+
+    while stack:
+        i, j = stack.pop()
+
+        if i >= 0 and j >= 0 and X[i] == Y[j]:
+            stack.append((i-1, j-1))
+            # We print after popping, so the order is preserved
+            if not stack:
+                print("  " + X[i])
+            else:
+                # Defer printing until after the recursive call
+                stack.append(("print", "  " + X[i]))
+        elif j > 0 and (i == 0 or C[i][j-1] >= C[i-1][j]):
+            stack.append((i, j-1))
+            if not stack or stack[-1][0] != "print":
+                stack.append(("print", "+ " + Y[j]))
+        elif i > 0 and (j == 0 or C[i][j-1] < C[i-1][j]):
+            stack.append((i-1, j))
+            if not stack or stack[-1][0] != "print":
+                stack.append(("print", "- " + X[i]))
+        else:
+            if not stack or stack[-1][0] != "print":
+                stack.append(("print", ""))
+
+        # Print all deferred messages
+        while stack and stack[-1][0] == "print":
+            _, msg = stack.pop()
+            if msg:
+                print(msg)
+
+Explanation:
+
+Stack Usage: The stack stores tuples of (i, j) to simulate the recursive calls.
+Deferred Printing: When a print statement is needed, it is pushed onto the stack as a tuple with "print" as the first element. This ensures that prints happen in the correct order, just like in the recursive version.
+Order Preservation: The stack ensures that the last pushed call is the first to be processed, mimicking the call stack of recursion.
+You can call it like this:
+
+printDiff_iterative(C, X, Y)
+
+Note: This assumes C, X, and Y are defined as in your original function. The iterative version will produce the same output as the recursive one.
