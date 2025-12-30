@@ -1,5 +1,5 @@
-Rob Toscani:
-============
+(Q) Rob Toscani:
+================
 
 Convert following recursive function to an iterative function:
 
@@ -17,8 +17,8 @@ def printDiff(C, X, Y, i, j):
         print("")
 
 
-Le Chat Mistral:
-================
+(A) Le Chat Mistral (AI):
+=========================
 
 Here’s how you can convert the recursive printDiff function to an iterative version using a stack to simulate the call stack:
 
