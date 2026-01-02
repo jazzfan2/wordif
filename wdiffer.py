@@ -105,11 +105,13 @@ def populateMatrix(words1, words2):
     for j in range (0,n+1):
         M[0][j] = 0
     for i in range(1,m+1):
+        x = i - 1
         for j in range(1,n+1):
+            y = j - 1
             if words1[i] == words2[j]:
-                M[i][j] = M[i-1][j-1] + 1
+                M[i][j] = M[x][y] + 1
             else:
-                M[i][j] = max(M[i][j-1], M[i-1][j])
+                M[i][j] = max(M[i][y], M[x][j])
 
 # Execute the LCS algorithm and store results to diff-words list in reverse reading order:
 def printDiff(M, words1, words2):
