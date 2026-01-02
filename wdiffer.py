@@ -120,21 +120,23 @@ def printDiff(M, words1, words2):
 
     while stack:
         i, j = stack.pop()
+        x = i - 1
+        y = j - 1
 
         if i >= 0 and j >= 0 and words1[i] == words2[j]:
-            stack.append((i-1, j-1))
+            stack.append((x, y))
             # We print after popping, so the order is preserved
             if not stack:
                 diff_text.append(words1[i])   # Diff output words list
             else:
                 # Defer printing until after the recursive call
                 stack.append(("print", words1[i]))
-        elif j > 0 and (i == 0 or M[i][j-1] >= M[i-1][j]):
-            stack.append((i, j-1))
+        elif j > 0 and (i == 0 or M[i][y] >= M[x][j]):
+            stack.append((i, y))
             if not stack or stack[-1][0] != "print":
                 stack.append(("print", start_insert + words2[j] + end_insert))
-        elif i > 0 and (j == 0 or M[i][j-1] < M[i-1][j]):
-            stack.append((i-1, j))
+        elif i > 0 and (j == 0 or M[i][y] < M[x][j]):
+            stack.append((x, j))
             if not stack or stack[-1][0] != "print":
                 stack.append(("print", start_delete + words1[i] + end_delete))
         else:
