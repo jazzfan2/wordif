@@ -88,11 +88,11 @@ wdiff_function()
         while (1){
             if (words1[++i] == words2[i]){
                 if (! (words1[i] == "\n" || words1[i] == ""))
-                    printf words1[i]" "
+                    printf words1[i]" "   # Print matching beginning
                 else{
                     print ""
                 }
-                p ++
+                p ++     # Length of matching beginning
             }
             else
                 break
@@ -103,15 +103,15 @@ wdiff_function()
         q = 0
         while (1){
             if (words1[i--] == words2[j--])
-                q ++
+                q ++    # Length of matching end
             else
                 break
         }
 
-        m = m - q
+        m = m - q       # Lower max indexes by omission of matching end
         n = n - q
 
-        words1[p] = ""
+        words1[p] = ""  # Higher min index by omission of matching beginning
         words2[p] = ""
 
         split("", M)
@@ -206,7 +206,7 @@ wdiff_function()
 
         for (i = m+1; i <= m+q; i++){
             if (! (words1[i] == "\n" || words1[i] == ""))
-                printf words1[i]" "
+                printf words1[i]" "    # Print matching end
             else{
                 print ""
             }
