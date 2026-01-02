@@ -18,17 +18,11 @@
 # LeChat Mistral (AI) has been used to convert the *recursive* printDiff() function
 # from above source into the similarly named *iterative* version used below.
 #
-# Opmerking 1:
+# Opmerking:
 # Hier wordt elk apart woord nog gemarkeerd als een eigen delete- of insert-region,
 # in plaats van de aaneengeschakelde groep waartoe die woorden behoren.
 # Dit wijkt dus qua gedrag af van wdiff(), maar geeft bij kleurcodering
 # geen afwijkend visueel effect.
-#
-# Opmerking 2:
-# Om dit programma in python2 uit te voeren (bij gebrek aan python3) kan vanuit
-# bash b.v. een commando gegeven in de trant van (nog uit te werken):
-#
-# python2 <(sed 's/<pyhon3syntax>/<pyhon2syntax>/g' wdiffer.py) file1 file2
 #
 #####################################################################################
 #
@@ -95,7 +89,7 @@ for opt, arg in options:
         end_insert = str(arg)
 
 if len(non_option_args) < 2:
-    print("Files are missing as argument!", file=sys.stderr)
+    print("Files are missing as an argument!", file=sys.stderr)
     sys.exit()
 
 # Both text files:
