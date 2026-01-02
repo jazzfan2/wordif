@@ -56,9 +56,7 @@ wdiff_function()
     BEGIN {
         split("", words1)
         split("", words2)
-        split("", words3)
-        words1[0] = ""
-        words2[0] = ""
+        split("", diff_text)
         m = 0
         n = 0
         k = 0
@@ -85,17 +83,52 @@ wdiff_function()
 
     END {
 
+        i = 0
+        p = 0
+        while (1){
+            if (words1[++i] == words2[i]){
+                if (! (words1[i] == "\n" || words1[i] == ""))
+                    printf words1[i]" "
+                else{
+                    print ""
+                }
+                p ++
+            }
+            else
+                break
+        }
+
+        i = m
+        j = n
+        q = 0
+        while (1){
+            if (words1[i--] == words2[j--])
+                q ++
+            else
+                break
+        }
+
+        m = m - q
+        n = n - q
+
+        words1[p] = ""
+        words2[p] = ""
+
         split("", M)
-        for (i = 0; i < m+1; i++)
+        for (i = p; i <= m; i++)
             M[i][0] = 0
-        for (j = 0; j < n+1; j++)
-            M[0][j] = 0
-        for (i = 1; i < m+1; i++){
-            for (j = 1; j < n+1; j++){
+        for (j = p; j <= n; j++)
+            M[p][j] = 0
+        i_min = 1+p
+        j_min = 1+p
+        for (i = i_min; i <= m; i++){
+            x = i - 1
+            for (j = j_min; j <= n; j++){
+                y = j - 1
                 if (words1[i] == words2[j])
-                    M[i][j] = M[i-1][j-1] + 1
+                    M[i][j] = M[x][y] + 1
                 else
-                    M[i][j] = max(M[i][j-1], M[i-1][j])
+                    M[i][j] = max(M[i][y], M[x][j])
              }
         }
 
@@ -109,33 +142,35 @@ wdiff_function()
 
             i = stack[pointer][0]
             j = stack[pointer][1]
+            x = i - 1
+            y = j - 1
             pointer--
 
-            if (i >= 0 && j >= 0 && words1[i] == words2[j]){
+            if (i >= p && j >= p && words1[i] == words2[j]){
                 pointer++
-                stack[pointer][0] = i-1
-                stack[pointer][1] = j-1
+                stack[pointer][0] = x
+                stack[pointer][1] = y
                 if (pointer < 0)
-                    words3[k++] = words1[i]
+                    diff_text[k++] = words1[i]
                 else{
                     pointer++
                     stack[pointer][0] = "print"
                     stack[pointer][1] = words1[i]
                 }
             }
-            else if (j > 0 && (i == 0 || M[i][j-1] >= M[i-1][j])){
+            else if (j > p && (i == p || M[i][y] >= M[x][j])){
                 pointer++
                 stack[pointer][0] = i
-                stack[pointer][1] = j-1
+                stack[pointer][1] = y
                 if (pointer < 0 || stack[pointer][0] != "print"){
                     pointer++
                     stack[pointer][0] = "print"
                     stack[pointer][1] = start_insert""words2[j]""end_insert
                 }
             }
-            else if (i > 0 && (j == 0 || M[i][j-1] < M[i-1][j])){
+            else if (i > p && (j == p || M[i][y] < M[x][j])){
                 pointer++
-                stack[pointer][0] = i-1
+                stack[pointer][0] = x
                 stack[pointer][1] = j
                 if (pointer < 0 || stack[pointer][0] != "print"){
                     pointer++
@@ -157,13 +192,21 @@ wdiff_function()
                 pointer--
 
                 if (msg)
-                    words3[k++] = msg
+                    diff_text[k++] = msg
             }
         }
 
         for (i = k-1; i > 0; i--){
-            if (! (words3[i] == "\n" || words3[i] == ""))
-                printf words3[i]" "
+            if (! (diff_text[i] == "\n" || diff_text[i] == ""))
+                printf diff_text[i]" "
+            else{
+                print ""
+            }
+        }
+
+        for (i = m+1; i <= m+q; i++){
+            if (! (words1[i] == "\n" || words1[i] == ""))
+                printf words1[i]" "
             else{
                 print ""
             }
@@ -214,7 +257,12 @@ EOF
 make_separator()
 # Unique random string to separate file2 from file1 in catenated stream to awk:
 {
-    echo "$(tr -dc a-z < /dev/urandom | head -c 80)"
+#   echo "$(tr -dc a-z < /dev/urandom | head -c 80)"
+    n=80
+    while (( n )); do
+        echo -n $(( $RANDOM % 10 ))
+        (( n -= 1 ))
+    done
 }
 
 start_delete=""

@@ -100,13 +100,15 @@ file2 = non_option_args[1]
 def populateMatrix(words1, words2):
     m=len(words1)-1
     n=len(words2)-1
-    for i in range(0, m+1):
+    m_bound = m+1
+    n_bound = n+1
+    for i in range(0,m_bound):
         M[i][0] = 0
-    for j in range (0,n+1):
+    for j in range (0,n_bound):
         M[0][j] = 0
-    for i in range(1,m+1):
+    for i in range(1,m_bound):
         x = i - 1
-        for j in range(1,n+1):
+        for j in range(1,n_bound):
             y = j - 1
             if words1[i] == words2[j]:
                 M[i][j] = M[x][y] + 1
