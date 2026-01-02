@@ -52,8 +52,10 @@
 import sys
 import getopt
 
-# Initialize diff-words list:
-words3 = []
+# Initialize all output words lists:
+start_text = []
+diff_text  = []
+end_text   = []
 
 # Initialize strings marking beginning and end of insert- en delete-regions:
 start_delete = ""
@@ -118,7 +120,7 @@ def populateMatrix(words1, words2):
 # Execute the LCS algorithm and store results to diff-words list in reverse reading order:
 def printDiff(M, words1, words2):
     stack = []
-    stack.append((len(words1)-1, len(words2)-1))  # Start from the end of both strings
+    stack.append((len(words1)-1, len(words2)-1))  # Start from the end of both texts
 
     while stack:
         i, j = stack.pop()
@@ -127,7 +129,7 @@ def printDiff(M, words1, words2):
             stack.append((i-1, j-1))
             # We print after popping, so the order is preserved
             if not stack:
-                words3.append(words1[i])
+                diff_text.append(words1[i])   # Diff output words list
             else:
                 # Defer printing until after the recursive call
                 stack.append(("print", words1[i]))
@@ -147,15 +149,37 @@ def printDiff(M, words1, words2):
         while stack and stack[-1][0] == "print":
             _, msg = stack.pop()
             if msg:
-                words3.append(msg)
+                diff_text.append(msg)   # Diff output words list
 
-# Store file1 into words list:
+# Store file1 into words1 list:
 with open(file1) as f:
-    words1 = [ "" ] + [ word for line in f for word in line.split()+["\n"]]
+    words1 = [word for line in f for word in line.split()+["\n"]]
 
-# Store file2 into words list:
+# Store file2 into words2 list:
 with open(file2) as f:
-    words2 = [ "" ] + [ word for line in f for word in line.split()+["\n"]]
+    words2 = [word for line in f for word in line.split()+["\n"]]
+
+# Store matching text at the beginning into start_text list (to be excluded from Matrix):
+i = 0
+while True:
+    if words1[i] == words2[i]:
+        start_text.append(words1[i])
+        i += 1
+    else:
+        break
+
+# Store matching text at the end into end_text list (to be excluded from Matrix):
+i = -1
+while True:
+    if words1[i] == words2[i]:
+        end_text.append(words1[i])   # N.B.: this is a reverted list!
+        i -= 1
+    else:
+        break
+
+# Trim words1 and words2 by omitting matching text lists at beginning & end:
+words1[:] = [ "" ] + words1[len(start_text):-len(end_text) % len(words1)]
+words2[:] = [ "" ] + words2[len(start_text):-len(end_text) % len(words2)]
 
 # Initialize the LCS-Matrix:
 M = [ [ y for y in range(0,len(words2))] for x in range(0,len(words1)) ]
@@ -166,11 +190,12 @@ populateMatrix(words1, words2)
 # Execute the LCS algorithm:
 printDiff(M, words1, words2)
 
-# Revert the diff-words list to achieve correct word order (= reading order):
-words3 = list(reversed(words3))
+# Revert diff_text and end_text lists to achieve correct word order (= reading order):
+diff_text.reverse()
+end_text.reverse()
 
-# Send diff-words list to stdout as a text stream:
-for word in words3:
+# Send all output words lists to stdout as a text stream:
+for word in start_text + diff_text + end_text:
     if not (word == "\n" or word == "" or word == "\r" or word == "\r\n"):
         print(word, end=' ')
     else:
