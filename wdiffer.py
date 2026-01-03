@@ -159,27 +159,31 @@ with open(file1) as f:
 with open(file2) as f:
     words2 = [word for line in f for word in line.split()+["\n"]]
 
+# Maximum number of matching words at beginning and end that can be stripped:
+striplength = min(len(words1), len(words2))
+
 # Store matching text at the beginning into start_text list (to be excluded from Matrix):
 i = 0
-while True:
+for i in range(0, striplength):
     if words1[i] == words2[i]:
         start_text.append(words1[i])
-        i += 1
+        striplength -= 1
     else:
         break
 
 # Store matching text at the end into end_text list (to be excluded from Matrix):
 i = -1
-while True:
+while striplength > 0:
     if words1[i] == words2[i]:
         end_text.append(words1[i])   # N.B.: this is a reverted list!
         i -= 1
+        striplength -= 1
     else:
         break
 
 # Trim words1 and words2 by omitting matching text lists at beginning & end:
-words1[:] = [ "" ] + words1[len(start_text):-len(end_text) % len(words1)]
-words2[:] = [ "" ] + words2[len(start_text):-len(end_text) % len(words2)]
+words1[:] = [ "" ] + words1[len(start_text) : len(words1) - len(end_text)]
+words2[:] = [ "" ] + words2[len(start_text) : len(words2) - len(end_text)]
 
 # Initialize the LCS-Matrix:
 M = [ [ y for y in range(0,len(words2))] for x in range(0,len(words1)) ]
