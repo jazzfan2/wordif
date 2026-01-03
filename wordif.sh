@@ -134,7 +134,7 @@ checkrepeat()
 is_plain_text()
 # Verify if both files contain plain text only, and if not issue an error message:
 {
-    if [[ -z "$(file "$1" | grep text)" ]] || [[ -z "$(file "$2" | grep text)" ]]; then
+    if ! (file "$1" | grep -qE "(text|empty)" && file "$2" | grep -qE "(text|empty)"); then
         echo "ERROR: Other than plain text in $1 and/or $2, skipping."
         return 1
     fi
@@ -196,11 +196,11 @@ pre {
     # If both files are indeed plain text, compare them to each other:
     if is_plain_text "$file1" "$file2"; then
         # Generate the color-marked difference-file:
-        wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-                  <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
+#       wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
+#                 <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
-#       wdiffer.py -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-#                      <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
+        wdiffer.py -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
+                       <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
 #       wdiffer.sh -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
 #                     <(sed "$esc_html" "$file1" | tr -d '\r' ) <(sed "$esc_html" "$file2" | tr -d '\r' ) |
