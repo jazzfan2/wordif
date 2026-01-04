@@ -164,7 +164,8 @@ striplength = min(len(words1), len(words2))
 
 # Store matching text at the beginning into start_text list (to be excluded from Matrix):
 i = 0
-for i in range(0, striplength):
+boundary = striplength
+for i in range(0, boundary):
     if words1[i] == words2[i]:
         start_text.append(words1[i])
         striplength -= 1
