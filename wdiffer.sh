@@ -275,7 +275,7 @@ end_insert=""
 options "$@"
 shift $(( OPTIND - 1 ))
 
-# Call wdiff_function w/ both files, after removing returns, 
+# Call wdiff_function w/ both files, after removing returns,
 # idle spaces & tabs and empty top & bottom lines:
 wdiff_function <(sed -E -e $'s/\r//g; s/^( |\t)*$//' "$1" | remove_empty_top_end -) \
                <(sed -E -e $'s/\r//g; s/^( |\t)*$//' "$2" | remove_empty_top_end -)
