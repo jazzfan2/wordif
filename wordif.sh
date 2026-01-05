@@ -199,11 +199,11 @@ pre {
 #       wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
 #                 <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
-        wdiffer.py -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-                       <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
+#       wdiffer.py -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
+#                       <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
-#       wdiffer.sh -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-#                     <(sed "$esc_html" "$file1" | tr -d '\r' ) <(sed "$esc_html" "$file2" | tr -d '\r' ) |
+        wdiffer.sh -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
+                      <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
         # And save results in desired format (default HTML):
         cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMBER
