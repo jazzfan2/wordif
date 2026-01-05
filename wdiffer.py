@@ -24,6 +24,9 @@
 # Dit wijkt dus qua gedrag af van wdiff(), maar geeft bij kleurcodering
 # geen afwijkend visueel effect.
 #
+# Bug: the output results don't show any text indents nor multiple spaces/tabs present
+# in the original texts.
+#
 #####################################################################################
 #
 # Copyright (C) 2025 Rob Toscani <rob_toscani@yahoo.com>
@@ -45,6 +48,7 @@
 
 import sys
 import getopt
+import re
 
 # Initialize all output words lists:
 start_text = []
@@ -159,26 +163,39 @@ with open(file1) as f:
 with open(file2) as f:
     words2 = [word for line in f for word in line.split()+["\n"]]
 
-# Maximum number of matching words at beginning and end that can be stripped:
-striplength = min(len(words1), len(words2))
+# Remove all empty cells at beginning and end of both lists:
+while re.match(r'^( |  )*$', words1[0]):
+    words1.pop(0)
+
+while re.match(r'^( |  )*$', words1[-1]):
+    words1.pop(-1)
+
+while re.match(r'^( |  )*$', words2[0]):
+    words2.pop(0)
+
+while re.match(r'^( |  )*$', words2[-1]):
+    words2.pop(-1)
+
+# Maximum possible number of matching words at beginning and end:
+maxmatch = min(len(words1), len(words2))
 
 # Store matching text at the beginning into start_text list (to be excluded from Matrix):
 i = 0
-boundary = striplength
+boundary = maxmatch
 for i in range(0, boundary):
     if words1[i] == words2[i]:
         start_text.append(words1[i])
-        striplength -= 1
+        maxmatch -= 1
     else:
         break
 
 # Store matching text at the end into end_text list (to be excluded from Matrix):
 i = -1
-while striplength > 0:
+while maxmatch > 0:
     if words1[i] == words2[i]:
         end_text.append(words1[i])   # N.B.: this is a reverted list!
         i -= 1
-        striplength -= 1
+        maxmatch -= 1
     else:
         break
 

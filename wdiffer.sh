@@ -22,6 +22,9 @@
 # Prerequisite:
 # - gawk
 #
+# Bug: the output results don't show any text indents nor multiple spaces/tabs present
+# in the original texts.
+#
 #####################################################################################
 #
 # Copyright (C) 2025 Rob Toscani <rob_toscani@yahoo.com>
@@ -44,10 +47,17 @@
 
 wdiff_function()
 {
-    gawk -v separator="$separator"  -v start_delete="$start_delete" -v end_delete="$end_delete" \
-        -v start_insert="$start_insert" -v end_insert="$end_insert" '\
+    gawk -v start_delete="$start_delete" -v end_delete="$end_delete" \
+         -v start_insert="$start_insert" -v end_insert="$end_insert" '\
     function max(a, b){
         if (a >= b)
+            return a
+        else
+            return b
+    }
+
+    function min(a, b){
+        if (a <= b)
             return a
         else
             return b
@@ -60,39 +70,32 @@ wdiff_function()
         m = 0
         n = 0
         k = 0
-        flag = 1
     }
 
-    {
-        if ($0 == separator){
-            flag = 2
-            next
-        }
-
-        if (flag == 1){
-           for (f = 1; f <= NF; f++)
-                words1[++m] = $f
-            words1[++m] = "\n"
-        }
-        else{
-            for (f = 1; f <= NF; f++)
-                words2[++n] = $f
-            words2[++n] = "\n"
-        }
+    FNR == NR && ARGV[1] == FILENAME {
+        for (f = 1; f <= NF; f++)
+             words1[++m] = $f
+        words1[++m] = "\n"
+        next
+    }  {
+        for (f = 1; f <= NF; f++)
+            words2[++n] = $f
+        words2[++n] = "\n"
     }
 
     END {
 
-        i = 0
+        maxmatch = min(m,n)  # Maximum possible number of matching words at beginning and end
+        boundary = maxmatch
         p = 0
-        while (1){
-            if (words1[++i] == words2[i]){
+        for (i = 1; i <= boundary; i++){
+            if (words1[i] == words2[i]){
                 if (! (words1[i] == "\n" || words1[i] == ""))
                     printf words1[i]" "   # Print matching beginning
-                else{
+                else
                     print ""
-                }
-                p ++     # Length of matching beginning
+                p ++         # Length of matching beginning
+                maxmatch --  # Max remaining number of matching words at beginning and end
             }
             else
                 break
@@ -101,22 +104,24 @@ wdiff_function()
         i = m
         j = n
         q = 0
-        while (1){
-            if (words1[i--] == words2[j--])
-                q ++    # Length of matching end
+        while (maxmatch){
+            if (words1[i--] == words2[j--]){
+                q ++         # Length of matching end
+                maxmatch --  # Max remaining number of matching words at beginning and end
+            }
             else
                 break
         }
 
-        m = m - q       # Lower max indexes by omission of matching end
+        m = m - q       # Lower end indexes by q, omitting matching text at the end
         n = n - q
 
-        words1[p] = ""  # Higher min index by omission of matching beginning
+        words1[p] = ""  # Raise start index by p, omitting matching text at beginning
         words2[p] = ""
 
         split("", M)
         for (i = p; i <= m; i++)
-            M[i][0] = 0
+            M[i][p] = 0
         for (j = p; j <= n; j++)
             M[p][j] = 0
         i_min = 1+p
@@ -129,7 +134,7 @@ wdiff_function()
                     M[i][j] = M[x][y] + 1
                 else
                     M[i][j] = max(M[i][y], M[x][j])
-             }
+            }
         }
 
         split("", stack)
@@ -196,7 +201,7 @@ wdiff_function()
             }
         }
 
-        for (i = k-1; i > 0; i--){
+        for (i = k-1; i >= 0; i--){
             if (! (diff_text[i] == "\n" || diff_text[i] == ""))
                 printf diff_text[i]" "
             else{
@@ -212,7 +217,7 @@ wdiff_function()
             }
         }
 
-    }' "$1"
+    }' "$1" "$2"
 }
 
 options(){
@@ -254,15 +259,11 @@ Usage:
 EOF
 }
 
-make_separator()
-# Unique random string to separate file2 from file1 in catenated stream to awk:
+remove_empty_top_end()
+# https://unix.stackexchange.com/questions/666539/how-to-remove-empty-lines-at-the-end-of-a-file-using-awk
 {
-#   echo "$(tr -dc a-z < /dev/urandom | head -c 80)"
-    n=80
-    while (( n )); do
-        echo -n $(( $RANDOM % 10 ))
-        (( n -= 1 ))
-    done
+    awk '/^$/ && a!=1 {a=0} !/^$/ {a=1} a==1 {print}' "$1"  |
+    awk '/^$/{n=n RS}; /./{printf "%s",n; n=""; print}'
 }
 
 start_delete=""
@@ -274,10 +275,7 @@ end_insert=""
 options "$@"
 shift $(( OPTIND - 1 ))
 
-file_1="$1"
-file_2="$2"
-
-separator="$(make_separator)"
-
-# Call wdiff_function with both files combined into one including separator line:
-(cat "$file_1"; echo -e "\n$separator"; cat "$file_2") | wdiff_function -
+# Call wdiff_function w/ both files, after removing returns, 
+# idle spaces & tabs and empty top & bottom lines:
+wdiff_function <(sed -E -e $'s/\r//g; s/^( |\t)*$//' "$1" | remove_empty_top_end -) \
+               <(sed -E -e $'s/\r//g; s/^( |\t)*$//' "$2" | remove_empty_top_end -)
