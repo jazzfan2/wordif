@@ -74,7 +74,7 @@ wdiff_function()
 
     FNR == NR && ARGV[1] == FILENAME {
         for (f = 1; f <= NF; f++)
-             words1[++m] = $f
+            words1[++m] = $f
         words1[++m] = "\n"
         next
     }  {
@@ -104,7 +104,7 @@ wdiff_function()
         i = m
         j = n
         q = 0
-        while (maxmatch){
+        while (maxmatch > 0){
             if (words1[i--] == words2[j--]){
                 q ++         # Length of matching end
                 maxmatch --  # Max remaining number of matching words at beginning and end
@@ -259,11 +259,25 @@ Usage:
 EOF
 }
 
-remove_empty_top_end()
-# https://unix.stackexchange.com/questions/666539/how-to-remove-empty-lines-at-the-end-of-a-file-using-awk
+strip_top()
+# Remove empty top lines:
 {
-    awk '/^$/ && a!=1 {a=0} !/^$/ {a=1} a==1 {print}' "$1"  |
-    awk '/^$/{n=n RS}; /./{printf "%s",n; n=""; print}'
+   awk '
+   {
+       if (! textline){
+           if (NF == 0)
+               next
+           else
+               textline = 1
+       }
+       print $0
+   }' "$1"
+}
+
+strip()
+# Remove returns and empty top & bottom lines:
+{
+   tr -d '\r' < "$1" | strip_top - | tac - | strip_top - | tac -
 }
 
 start_delete=""
@@ -275,7 +289,5 @@ end_insert=""
 options "$@"
 shift $(( OPTIND - 1 ))
 
-# Call wdiff_function w/ both files, after removing returns,
-# idle spaces & tabs and empty top & bottom lines:
-wdiff_function <(sed -E -e $'s/\r//g; s/^( |\t)*$//' "$1" | remove_empty_top_end -) \
-               <(sed -E -e $'s/\r//g; s/^( |\t)*$//' "$2" | remove_empty_top_end -)
+# Call wdiff_function w/ both files, after stripping empty lines at top and bottom:
+wdiff_function <(strip "$1") <(strip "$2")
