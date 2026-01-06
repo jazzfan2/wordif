@@ -134,8 +134,8 @@ checkrepeat()
 is_plain_text()
 # Verify if both files contain plain text only, and if not issue an error message:
 {
-    if ! (file "$1" | grep -qE "(text|empty)" && file "$2" | grep -qE "(text|empty)"); then
-        echo "ERROR: Other than plain text in $1 and/or $2, skipping."
+    if ! (file "$1" | grep -qE "(text|empty|pipe)" && file "$2" | grep -qE "(text|empty|pipe)"); then
+        echo "ERROR: Other than plain text in $1 and/or $2 or can't be evaluated, skipping."
         return 1
     fi
     return 0
@@ -160,12 +160,12 @@ makediff()
             return
         fi
     else
-        # In case of files instead of directories as arguments, verify if that's really the case:
-        if [[ -f "$1" ]] && [[ -f "$2" ]]; then
+        # If arguments must be files instead of directories, verify whether that's really the case:
+        if [[ ! -d "$1" ]] && [[ ! -d "$2" ]]; then
             file1="$1"
             file2="$2"
         else
-            echo "ERROR: Specify existing files, and do not specify directories"
+            echo "ERROR: Do not specify directories"
             return 1
         fi
     fi
