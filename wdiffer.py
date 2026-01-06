@@ -164,16 +164,16 @@ with open(file2) as f:
     words2 = [word for line in f for word in line.split()+["\n"]]
 
 # Remove all empty cells at beginning and end of both lists:
-while re.match(r'^( |  )*$', words1[0]):
+while len(words1) and re.match(r'^( |  )*$', words1[0]):
     words1.pop(0)
 
-while re.match(r'^( |  )*$', words1[-1]):
+while len(words1) and re.match(r'^( |  )*$', words1[-1]):
     words1.pop(-1)
 
-while re.match(r'^( |  )*$', words2[0]):
+while len(words2) and re.match(r'^( |  )*$', words2[0]):
     words2.pop(0)
 
-while re.match(r'^( |  )*$', words2[-1]):
+while len(words2) and re.match(r'^( |  )*$', words2[-1]):
     words2.pop(-1)
 
 # Maximum possible number of matching words at beginning and end:
