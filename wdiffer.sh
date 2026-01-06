@@ -263,13 +263,11 @@ strip_top()
 # Remove empty top lines:
 {
    awk '
-   {
-       if (! textline){
-           if (NF == 0)
-               next
-           else
-               textline = 1
-       }
+   ! textline {
+       if (NF == 0)
+           next
+       textline = 1
+   } {
        print $0
    }' "$1"
 }
