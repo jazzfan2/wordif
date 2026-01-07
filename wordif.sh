@@ -134,7 +134,7 @@ checkrepeat()
 is_plain_text()
 # Verify if both files contain plain text only, and if not issue an error message:
 {
-    if ! (file "$1" | grep -qE "(text|empty|pipe)" && file "$2" | grep -qE "(text|empty|pipe)"); then
+    if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
         echo "ERROR: Other than plain text in $1 and/or $2 or can't be evaluated, skipping."
         return 1
     fi
@@ -202,7 +202,7 @@ pre {
 #       wdiffer.py -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
 #                       <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
-        wdiffer.sh -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
+        wdiffer2.sh -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
                       <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
 
         # And save results in desired format (default HTML):
