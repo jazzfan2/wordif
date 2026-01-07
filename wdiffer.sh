@@ -22,8 +22,12 @@
 # Prerequisite:
 # - gawk
 #
-# Bug: the output results don't show any text indents nor multiple spaces/tabs present
-# in the original texts.
+# Bugs: 
+# 1. Slow;
+# 2. Quadratic memory usage, limiting the maximum allowed word count product of
+#    compared files to the available free RAM memory;
+# 3. The output results don't show any text indents nor multiple spaces/tabs present
+#    in the original texts.
 #
 #####################################################################################
 #
