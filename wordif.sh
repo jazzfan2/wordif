@@ -1,10 +1,11 @@
 #!/bin/bash
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 8th December 2025
-# Description: This program is a wrapper-script around 'wdiff()'
-# (https://www.gnu.org/software/wdiff/), performing word-by-word
-# comparison between two plain-text-files.
+# Date: 7th Januari 2026
+# Description: This program performs word-by-word comparison between
+# two plain-text-files.
+# It is a wrapper-script around 'diff()', and serves as an alternative
+# for wdiff() (https://www.gnu.org/software/wdiff/).
 #
 # It does either:
 # a. one single comparison between given two text-files, or
@@ -23,13 +24,18 @@
 #         file in 2nd directory
 #   -p    Output as PDF- instead of HTML-files
 #
-# Prerequisites:
-# - wdiff
+# Prerequisite:
 # - wkhtmltopdf (if output to PDF is desired)
+#
+# Opmerking:
+# Hier wordt elk apart woord nog gemarkeerd als een eigen delete- of insert-region,
+# in plaats van de aaneengeschakelde groep waartoe die woorden behoren.
+# Dit wijkt dus qua gedrag af van wdiff(), maar geeft bij kleurcodering
+# geen afwijkend visueel effect.
 #
 #####################################################################################
 #
-# Copyright (C) 2025 Rob Toscani <rob_toscani@yahoo.com>
+# Copyright (C) 2026 Rob Toscani <rob_toscani@yahoo.com>
 #
 # wordif.sh is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -131,15 +137,54 @@ checkrepeat()
     fi
 }
 
-is_plain_text()
-# Verify if both files contain plain text only, and if not issue an error message:
+strip_top()
+# Remove empty top lines:
 {
-    if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
-        echo "ERROR: Other than plain text in $1 and/or $2 or can't be evaluated, skipping."
-        return 1
-    fi
-    return 0
+    awk '
+    ! textline {
+        if (NF == 0)
+            next
+        textline = 1
+    } {
+        print $0
+    }' "$1"
 }
+
+strip()
+# Remove returns and empty top & bottom lines:
+{
+    tr -d '\r' | strip_top | tac | strip_top | tac
+}
+
+make_marker()
+# Unique random string to identify newline:
+{
+    n=80
+    while (( n )); do
+        echo -n $(( $RANDOM % 10 ))
+        (( n -= 1 ))
+    done
+}
+
+splitwords()
+{
+    awk -v newlinemarker=$newlinemarker '
+    {
+        gsub(/^/, newlinemarker)
+        gsub(/ /, "\n")
+        print
+    }' "$1"
+}
+
+joinwords()
+{
+    tr '\n' ' ' |
+    awk -v newlinemarker=$newlinemarker '
+    {
+        gsub(newlinemarker, "\n")
+        print
+    }' -
+ }
 
 makediff()
 # Perform text comparison between two text files, and store the output in desired format:
@@ -193,21 +238,15 @@ pre {
 <body>
 <pre>"
 
-    # If both files are indeed plain text, compare them to each other:
-    if is_plain_text "$file1" "$file2"; then
-        # Generate the color-marked difference-file:
-#       wdiff -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-#                 <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
+    # Compare both files to each other and generate color-marked difference-file:
+    diff --old-line-format="$delete_start"%L"$end" \
+         --new-line-format="$insert_start"%L"$end" \
+         --unchanged-line-format='%L'              \
+          <(sed "$esc_html" "$file1" | strip - | splitwords - ) \
+          <(sed "$esc_html" "$file2" | strip - | splitwords - ) |
 
-#       wdiffer.py -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-#                       <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
-
-        wdiffer2.sh -w "$delete_start" -x "$end" -y "$insert_start" -z "$end" \
-                      <(sed "$esc_html" "$file1") <(sed "$esc_html" "$file2") |
-
-        # And save results in desired format (default HTML):
-        cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMBER
-    fi
+    joinwords - |
+    cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMBER
 }
 
 store2file()
@@ -229,6 +268,8 @@ store2file()
 # Execute the options:
 options "$@"
 shift $(( OPTIND - 1 ))
+
+newlinemarker="$(make_marker)"
 
 if [[ $args == "directories" ]]; then
 
