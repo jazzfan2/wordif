@@ -12,8 +12,8 @@ Stappenplan wordif.sh op MacOS laptop
 9. Plaats in $HOME eventueel ook nog een (aangepaste) kopie van .bashrc, .profile en .bash_aliases
 10. Maak d.m.v. Automator een 'Launch Wordif App' launcher aan (/bin/bash programma) met als inhoud: [code]
 
-	cd /Users/jacqueline/Desktop/wordif_vergelijking
-	/Users/jacqueline/Desktop/scripts/wordif.sh -d oud nieuw
+	cd /Users/<user>/Desktop/wordif_vergelijking
+	/Users/<user>/Desktop/scripts/wordif.sh -d oud nieuw
 
     [/code] en save deze naar Desktop/
 11. Maak in de code van 'wordif.sh' de paden naar de wdiffer-scripts compleet, gelijk aan bovenstaande locaties [VERVALLEN].

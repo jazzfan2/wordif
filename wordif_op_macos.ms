@@ -54,8 +54,8 @@ Plaats in $HOME eventueel ook nog een (aangepaste) kopie van \&.bashrc, \&.profi
 Maak d.m.v. Automator een `Launch Wordif App' launcher aan (/\:bin/\:bash programma) met als inhoud:
 .DS I 3
 .CW
-cd /Users/jacqueline/Desktop/wordif_vergelijking
-/Users/jacqueline/Desktop/scripts/wordif.sh -d oud nieuw
+cd /Users/<user>/Desktop/wordif_vergelijking
+/Users/<user>/Desktop/scripts/wordif.sh -d oud nieuw
 .DE
 en save deze naar Desktop/\:
 .IP "\m[blue]11." 3
