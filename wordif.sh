@@ -165,7 +165,7 @@ strip()
 }
 
 make_marker()
-# Unique random string to identify newline:
+# Generate unique random string:
 {
     n=80
     while (( n )); do
@@ -175,6 +175,7 @@ make_marker()
 }
 
 splitwords()
+# Place all single words on a separate line after preserving original newlines:
 {
     awk -v newlinemarker=$newlinemarker '
     {
@@ -185,6 +186,7 @@ splitwords()
 }
 
 joinwords()
+# Place all single words on the same line again and restore original newlines:
 {
     tr '\n' ' ' |
     awk -v newlinemarker=$newlinemarker '
