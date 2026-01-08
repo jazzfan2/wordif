@@ -105,7 +105,7 @@ helptext()
     while read "line"; do
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
-Usage: 
+Usage:
 |        wordif.sh   [-p]  FILE1       FILE2
 |        wordif.sh -d[-p]  DIRECTORY1  DIRECTORY2
 |
@@ -152,6 +152,12 @@ strip_top()
     }' "$1"
 }
 
+tac()
+# Workaround if UNIX tac() utility isn´t available: 
+{
+    awk '{ a[++i] = $0 } END { while(i) print a[i--] }' "$1"
+}
+
 strip()
 # Remove returns and empty top & bottom lines:
 {
@@ -173,7 +179,7 @@ splitwords()
     awk -v newlinemarker=$newlinemarker '
     {
         gsub(/^/, newlinemarker)
-        gsub(/ /, "\n")
+        gsub(/( |\t)/, "\n")
         print
     }' "$1"
 }
