@@ -153,7 +153,7 @@ strip_top()
 }
 
 tac()
-# Workaround if UNIX tac() utility isn´t available: 
+# Workaround if UNIX tac() utility isn´t available:
 {
     awk '{ a[++i] = $0 } END { while(i) print a[i--] }' "$1"
 }
