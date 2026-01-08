@@ -7,10 +7,12 @@
 # It is a wrapper-script around 'diff()', and serves as an alternative
 # for wdiff() (https://www.gnu.org/software/wdiff/).
 #
-# It does either:
-# a. one single comparison between given two text-files, or
-# b. (optionally) multiple comparison of all pairs of text-files
-#     with equally numbered name, shared by given two directories.
+# It can function in two modes:
+# Either:
+#     a. (default) one single comparison between given two text-files,
+# or:
+#     b. (optionally) multiple comparison of all pairs of text-files
+#         with equally numbered name, shared by given two directories.
 #
 # The results are stored as color-marked difference-files in HTML-,
 # or (optionally) PDF-format.
