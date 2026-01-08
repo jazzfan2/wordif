@@ -161,7 +161,7 @@ tac()
 strip()
 # Remove returns and empty top & bottom lines:
 {
-    tr -d '\r' | strip_top | tac | strip_top | tac
+    tr -d '\r' | strip_top - | tac - | strip_top - | tac -
 }
 
 make_marker()
