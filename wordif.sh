@@ -175,7 +175,7 @@ make_marker()
 }
 
 splitwords()
-# Place all single words on a separate line after preserving original newlines:
+# Place all words on a separate line after preserving original newlines:
 {
     awk -v newlinemarker=$newlinemarker '
     {
@@ -186,7 +186,7 @@ splitwords()
 }
 
 joinwords()
-# Place all single words on the same line again and restore original newlines:
+# Place all words on the same line again and restore original newlines:
 {
     tr '\n' ' ' |
     awk -v newlinemarker=$newlinemarker '
