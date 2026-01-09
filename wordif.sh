@@ -207,7 +207,7 @@ splitwords()
     awk -v newlinemarker=$newlinemarker '
     {
         gsub(/^/, newlinemarker)
-        gsub(/ /,  "\n \n")
+        gsub(/ /,  "\n")
         gsub(/\t/, "\n\t\n")
         print
     }' "$1"
@@ -216,7 +216,7 @@ splitwords()
 joinwords()
 # Place all words on the same line again and restore original newlines:
 {
-    tr -d '\n' |
+    tr '\n' ' ' |
     awk -v newlinemarker=$newlinemarker '
     {
         gsub(newlinemarker, "\n")
