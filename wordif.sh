@@ -139,6 +139,33 @@ checkrepeat()
     fi
 }
 
+print_html_intro()
+# Print the HTML-tags to be pasted above the text:
+{
+    intro="
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=\"utf8\">
+<style type=\"text/css\">
+pre {
+  font-family:Courier New;
+  font-size:12pt;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: -webkit-pre-wrap;
+  word-wrap: break-word;
+}
+</style>
+<title>$1</title>
+</head>
+<body>
+<pre>"
+    echo "$intro"
+}
+
 strip_top()
 # Remove empty top lines:
 {
@@ -215,7 +242,7 @@ makediff()
             return
         fi
     else
-        # If arguments must be files instead of directories, verify whether that's really the case:
+        # If arguments are supposed to be files, verify that no directories are being given:
         if [[ ! -d "$1" ]] && [[ ! -d "$2" ]]; then
             file1="$1"
             file2="$2"
@@ -225,28 +252,7 @@ makediff()
         fi
     fi
 
-    # The HTML-tags to be pasted above the text:
-    html_intro="
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset=\"utf8\">
-<style type=\"text/css\">
-pre {
-  font-family:Courier New;
-  font-size:12pt;
-  white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  white-space: -pre-wrap;
-  white-space: -o-pre-wrap;
-  white-space: -webkit-pre-wrap;
-  word-wrap: break-word;
-}
-</style>
-<title>$file2</title>
-</head>
-<body>
-<pre>"
+    (print_html_intro "$file2"
 
     # Compare both files to each other and generate color-marked difference-file:
     diff --old-line-format="$delete_start"%L"$end" \
@@ -255,8 +261,9 @@ pre {
           <(sed "$esc_html" "$file1" | strip - | splitwords - ) \
           <(sed "$esc_html" "$file2" | strip - | splitwords - ) |
 
-    joinwords - |
-    cat <(echo "$html_intro") - <(echo "$html_coda") | store2file - $NUMBER
+    joinwords -
+
+    echo "$html_coda") | store2file - $NUMBER
 }
 
 store2file()
@@ -278,6 +285,8 @@ store2file()
 # Execute the options:
 options "$@"
 shift $(( OPTIND - 1 ))
+
+[[ $# < 2 ]] && echo "Not enough arguments given" && exit 1
 
 newlinemarker="$(make_marker)"
 
