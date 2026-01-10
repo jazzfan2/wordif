@@ -35,6 +35,8 @@
 # Dit wijkt dus qua gedrag af van wdiff(), maar geeft bij kleurcodering
 # geen afwijkend visueel effect.
 #
+# (The script 'shufflewords.sh' can be used to stress-test this program.)
+#
 #####################################################################################
 #
 # Copyright (C) 2026 Rob Toscani <rob_toscani@yahoo.com>
