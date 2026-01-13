@@ -181,11 +181,11 @@ strip_top()
     }' "$1"
 }
 
-tac()
-# Workaround if UNIX tac() utility isn´t available:
-{
-    awk '{ a[++i] = $0 } END { while(i) print a[i--] }' "$1"
-}
+# tac()
+# Uncomment this function if UNIX tac() utility isn´t available:
+# {
+#     awk '{ a[++i] = $0 } END { while(i) print a[i--] }' "$1"
+# }
 
 strip()
 # Remove returns and empty top & bottom lines:
@@ -224,7 +224,7 @@ joinwords()
         gsub(newlinemarker, "\n")
         print
     }' -
- }
+}
 
 makediff()
 # Perform text comparison between two text files, and store the output in desired format:
