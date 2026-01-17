@@ -29,12 +29,6 @@
 # Prerequisite:
 # - wkhtmltopdf (if output to PDF is desired)
 #
-# Opmerking:
-# Hier wordt elk apart woord nog gemarkeerd als een eigen delete- of insert-region,
-# in plaats van de aaneengeschakelde groep waartoe die woorden behoren.
-# Dit wijkt dus qua gedrag af van wdiff(), maar geeft bij kleurcodering
-# geen afwijkend visueel effect.
-#
 # (The script 'shufflewords.sh' can be used to stress-test this program.)
 #
 #####################################################################################
@@ -168,48 +162,12 @@ pre {
     echo "$intro"
 }
 
-strip_top()
-# Remove empty top lines:
-{
-    awk '
-    ! textline {
-        if (NF == 0)
-            next
-        textline = 1
-    } {
-        print $0
-    }' "$1"
-}
-
-# tac()
-# Uncomment this function if UNIX tac() utility isn´t available:
-# {
-#     awk '{ a[++i] = $0 } END { while(i) print a[i--] }' "$1"
-# }
-
-strip()
-# Remove returns and empty top & bottom lines:
-{
-    tr -d '\r' | strip_top - | tac - | strip_top - | tac -
-}
-
-make_marker()
-# Generate unique random string:
-{
-    n=80
-    while (( n )); do
-        echo -n $(( $RANDOM % 10 ))
-        (( n -= 1 ))
-    done
-}
-
 splitwords()
 # Place all words on a separate line, while preserving original newlines, spaces and tabs:
 {
-    awk -v newlinemarker=$newlinemarker '
-    {
-        gsub(/^/, newlinemarker)
-        gsub(/ /,  "\n")
+    awk '{
+        gsub(/^/, "\b")
+        gsub(/ /, "\n")
         gsub(/\t/, "\n\t\n")
         print
     }' "$1"
@@ -219,9 +177,8 @@ joinwords()
 # Place all words on the same line again and restore original newlines:
 {
     tr '\n' ' ' |
-    awk -v newlinemarker=$newlinemarker '
-    {
-        gsub(newlinemarker, "\n")
+    awk '{
+        gsub(/\b/, "\n")
         print
     }' -
 }
@@ -258,11 +215,12 @@ makediff()
     (print_html_intro "$file2"
 
     # Compare both files to each other and generate color-marked difference-file:
-    diff --old-line-format="$delete_start"%L"$end" \
-         --new-line-format="$insert_start"%L"$end" \
-         --unchanged-line-format='%L'              \
-          <(sed "$esc_html" "$file1" | strip - | splitwords - ) \
-          <(sed "$esc_html" "$file2" | strip - | splitwords - ) |
+    diff -bBZ --strip-trailing-cr                 \
+         --old-group-format="$delete_start%<$end" \
+         --new-group-format="$insert_start%>$end" \
+         --unchanged-group-format='%='            \
+          <(sed "$esc_html" "$file1" | splitwords - ) \
+          <(sed "$esc_html" "$file2" | splitwords - ) |
 
     joinwords -
 
@@ -290,9 +248,6 @@ options "$@"
 shift $(( OPTIND - 1 ))
 
 [[ $# < 2 ]] && echo "Not enough arguments given" && exit 1
-
-newlinemarker="\b"
-# newlinemarker="$(make_marker)"
 
 if [[ $args == "directories" ]]; then
 
