@@ -56,5 +56,7 @@ cd /Users/<user>/Desktop/wordif_vergelijking
 .DE
 en save deze naar Desktop/\:
 .IP "\m[blue]7." 3
+Plaats in de mappen `oud/\:' en `nieuw/\:' de te vergel\[ij]ken bestanden en volg daarb\[ij] de regels in `wordif_\:doc.pdf'
+.IP "\m[blue]8." 3
 Een dubbelklik op `Launch Wordif App' maakt nu een diff/\: map aan (als die nog niet bestond) met daarin
 de verschilbestanden van de inhoud van oud/\: en nieuw/\:
