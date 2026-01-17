@@ -1,22 +1,22 @@
 Stappenplan wordif.sh op MacOS laptop
 =====================================
 
-1. Maak de map 'wordif_vergelijking/' aan onder Desktop/, met daarin de subdirectories: 'oud/' en 'nieuw/'
-2. Maak de map 'scripts/' aan onder Desktop/ of direct onder $HOME (= /Users/<user>/)
-3. Plaats in de map scripts/ het bestand 'wordif.sh' 
-4. Maak dit script executable met: [code]
+1. Maak de map 'wordif_vergelijking/' aan onder 'Desktop/', met daarin de subdirectories: 'oud/' en 'nieuw/'
+2. Maak de map 'scripts/' aan onder 'Desktop/' of direct onder '$HOME' (= /Users/<user>/)
+3. Plaats het bestand 'wordif.sh' in de map 'scripts/'
+4. Open een terminal, ga daarin naar de map 'scripts/', en maak het bestand 'wordif.sh' executable met het commando: [code]
 
 	chmod u+x wordif.sh
 
    [/code]
-5. Plaats in $HOME eventueel ook een (aan de mapstructuur aangepaste) kopie van .bashrc, .profile en .bash_aliases om
+5. Plaats in '$HOME' eventueel ook een (aan de mapstructuur aangepaste) kopie van '.bashrc', '.profile' en '.bash_aliases' om
    in de terminal gemakkelijker scripts te kunnen aanroepen en aliassen te kunnen gebruiken voor veelgebruikte commando's
-6. Maak d.m.v. Automator een 'Launch Wordif App' launcher aan (/bin/bash programma) met als inhoud: [code]
+6. Maak d.m.v. 'Automator' een 'Launch Wordif App' launcher aan (/bin/bash programma) met als inhoud: [code]
 
 	cd /Users/<user>/Desktop/wordif_vergelijking
 	/Users/<user>/Desktop/scripts/wordif.sh -d oud nieuw
 
-   [/code] en save deze naar Desktop/
-7. Plaats in de mappen 'oud/' en 'nieuw/' de te vergelijken bestanden en volg daarbij de regels in 'wordif_doc.pdf'
-8. Een dubbelklik op 'Launch Wordif App' maakt nu een diff/ map aan (als die nog niet bestond) met daarin
-   de verschilbestanden van de inhoud van oud/ en nieuw/
+   [/code] en save deze naar 'Desktop/'
+7. Plaats de te vergelijken tekstbestanden in de mappen 'oud/' en 'nieuw/' en volg daarbij de regels in 'wordif_doc.pdf'
+8. Een (dubbel)klik op 'Launch Wordif App' maakt nu een 'diff/' map aan (als die nog niet bestond) met daarin
+   de verschilbestanden van de inhoud van 'oud/' en 'nieuw/'

@@ -33,30 +33,30 @@ naar het TROFF-formaat, door middel van het script \f3text2troff\fP, een project
 \f[3]Stappenplan wordif.sh op MacOS laptop\[P]
 .LP
 .IP "\m[blue]1." 3
-Maak de map `wordif_\:vergel\[ij]king/\:' aan onder Desktop/\:, met daarin de subdirectories: `oud/\:' en `nieuw/\:'
+Maak de map `wordif_\:vergel\[ij]king/\:' aan onder `Desktop/\:', met daarin de subdirectories: `oud/\:' en `nieuw/\:'
 .IP "\m[blue]2." 3
-Maak de map `scripts/\:' aan onder Desktop/\: of direct onder $HOME (=\: /Users/\:<user>/\:)
+Maak de map `scripts/\:' aan onder `Desktop/\:' of direct onder '$HOME' (=\: /Users/\:<user>/\:)
 .IP "\m[blue]3." 3
-Plaats in de map scripts/\: het bestand `wordif.sh'
+Plaats het bestand `wordif.sh' in de map `scripts/\:'
 .IP "\m[blue]4." 3
-Maak dit script executable met:
+Open een terminal, ga daarin naar de map `scripts/\:', en maak het bestand `wordif.sh' executable met het commando:
 .DS I 3
 .CW
 chmod u+x wordif.sh
 .DE
 .IP "\m[blue]5." 3
-Plaats in $HOME eventueel ook een (aan de mapstructuur aangepaste) kopie van \&.bashrc, \&.profile en \&.bash_\:aliases om
+Plaats in '$HOME' eventueel ook een (aan de mapstructuur aangepaste) kopie van '.bashrc', '.profile' en '.bash_\:aliases' om
 in de terminal gemakkel\[ij]ker scripts te kunnen aanroepen en aliassen te kunnen gebruiken voor veelgebruikte commando's
 .IP "\m[blue]6." 3
-Maak d.m.v. Automator een `Launch Wordif App' launcher aan (/\:bin/\:bash programma) met als inhoud:
+Maak d.m.v. `Automator' een `Launch Wordif App' launcher aan (/\:bin/\:bash programma) met als inhoud:
 .DS I 3
 .CW
 cd /Users/<user>/Desktop/wordif_vergelijking
 /Users/<user>/Desktop/scripts/wordif.sh -d oud nieuw
 .DE
-en save deze naar Desktop/\:
+en save deze naar `Desktop/\:'
 .IP "\m[blue]7." 3
-Plaats in de mappen `oud/\:' en `nieuw/\:' de te vergel\[ij]ken bestanden en volg daarb\[ij] de regels in `wordif_\:doc.pdf'
+Plaats de te vergel\[ij]ken tekstbestanden in de mappen `oud/\:' en `nieuw/\:' en volg daarb\[ij] de regels in `wordif_\:doc.pdf'
 .IP "\m[blue]8." 3
-Een dubbelklik op `Launch Wordif App' maakt nu een diff/\: map aan (als die nog niet bestond) met daarin
-de verschilbestanden van de inhoud van oud/\: en nieuw/\:
+Een (dubbel)klik op `Launch Wordif App' maakt nu een `diff/\:' map aan (als die nog niet bestond) met daarin
+de verschilbestanden van de inhoud van `oud/\:' en `nieuw/\:'
