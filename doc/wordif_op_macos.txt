@@ -18,5 +18,5 @@ Stappenplan wordif.sh op MacOS laptop
 
    [/code] en save deze naar 'Desktop/'
 7. Plaats de te vergelijken tekstbestanden in de mappen 'oud/' en 'nieuw/' en volg daarbij de regels in 'wordif_doc.pdf'
-8. Een (dubbel)klik op 'Launch Wordif App' maakt nu een 'diff/' map aan (als die nog niet bestond) met daarin
+8. Een (dubbel)klik op 'Launch Wordif App' maakt nu een 'diff/' map aan (als die nog niet bestond), en plaatst daarin
    de verschilbestanden van de inhoud van 'oud/' en 'nieuw/'
