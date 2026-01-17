@@ -1,21 +1,21 @@
 Stappenplan wordif.sh op MacOS laptop
 =====================================
 
-1. Maak map 'wordif_vergelijking/' aan onder Desktop/, met daarin de subdirectories: 'oud/' en 'nieuw/'
-2. Maak map 'scripts/' aan onder Desktop/ of direct onder $HOME
-3. [INFORMATIEF] Check of wdiff() is geïnstalleerd
-4. [INFORMATIEF] Check of Python2 en/of Python3 is geïnstalleerd, en zo ja: de __future__ module
-5. [INFORMATIEF] Check of gawk() is geïnstalleerd
-6. [INFORMATIEF] Check of gcc, xcode, clang, tcc, pcc, idc of sdcc zijn geïnstalleerd (compilers)
-7. Plaats in scripts/ de bestanden wordif.sh, wdiffer2.py [VERVALLEN], wdiffer2.sh [VERVALLEN] (, wdiffer.py [VERVALLEN], wdiffer.sh [VERVALLEN]) 
-8. Maak al deze scripts executable met chmod u+x
-9. Plaats in $HOME eventueel ook nog een (aangepaste) kopie van .bashrc, .profile en .bash_aliases
-10. Maak d.m.v. Automator een 'Launch Wordif App' launcher aan (/bin/bash programma) met als inhoud: [code]
+1. Maak de map 'wordif_vergelijking/' aan onder Desktop/, met daarin de subdirectories: 'oud/' en 'nieuw/'
+2. Maak de map 'scripts/' aan onder Desktop/ of direct onder $HOME (= /Users/<user>/)
+3. Plaats in de map scripts/ het bestand 'wordif.sh' 
+4. Maak dit script executable met: [code]
+
+	chmod u+x wordif.sh
+
+   [/code]
+5. Plaats in $HOME eventueel ook een (aan de mapstructuur aangepaste) kopie van .bashrc, .profile en .bash_aliases om
+   in de terminal gemakkelijker scripts te kunnen aanroepen en aliassen te kunnen gebruiken voor veelgebruikte commando's
+6. Maak d.m.v. Automator een 'Launch Wordif App' launcher aan (/bin/bash programma) met als inhoud: [code]
 
 	cd /Users/<user>/Desktop/wordif_vergelijking
 	/Users/<user>/Desktop/scripts/wordif.sh -d oud nieuw
 
-    [/code] en save deze naar Desktop/
-11. Maak in de code van 'wordif.sh' de paden naar de wdiffer-scripts compleet, gelijk aan bovenstaande locaties [VERVALLEN].
-12. Een dubbelklik op 'Launch Wordif App' maakt nu een diff/ map aan (als die nog niet bestond) met daarin
-    de verschilbestanden van de inhoud van oud/ en nieuw/
+   [/code] en save deze naar Desktop/
+7. Een dubbelklik op 'Launch Wordif App' maakt nu een diff/ map aan (als die nog niet bestond) met daarin
+   de verschilbestanden van de inhoud van oud/ en nieuw/

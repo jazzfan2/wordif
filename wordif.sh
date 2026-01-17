@@ -291,7 +291,8 @@ shift $(( OPTIND - 1 ))
 
 [[ $# < 2 ]] && echo "Not enough arguments given" && exit 1
 
-newlinemarker="$(make_marker)"
+newlinemarker="\b"
+# newlinemarker="$(make_marker)"
 
 if [[ $args == "directories" ]]; then
 

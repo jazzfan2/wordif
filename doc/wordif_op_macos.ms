@@ -33,24 +33,21 @@ naar het TROFF-formaat, door middel van het script \f3text2troff\fP, een project
 \f[3]Stappenplan wordif.sh op MacOS laptop\[P]
 .LP
 .IP "\m[blue]1." 3
-Maak map `wordif_\:vergel\[ij]king/\:' aan onder Desktop/\:, met daarin de subdirectories: `oud/\:' en `nieuw/\:'
+Maak de map `wordif_\:vergel\[ij]king/\:' aan onder Desktop/\:, met daarin de subdirectories: `oud/\:' en `nieuw/\:'
 .IP "\m[blue]2." 3
-Maak map `scripts/\:' aan onder Desktop/\: of direct onder $HOME
+Maak de map `scripts/\:' aan onder Desktop/\: of direct onder $HOME (=\: /Users/\:<user>/\:)
 .IP "\m[blue]3." 3
-[INFORMATIEF] Check of wdiff() is geïnstalleerd
+Plaats in de map scripts/\: het bestand `wordif.sh'
 .IP "\m[blue]4." 3
-[INFORMATIEF] Check of Python2 en/\:of Python3 is geïnstalleerd, en zo ja: de __\:future_\:_ module
+Maak dit script executable met:
+.DS I 3
+.CW
+chmod u+x wordif.sh
+.DE
 .IP "\m[blue]5." 3
-[INFORMATIEF] Check of gawk() is geïnstalleerd
+Plaats in $HOME eventueel ook een (aan de mapstructuur aangepaste) kopie van \&.bashrc, \&.profile en \&.bash_\:aliases om
+in de terminal gemakkel\[ij]ker scripts te kunnen aanroepen en aliassen te kunnen gebruiken voor veelgebruikte commando's
 .IP "\m[blue]6." 3
-[INFORMATIEF] Check of gcc, xcode, clang, tcc, pcc, idc of sdcc z\[ij]n geïnstalleerd (compilers)
-.IP "\m[blue]7." 3
-Plaats in scripts/\: de bestanden wordif.sh, wdiffer2.py [VERVALLEN], wdiffer2.sh [VERVALLEN] (, wdiffer.py [VERVALLEN], wdiffer.sh [VERVALLEN])
-.IP "\m[blue]8." 3
-Maak al deze scripts executable met chmod u+\:x
-.IP "\m[blue]9." 3
-Plaats in $HOME eventueel ook nog een (aangepaste) kopie van \&.bashrc, \&.profile en \&.bash_\:aliases
-.IP "\m[blue]10." 3
 Maak d.m.v. Automator een `Launch Wordif App' launcher aan (/\:bin/\:bash programma) met als inhoud:
 .DS I 3
 .CW
@@ -58,8 +55,6 @@ cd /Users/<user>/Desktop/wordif_vergelijking
 /Users/<user>/Desktop/scripts/wordif.sh -d oud nieuw
 .DE
 en save deze naar Desktop/\:
-.IP "\m[blue]11." 3
-Maak in de code van `wordif.sh' de paden naar de wdiffer-scripts compleet, gel\[ij]k aan bovenstaande locaties [VERVALLEN].
-.IP "\m[blue]12." 3
+.IP "\m[blue]7." 3
 Een dubbelklik op `Launch Wordif App' maakt nu een diff/\: map aan (als die nog niet bestond) met daarin
 de verschilbestanden van de inhoud van oud/\: en nieuw/\:
