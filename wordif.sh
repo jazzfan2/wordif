@@ -17,14 +17,19 @@
 # The results are stored as color-marked difference-files in HTML-,
 # or (optionally) PDF-format.
 #
-# Usage:  wordif.sh   [-p]  FILE1       FILE2
-#         wordif.sh -d[-p]  DIRECTORY1  DIRECTORY2
+# Usage:  wordif.sh   [-c:C:op]  FILE1       FILE2
+#         wordif.sh -d[-c:C:op]  DIRECTORY1  DIRECTORY2
 # Options:
 #   -h    Help (this output)
-#   -d    Specify two directories as arguments instead of two files;
+#   -c RGBHEX
+#         Specify 'deleted-text' color by 6-digit hex-rgb-value (default: ff0000 [red])
+#   -C RGBHEX
+#         Specify 'inserted-text' color by 6-digit hex-rgb-value (default: 00ff00 [green])
+#   -d    Specify two directories as arguments rather than two files;
 #         Compare each file in 1st directory to equally unique-numbered
 #         file in 2nd directory
-#   -p    Output as PDF- instead of HTML-files
+#   -o    Send HTML-text to stdout rather than to file
+#   -p    Convert HTML-text and save to PDF-file
 #
 # Prerequisite:
 # - wkhtmltopdf (if output to PDF is desired)
@@ -50,13 +55,12 @@
 #
 ######################################################################################
 
-# Standard arguments:
+# Default arguments:
 args="files"
 
-# The color markings:
-delete_start="<span style=\"font-weight:bold;color:#ff0000;\">"
-insert_start="<span style=\"font-weight:bold;color:#00ff00;\">"
-end="</span>"
+# Default deletion- and insertion-colors:
+delhex="ff0000"
+inshex="00ff00"
 
 # Escape < and > to prevent interpretation as HTML-syntax (tags):
 esc_html="s/</\&lt;/g; s/>/\&gt;/g"
@@ -71,7 +75,7 @@ html_coda="
 outputdir="./"
 
 # Standard output-format:
-format="html"
+format="html_file"
 
 
 # FUNCTIONS:
@@ -79,14 +83,28 @@ format="html"
 
 options(){
 # Specify options:
-    while getopts "dhp" OPTION; do
+    while getopts "c:C:dhop" OPTION; do
         case $OPTION in
+            c) if grep -qE "^[0-9a-fA-F]{6}$" <(echo "$OPTARG"); then
+                   delhex="$OPTARG"
+               else
+                   helptext && exit 1
+               fi
+               ;;
+            C) if grep -qE "^[0-9a-fA-F]{6}$" <(echo "$OPTARG"); then
+                   inshex="$OPTARG"
+               else
+                   helptext && exit 1
+               fi
+               ;;
             d) args="directories"
                ;;
             h) helptext
                exit 0
                ;;
-            p) format="pdf"
+            o) format="html_stdout"
+               ;;
+            p) format="pdf_file"
                ;;
             *) helptext
                exit 1
@@ -102,13 +120,18 @@ helptext()
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
 Usage:
-|        wordif.sh   [-p]  FILE1       FILE2
-|        wordif.sh -d[-p]  DIRECTORY1  DIRECTORY2
+|        wordif.sh   [-c:C:op]  FILE1       FILE2
+|        wordif.sh -d[-c:C:op]  DIRECTORY1  DIRECTORY2
 |
 |-h      Help (this output)
-|-d      Specify two directories as arguments instead of two files;
+|-c RGBHEX
+|        Specify 'deleted-text' color by 6-digit hex-rgb-value (default: ff0000 [red])
+|-C RGBHEX
+|        Specify 'inserted-text' color by 6-digit hex-rgb-value (default: 00ff00 [green])
+|-d      Specify two directories as arguments rather than two files;
 |        Compare each file in 1st directory to equally unique-numbered file in 2nd directory
-|-p      Output as PDF- instead of HTML-files
+|-o      Send HTML-text to stdout rather than to file
+|-p      Convert HTML-text and save to PDF-file
 EOF
 }
 
@@ -130,8 +153,8 @@ checkrepeat()
     if [[ -n "$repeatnum" ]]; then
         qty=$(wc -w <<< "$repeatnum")
         num=${repeatnum/ */}
-        echo "WARNING: Number $num appears in $qty file-names in the $2."
-        echo "Only one file with $num was compared with a (possibly wrong) file in the $3."
+        echo "WARNING: Number $num appears in $qty file-names in the $2." >&2
+        echo "Only one file with $num was compared with a (possibly wrong) file in the $3." >&2
     fi
 }
 
@@ -195,9 +218,9 @@ makediff()
         # Do nothing if a <NUMBER> is missing. and issue warning if it misses in one directory only:
         if ([[ -z "$file1" ]] || [[ -z "$file2" ]]); then
             if [[ -n "$file1" ]]; then
-                echo "WARNING: Number $NUMBER appears in 1st directory only, not in 2nd directory."
+                echo "WARNING: Number $NUMBER appears in 1st directory only, not in 2nd directory." >&2
             elif [[ -n "$file2" ]]; then
-                echo "WARNING: Number $NUMBER appears in 2nd directory only, not in 1st directory."
+                echo "WARNING: Number $NUMBER appears in 2nd directory only, not in 1st directory." >&2
             fi
             return
         fi
@@ -207,7 +230,7 @@ makediff()
             file1="$1"
             file2="$2"
         else
-            echo "ERROR: Do not specify directories"
+            echo "ERROR: Do not specify directories" >&2
             return 1
         fi
     fi
@@ -228,13 +251,15 @@ makediff()
 }
 
 store2file()
-# Store text stream to HTML-file, or (if option -p is given) convert to PDF-file:
+# Save HTML-text-stream to file, or (option -o) send to stdout, or (option -p) convert to PDF-file:
 {
     file="$1"
     NUMBER="$2"
-    if [[ $format == "html" ]]; then
+    if [[ $format == "html_file" ]]; then
         cat "$file" >| "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.html"
-    else
+    elif [[ $format == "html_stdout" ]]; then
+        cat "$file"  # To be handled further by e.g. 'bcat()' or any other "pipe2browser" program
+    elif [[ $format == "pdf_file" ]]; then
         wkhtmltopdf "$file" "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.pdf" 2>/dev/null
     fi
 }
@@ -247,12 +272,17 @@ store2file()
 options "$@"
 shift $(( OPTIND - 1 ))
 
-[[ $# < 2 ]] && echo "Not enough arguments given" && exit 1
+[[ $# < 2 ]] && echo "Not enough arguments given"  >&2 && exit 1
+
+# The HTML deletion- and insertion-tags:
+delete_start="<span style=\"font-weight:bold;color:#$delhex;\">"
+insert_start="<span style=\"font-weight:bold;color:#$inshex;\">"
+end="</span>"
 
 if [[ $args == "directories" ]]; then
 
     # Check if given directories exist:
-    ([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Specify existing directories." && exit 1
+    ([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Specify existing directories."  >&2 && exit 1
 
     # Create the ./diff/-directory, unless it already exists:
     [[ ! -d ./diff ]] && mkdir ./diff
@@ -279,9 +309,11 @@ if [[ $args == "directories" ]]; then
     done
 
     # Conclusion:
-    echo "READY! - Please find all results in $(pwd)/diff/"
+    echo "READY! - Please find all results in $(pwd)/diff/" >&2
 
 else
     # In case of files instead of directories as arguments:
     makediff "$1" "$2"
 fi
+
+
