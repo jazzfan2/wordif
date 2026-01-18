@@ -22,9 +22,9 @@
 # Options:
 #   -h    Help (this output)
 #   -c RGBHEX
-#         Specify 'deleted-text' color by 6-digit hex-rgb-value (default: ff0000 [red])
+#         Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
 #   -C RGBHEX
-#         Specify 'inserted-text' color by 6-digit hex-rgb-value (default: 00ff00 [green])
+#         Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 #   -d    Specify two directories as arguments rather than two files;
 #         Compare each file in 1st directory to equally unique-numbered
 #         file in 2nd directory
@@ -125,9 +125,9 @@ Usage:
 |
 |-h      Help (this output)
 |-c RGBHEX
-|        Specify 'deleted-text' color by 6-digit hex-rgb-value (default: ff0000 [red])
+|        Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
 |-C RGBHEX
-|        Specify 'inserted-text' color by 6-digit hex-rgb-value (default: 00ff00 [green])
+|        Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 |-d      Specify two directories as arguments rather than two files;
 |        Compare each file in 1st directory to equally unique-numbered file in 2nd directory
 |-o      Send HTML-text to stdout rather than to file
