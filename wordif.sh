@@ -215,7 +215,7 @@ makediff()
     (print_html_intro "$file2"
 
     # Compare both files to each other and generate color-marked difference-file:
-    diff -bBZ --strip-trailing-cr                 \
+    diff -B --strip-trailing-cr                   \
          --old-group-format="$delete_start%<$end" \
          --new-group-format="$insert_start%>$end" \
          --unchanged-group-format='%='            \
