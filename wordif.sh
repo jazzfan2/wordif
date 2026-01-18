@@ -166,9 +166,9 @@ splitwords()
 # Place all words on a separate line, while preserving original newlines, spaces and tabs:
 {
     awk '{
-        gsub(/^/, "\b")
-        gsub(/ /, "\n")
-        gsub(/\t/, "\n\t\n")
+        gsub(/^/, "\b")       # Place backspace at beginning of line as to mark original "new line"
+        gsub(/ /, "\n")       # Replace space by newline, putting each word on a separate line
+        gsub(/\t/, "\n\t\n")  # Put tab (tabulation) on a separate line as to treat it like a word
         print
     }' "$1"
 }
@@ -176,9 +176,9 @@ splitwords()
 joinwords()
 # Place all words on the same line again and restore original newlines:
 {
-    tr '\n' ' ' |
+    tr '\n' ' ' |             # Restore original space from each (temporary) newline
     awk '{
-        gsub(/\b/, "\n")
+        gsub(/\b/, "\n")      # Restore original newline from each (temporary) backspace
         print
     }' -
 }
