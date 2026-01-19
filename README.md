@@ -24,14 +24,19 @@ start with same unique number, followed by an underscore.
 # How to use wordif.sh:
 Usage:
 
-	wordif.sh   [-p]  FILE1       FILE2
-	          -d[-p]  DIRECTORY1  DIRECTORY2
+	wordif.sh   [-c:C:op]  FILE1       FILE2
+	          -d[-c:C:op]  DIRECTORY1  DIRECTORY2
 
 Options:
 
 	-h       Help (this output)
+    -c RGBHEX
+             Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
+    -C RGBHEX
+             Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 	-d       Specify two directories as arguments instead of two text-files;
 	         Compare each file in 1st directory to equally unique-numbered file in 2nd directory
+    -o       Send HTML-text to stdout rather than to file
     -p       Output as PDF- instead of HTML-files
 
 

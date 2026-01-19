@@ -1,0 +1,88 @@
+./" Manpage for your_function
+.TH WORDIF 1 "19 January 2026" "0.0"
+.
+.
+.
+.SH NAME
+wordif \(en compares plain-text-files word-by-word, and stores color-marked results in HTML-format.
+.
+.
+.
+.SH SYNOPSIS
+wordif     [\fIoptions\fP]  \fIfile1\fP  \fIfile2\fP
+.br
+wordif  -d [\fIoptions\fP]  \fIdirectory1\fP  \fIdirectory2\fP
+.
+.
+.SH DESCRIPTION
+wordif is a wrapper script around the diff(1) utility,
+that compares two plain-text-files word-by-word in very much the same way as wdiff(1).
+The resulting HTML 'difference-file(s)' is/are either:
+.IP -
+stored as a disk file (default), or
+.IP -
+send to stdout (with option -o), or
+.IP -
+converted to PDF-format and stored to disk (with option -p)
+.LP
+A difference-file is a unification of the two input text-files, preserving original text sequence.
+Text present in both files is black. (Groups of) words locally missing in one of the two files
+are color-tagged as follows:
+.IP -
+deleted text (i.e.: present in the 1st file, and not present (there) in the 2nd file) is red (default),
+or of any color desired (per option -c);
+.IP -
+inserted text (i.e.: present in the 2nd file and not present (there) in the 1st file) is green (default),
+or of any color desired (per option -C);
+.LP
+With option -d, wordif acts on two directories instead of two text-files,
+It then compares each text-file in directory1 to its equivalent in directory2.
+To correctly associate each pair of files shared by both directories,
+their file names must start with same unique number, followed by an underscore.
+.LP
+The resulting difference-files are collected in a directory named diff/,
+which is either newly created \(en on the same level as both given directories \(en or re-used,
+if already present there.
+.LP
+The name of the difference-file is structured as: \fCDATE_TIME_’diff’_NUMBER'.'EXT\fP,
+with
+.IP DATE_TIME
+the system's response to the command: \fCdate +"%Y%m%d_%H%M"\fP
+.IP NUMBER
+the unique number in case of option -d or the NULL-string otherwise
+.IP EXT
+the appropriate file-extension: 'html' or 'pdf'
+.LP
+.
+.
+.
+.SH OPTIONS
+wordif takes the following options:
+.IP "\fB-h\fP"
+Help (this output)
+.IP "\fB-c RGBHEX\fP"
+Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
+.IP "\fB-C RGBHEX\fP"
+Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
+.IP "\fB-d\fP"
+Specify two directories as arguments instead of two text-files;
+Compare each file in 1st directory to equally unique-numbered file in 2nd directory
+.IP "\fB-o\fP"
+Send HTML-text to stdout rather than to file
+.IP "\fB-p\fP"
+Output as PDF- instead of HTML-files
+.
+.
+.
+.SH COMPATIBILITY
+The program 'wkhtmltopdf' must be installed on the system if output to PDF per option -p is desired.
+.
+.
+.
+.SH AUTHOR
+Written by Rob Toscani (rob_toscani@yahoo.com)
+.
+.
+.
+.SH REPORTING BUGS
+Please report any bugs to the author by e-mail or via https://github.com/jazzfan2/wordif/issues
