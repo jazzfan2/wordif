@@ -35,7 +35,7 @@ Options:
     -C RGBHEX
              Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 	-d       Specify two directories as arguments instead of two text-files;
-	         Compare each file in directory2 to equally unique-numbered file in directory1
+	         Compare each file in directory2 to the equally unique-numbered file in directory1
     -o       Send HTML-text to stdout rather than to file
     -p       Output as PDF- instead of HTML-files
 
