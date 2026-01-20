@@ -11,8 +11,8 @@ Results are stored as color-marked difference-files in HTML-format, or in PDF-fo
 A difference-file is a unification of the two input text-files, preserving original text sequence.
 Text present in both files is printed in black. (Groups of) words locally missing in one of the two files
 are color-marked as follows:
-- red text is present in the 1st file, and not present (there) in the 2nd file;
-- green text is present in the 2nd file and not present (there) in the 1st file;
+- bolt red text is present in the 1st file, and not present (there) in the 2nd file;
+- bolt green text is present in the 2nd file and not present (there) in the 1st file;
 
 With option -d, wordif.sh acts on two directories instead of two text-files.
 It then compares each text-file in the 2nd directory to its associated text-file in the 1st directory.
@@ -31,9 +31,9 @@ Options:
 
 	-h       Help (this output)
     -c RGBHEX
-             Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
+             Specify 'deleted-text' color by 6-digit hexadecimal rgb-value (default: ff0000 [red])
     -C RGBHEX
-             Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
+             Specify 'inserted-text' color by 6-digit hexadecimal rgb-value (default: 00ff00 [green])
 	-d       Specify two directories as arguments instead of two text-files;
 	         Compare each file in directory2 to the equally unique-numbered file in directory1
     -o       Send HTML-text to stdout rather than to file

@@ -30,10 +30,10 @@ Text present in both files is black. (Groups of) words locally missing in one of
 are color-tagged as follows:
 .IP -
 deleted text \(en i.e.: present in file1, and not present (there) in file2 \(en is bolt red (default),
-or of any color desired (per option -c);
+or of any desired color (per option -c);
 .IP -
 inserted text \(en i.e.: present in file2 and not present (there) in file1 \(en is bolt green (default),
-or of any color desired (per option -C);
+or of any desired color (per option -C);
 .LP
 With option -d, wordif acts on two directories instead of two text-files,
 It then compares each text-file in directory2 to its equivalent in directory1.
@@ -61,12 +61,12 @@ wordif takes the following options:
 .IP "\fB-h\fP"
 Help, showing usage and options listing
 .IP "\fB-c RGBHEX\fP"
-Specify 'deleted-text' color by 6-digit rgb hexadecimal value (default: ff0000 [red])
+Specify 'deleted-text' color by 6-digit hexadecimal rgb-value (default: ff0000 [red])
 .IP "\fB-C RGBHEX\fP"
-Specify 'inserted-text' color by 6-digit rgb hexadecimal value (default: 00ff00 [green])
+Specify 'inserted-text' color by 6-digit hexadecimal rgb-value (default: 00ff00 [green])
 .IP "\fB-d\fP"
-Specify two directories as arguments instead of two text-files;
-Compare each file in directory2 to equally unique-numbered file in directory1
+Specify two directories as arguments instead of two text-files.
+Compare each file in directory2 to the equally unique-numbered file in directory1
 .IP "\fB-o\fP"
 Send HTML-text to stdout rather than to file
 .IP "\fB-p\fP"
