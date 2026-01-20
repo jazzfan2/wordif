@@ -29,10 +29,10 @@ A difference-file is a unification of the two input text-files, preserving origi
 Text present in both files is black. (Groups of) words locally missing in one of the two files
 are color-tagged as follows:
 .IP -
-deleted text \(en i.e.: present in file1, and not present (there) in file2 \(en is red (default),
+deleted text \(en i.e.: present in file1, and not present (there) in file2 \(en is bolt red (default),
 or of any color desired (per option -c);
 .IP -
-inserted text \(en i.e.: present in file2 and not present (there) in file1 \(en is green (default),
+inserted text \(en i.e.: present in file2 and not present (there) in file1 \(en is bolt green (default),
 or of any color desired (per option -C);
 .LP
 With option -d, wordif acts on two directories instead of two text-files,
@@ -61,9 +61,9 @@ wordif takes the following options:
 .IP "\fB-h\fP"
 Help, showing usage and options listing
 .IP "\fB-c RGBHEX\fP"
-Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
+Specify 'deleted-text' color by 6-digit rgb hexadecimal value (default: ff0000 [red])
 .IP "\fB-C RGBHEX\fP"
-Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
+Specify 'inserted-text' color by 6-digit rgb hexadecimal value (default: 00ff00 [green])
 .IP "\fB-d\fP"
 Specify two directories as arguments instead of two text-files;
 Compare each file in directory2 to equally unique-numbered file in directory1
