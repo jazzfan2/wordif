@@ -24,8 +24,8 @@ start with same unique number, followed by an underscore.
 # How to use wordif.sh:
 Usage:
 
-	wordif.sh   [-c:C:op]  FILE1       FILE2
-	          -d[-c:C:op]  DIRECTORY1  DIRECTORY2
+	wordif.sh   [OPTIONS]  FILE1       FILE2
+	          -d[OPTIONS]  DIRECTORY1  DIRECTORY2
 
 Options:
 
