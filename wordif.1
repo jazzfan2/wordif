@@ -36,7 +36,7 @@ inserted text \(en i.e.: present in file2 and not present (there) in file1 \(en 
 or of any color desired (per option -C);
 .LP
 With option -d, wordif acts on two directories instead of two text-files,
-It then compares each text-file in directory1 to its equivalent in directory2.
+It then compares each text-file in directory2 to its equivalent in directory1.
 To correctly associate each pair of files shared by both directories,
 their file names must start with same unique number, followed by an underscore.
 .LP
@@ -66,7 +66,7 @@ Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
 Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 .IP "\fB-d\fP"
 Specify two directories as arguments instead of two text-files;
-Compare each file in 1st directory to equally unique-numbered file in 2nd directory
+Compare each file in directory2 to equally unique-numbered file in directory1
 .IP "\fB-o\fP"
 Send HTML-text to stdout rather than to file
 .IP "\fB-p\fP"
