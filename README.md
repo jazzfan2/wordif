@@ -15,7 +15,7 @@ are color-marked as follows:
 - green text is present in the 2nd file and not present (there) in the 1st file;
 
 With option -d, wordif.sh acts on two directories instead of two text-files.
-It then compares each text-file in the 1st directory to its associated text-file in the 2nd directory.
+It then compares each text-file in the 2nd directory to its associated text-file in the 1st directory.
 The resulting difference-files are collected in a difference-directory.
 
 To correctly associate two files in either directory to each other, their respective file names must
@@ -35,7 +35,7 @@ Options:
     -C RGBHEX
              Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 	-d       Specify two directories as arguments instead of two text-files;
-	         Compare each file in 1st directory to equally unique-numbered file in 2nd directory
+	         Compare each file in directory2 to equally unique-numbered file in directory1
     -o       Send HTML-text to stdout rather than to file
     -p       Output as PDF- instead of HTML-files
 

@@ -17,8 +17,8 @@
 # The results are stored as color-marked difference-files in HTML-,
 # or (optionally) PDF-format.
 #
-# Usage:  wordif.sh   [-c:C:op]  FILE1       FILE2
-#         wordif.sh -d[-c:C:op]  DIRECTORY1  DIRECTORY2
+# Usage:  wordif.sh   [OPTIONS]  FILE1       FILE2
+#         wordif.sh -d[OPTIONS]  DIRECTORY1  DIRECTORY2
 # Options:
 #   -h    Help (this output)
 #   -c RGBHEX
@@ -26,8 +26,7 @@
 #   -C RGBHEX
 #         Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 #   -d    Specify two directories as arguments rather than two files;
-#         Compare each file in 1st directory to equally unique-numbered
-#         file in 2nd directory
+#         Compare each file in directory2 to equally unique-numbered file in directory1
 #   -o    Send HTML-text to stdout rather than to file
 #   -p    Convert HTML-text and save to PDF-file
 #
@@ -120,8 +119,8 @@ helptext()
         echo "$line" >&2         # print to standard error (stderr)
     done << EOF
 Usage:
-|        wordif.sh   [-c:C:op]  FILE1       FILE2
-|        wordif.sh -d[-c:C:op]  DIRECTORY1  DIRECTORY2
+|        wordif.sh   [OPTIONS]  FILE1       FILE2
+|        wordif.sh -d[OPTIONS]  DIRECTORY1  DIRECTORY2
 |
 |-h      Help (this output)
 |-c RGBHEX
@@ -129,7 +128,7 @@ Usage:
 |-C RGBHEX
 |        Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 |-d      Specify two directories as arguments rather than two files;
-|        Compare each file in 1st directory to equally unique-numbered file in 2nd directory
+|        Compare each file in directory2 to equally unique-numbered file in directory1
 |-o      Send HTML-text to stdout rather than to file
 |-p      Convert HTML-text and save to PDF-file
 EOF
