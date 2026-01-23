@@ -1,8 +1,8 @@
 Installatie van WORDIF:
 =======================
-1. Pak het archiefbestand 'WORDIF.zip' uit;
-2. Plaats de resulterende map 'WORDIF' op het Bureaublad;
-3. In de map 'WORDIF' vind je:
+1. Plaats het archiefbestand 'WORDIF.zip' op het Bureaublad;
+2. Pak 'WORDIF.zip' daar uit;
+3. In de resulterende map 'WORDIF' vind je:
 - de twee mappen 'oud/' en 'nieuw/', deze zijn bedoeld om de te vergelijken tekstbestanden in te plaatsen;
 - het bestand 'wordif.sh', het vergelijkingsprogramma;
 - het bestand 'GETDIFF.py', de 'knop' waarmee 'wordif.sh' wordt gestart;

@@ -12,4 +12,4 @@ import os
 
 dirpath = os.path.dirname( __file__ )    # De locatie van dit python-script
 
-os.system('cd ' + dirpath + '; ./wordif.sh -d ./oud ./nieuw')
+os.system('cd \"' + dirpath + '\"; ./wordif.sh -d ./oud ./nieuw')
