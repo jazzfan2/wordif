@@ -1,29 +1,29 @@
 Installatie van WORDIF:
 =======================
-1. Pak het archiefbestand ‘WORDIF.zip’ uit;
-2. Plaats de resulterende map ‘WORDIF’ op het Bureaublad;
-3. In de map ‘WORDIF’ vind je:
-- de twee mappen ‘oud/‘ en ‘nieuw/‘, deze zijn bedoeld om de te vergelijken tekstbestanden in te plaatsen;
-- het bestand ‘wordif.sh’, het vergelijkingsprogramma;
-- het bestand ‘GETDIFF.py’, de 'knop' waarmee ‘wordif.sh’ wordt gestart;
+1. Pak het archiefbestand 'WORDIF.zip' uit;
+2. Plaats de resulterende map 'WORDIF' op het Bureaublad;
+3. In de map 'WORDIF' vind je:
+- de twee mappen 'oud/' en 'nieuw/', deze zijn bedoeld om de te vergelijken tekstbestanden in te plaatsen;
+- het bestand 'wordif.sh', het vergelijkingsprogramma;
+- het bestand 'GETDIFF.py', de 'knop' waarmee 'wordif.sh' wordt gestart;
 - deze handleiding 'Instruction.pdf'
 
 Procedure vergelijking platte tekstbestanden:
 =============================================
-1. Open de map ‘WORDIF’;
-2. Plaats van elk te vergelijken PLAT tekstbestand één oude versie in de map ‘oud/‘, en één nieuwe versie in de map ‘nieuw/‘;
+1. Open de map 'WORDIF';
+2. Plaats van elk te vergelijken PLAT tekstbestand één oude versie in de map 'oud/', en één nieuwe versie in de map 'nieuw/';
 3. De namen van beide versies van een bestand moeten beginnen met hetzelfde UNIEKE NUMMER, gevolgd door een underscore; daarna zijn spaties toestaan;
 4. Er geldt géén bovengrens voor het aantal te vergelijken tekstbestanden;
-5. Dubbelklik nu op het bestand ‘GETDIFF.py’ om het programma te starten;
-6. In een derde map ‘diff/‘ worden nu automatisch de resultaten geplaatst van de vergelijking tussen de versies in ‘oud/’ en ‘nieuw/’ van alle bestanden;
+5. Dubbelklik nu op het bestand 'GETDIFF.py' om het programma te starten;
+6. In een derde map 'diff/' worden nu automatisch de resultaten geplaatst van de vergelijking tussen de versies in 'oud/' en 'nieuw/' van alle bestanden;
 7. Van elk resultaat-bestand is de naam als volgt opgebouwd: [code]
 
-	DATUM_TIJD_’diff’_NUMMER’.html’
+	DATUM_TIJD_'diff'_NUMMER'.html'
 
 [/code]
 
 Opmerkingen:
 ============
-- Als in ‘diff/‘ al eerdere resultaten stonden, dan worden de nieuwe resultaten erbij geplaatst;
-- Indien gewenst mag de map ‘diff/‘ en/of de inhoud ervan worden verwijderd, evenals de INHOUD van ‘oud/‘ en ‘nieuw/‘;
-- Indien de map ‘diff/‘ niet aanwezig is, dan wordt deze bij elke druk op de ‘GETDIFF.py’-knop opnieuw aangemaakt - met inhoud.
+- De map 'diff/' en/of de inhoud ervan kunnen naar believen worden verwijderd, evenals de INHOUD van 'oud/' en 'nieuw/';
+- Indien 'diff/' al resultaten bevat van eerdere vergelijkingen, dan worden de nieuwe resultaten erbij geplaatst;
+- Bij afwezigheid van 'diff/' wordt deze bij een volgende dubbelklik op 'GETDIFF.py' opnieuw aangemaakt met actuele inhoud.
