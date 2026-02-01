@@ -28,7 +28,7 @@
 #   -d    Specify two directories as arguments rather than two files;
 #         Compare each file in directory2 to the equally unique-numbered file in directory1
 #   -o    Send HTML-text to stdout rather than to file
-#   -p    Convert HTML-text and save to PDF-file
+#   -p    Convert HTML-text and save to PDF-file; this option overrides option -o
 #
 # Prerequisite:
 # - wkhtmltopdf (if output to PDF is desired)
@@ -101,7 +101,9 @@ options(){
             h) helptext
                exit 0
                ;;
-            o) format="html_stdout"
+            o) if [[ $format !=  "pdf_file" ]]; then
+                   format="html_stdout"
+               fi
                ;;
             p) format="pdf_file"
                ;;
@@ -130,7 +132,7 @@ Usage:
 |-d      Specify two directories as arguments rather than two files;
 |        Compare each file in directory2 to the equally unique-numbered file in directory1
 |-o      Send HTML-text to stdout rather than to file
-|-p      Convert HTML-text and save to PDF-file
+|-p      Convert HTML-text and save to PDF-file; this option overrides option -o
 EOF
 }
 
@@ -224,14 +226,8 @@ makediff()
             return
         fi
     else
-        # If arguments are supposed to be files, verify that no directories are being given:
-        if [[ ! -d "$1" ]] && [[ ! -d "$2" ]]; then
-            file1="$1"
-            file2="$2"
-        else
-            echo "ERROR: Do not specify directories" >&2
-            return 1
-        fi
+        file1="$1"
+        file2="$2"
     fi
 
     (print_html_intro "$file2"
@@ -312,7 +308,12 @@ if [[ $args == "directories" ]]; then
 
 else
     # In case of files instead of directories as arguments:
-    makediff "$1" "$2"
+    if [[ -f  "$1" ]] && [[ -f "$2" ]]; then
+        makediff "$1" "$2"
+    else
+        echo "ERROR: Specify existing files and no directories" >&2
+        exit 1
+    fi
 fi
 
 
