@@ -223,7 +223,6 @@ joinwords()
     tr '\n' ' ' |             # Restore original space from each (temporary) newline
     awk '{
         gsub(/\b/, "\n")      # Restore original newline from each (temporary) backspace
-        gsub(/ \t /, "\t")    # Restore original tab
         gsub(/ \n/, "\n")     # Remove single trailing space
         print
     }' -
