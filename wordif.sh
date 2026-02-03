@@ -275,7 +275,6 @@ store2file()
     if [[ $format == "html_file" ]]; then
         cat "$file" >| "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.html"
     elif [[ $format == "html_stdout" ]]; then
-        # To be handled further by e.g. 'bcat()' or any other "pipe2browser" program:
         cat "$file"
     elif [[ $format == "pdf_file" ]]; then
         wkhtmltopdf "$file" "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.pdf" 2>/dev/null
@@ -345,8 +344,8 @@ if [[ $args == "directories" ]]; then
     while (( NUMBER <= max )); do
         makediff "$1" "$2" $NUMBER
         (( NUMBER += 1 ))
-    done | htmlcat -        # Send to stdout in case of option -o
-
+    done | htmlcat -        # Send to stdout in case of option -o to be handled further by
+                            # e.g. 'bcat()' or any other "pipe2browser" program.
     # Conclusion:
     [[ $format != "html_stdout" ]] && echo "READY! - Please find all results in $(pwd)/diff/" >&2
 
