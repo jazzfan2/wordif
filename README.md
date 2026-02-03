@@ -36,8 +36,19 @@ Options:
              Specify 'inserted-text' color by 6-digit hexadecimal rgb-value (default: 00ff00 [green])
 	-d       Specify two directories as arguments instead of two text-files;
 	         Compare each file in directory2 to the equally unique-numbered file in directory1
+    -f FONT
+             Character-font instead of default Courier New:
+             FONT  = H   Helvetica
+                     h   Helvetica Narrow
+                     c   Courier
+                     n   New Century Schoolbook
+                     p   Palatino
+                     T   Times New Roman
+                     t   Times
     -o       Send HTML-text to stdout rather than to file
     -p       Output as PDF- instead of HTML-files; this option overrides option -o
+    -z SIZE
+|            Character size in pts
 
 
 # Author:

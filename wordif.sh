@@ -15,20 +15,7 @@
 #         with equally numbered name, shared by given two directories.
 #
 # The results are stored as color-marked difference-files in HTML-,
-# or (optionally) PDF-format.
-#
-# Usage:  wordif.sh   [OPTIONS]  FILE1       FILE2
-#         wordif.sh -d[OPTIONS]  DIRECTORY1  DIRECTORY2
-# Options:
-#   -h    Help (this output)
-#   -c RGBHEX
-#         Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
-#   -C RGBHEX
-#         Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
-#   -d    Specify two directories as arguments rather than two files;
-#         Compare each file in directory2 to the equally unique-numbered file in directory1
-#   -o    Send HTML-text to stdout rather than to file
-#   -p    Convert HTML-text and save to PDF-file; this option overrides option -o
+# or (optionally) PDF-format, or (optionally) sent to stdout in HTML-format.
 #
 # Prerequisite:
 # - wkhtmltopdf (if output to PDF is desired)
@@ -76,13 +63,19 @@ outputdir="./"
 # Standard output-format:
 format="html_file"
 
+# Standard character font:
+font="\"Courier New\", monospace"
+
+# Standard character size:
+size=12
+
 
 # FUNCTIONS:
 # ==========
 
 options(){
 # Specify options:
-    while getopts "c:C:dhop" OPTION; do
+    while getopts "c:C:df:hopz:" OPTION; do
         case $OPTION in
             c) if grep -qE "^[0-9a-fA-F]{6}$" <(echo "$OPTARG"); then
                    delhex="$OPTARG"
@@ -98,6 +91,16 @@ options(){
                ;;
             d) args="directories"
                ;;
+            f) if   [[ $OPTARG == H ]]; then font="\"Helvetica\", sans-serif"
+               elif [[ $OPTARG == h ]]; then font="\"Helvetica Narrow\", sans-serif" 
+               elif [[ $OPTARG == c ]]; then font="\"Courier\", monospace"
+               elif [[ $OPTARG == n ]]; then font="\"New Century Schoolbook\", serif"
+               elif [[ $OPTARG == p ]]; then font="\"Palatino\", serif"
+               elif [[ $OPTARG == T ]]; then font="\"Times New Roman\", serif"
+               elif [[ $OPTARG == t ]]; then font="\"Times\", serif"
+               else                          font="\"Courier New\", monospace"
+               fi
+               ;;
             h) helptext
                exit 0
                ;;
@@ -106,6 +109,12 @@ options(){
                fi
                ;;
             p) format="pdf_file"
+               ;;
+            z) if grep -qE "^[[:digit:]]*\.?[[:digit:]]+$" <<<"$OPTARG"; then
+                   size=$OPTARG
+               else
+                   helptext && exit 1
+               fi
                ;;
             *) helptext
                exit 1
@@ -124,15 +133,26 @@ Usage:
 |        wordif.sh   [OPTIONS]  FILE1       FILE2
 |        wordif.sh -d[OPTIONS]  DIRECTORY1  DIRECTORY2
 |
-|-h      Help (this output)
-|-c RGBHEX
-|        Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
-|-C RGBHEX
+-h       Help (this output)
+-c RGBHEX
+|         Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
+-C RGBHEX
 |        Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
-|-d      Specify two directories as arguments rather than two files;
+-d       Specify two directories as arguments rather than two files;
 |        Compare each file in directory2 to the equally unique-numbered file in directory1
-|-o      Send HTML-text to stdout rather than to file
-|-p      Convert HTML-text and save to PDF-file; this option overrides option -o
+-f FONT
+|        Character-font instead of default Courier New:
+|        FONT  = H   Helvetica
+|                h   Helvetica Narrow
+|                c   Courier
+|                n   New Century Schoolbook
+|                p   Palatino
+|                T   Times New Roman
+|                t   Times
+-o       Send HTML-text to stdout rather than to file
+-p       Convert HTML-text and save to PDF-file; this option overrides option -o
+-z SIZE
+|        Character size in pts
 EOF
 }
 
@@ -169,14 +189,14 @@ print_html_intro()
 <meta charset=\"utf8\">
 <style type=\"text/css\">
 pre {
-  font-family:Courier New;
-  font-size:12pt;
+  font-family: "$font";
+  font-size:   "$size"pt;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   white-space: -webkit-pre-wrap;
-  word-wrap: break-word;
+  word-wrap:   break-word;
 }
 </style>
 <title>$1</title>
@@ -203,6 +223,8 @@ joinwords()
     tr '\n' ' ' |             # Restore original space from each (temporary) newline
     awk '{
         gsub(/\b/, "\n")      # Restore original newline from each (temporary) backspace
+        gsub(/ \t /, "\t")    # Restore original tab
+        gsub(/ \n/, "\n")     # Remove single trailing space
         print
     }' -
 }
@@ -246,17 +268,39 @@ makediff()
 }
 
 store2file()
-# Save HTML-text-stream to file, or (option -o) send to stdout, or (option -p) convert to PDF-file:
+# Save HTML-text-stream to file, or (option -o) catenate, or (option -p) convert to PDF-file:
 {
     file="$1"
     NUMBER="$2"
     if [[ $format == "html_file" ]]; then
         cat "$file" >| "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.html"
     elif [[ $format == "html_stdout" ]]; then
-        cat "$file"  # To be handled further by e.g. 'bcat()' or any other "pipe2browser" program
+        # To be handled further by e.g. 'bcat()' or any other "pipe2browser" program:
+        cat "$file"
     elif [[ $format == "pdf_file" ]]; then
         wkhtmltopdf "$file" "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.pdf" 2>/dev/null
     fi
+}
+
+htmlcat()
+# Send html text-stream to stdout (option -o) while removing all headers except the first one:
+{
+    awk -v first=1 '{
+        if (first){
+            print
+            if (/^<\/head>/) first = 0
+        }
+        else{                               # If not the first header
+            if (/^<head>/)
+                head = 1
+            else if (/^<\/head>/)
+                head = 0
+            else if (! (head || /^<!DOCTYPE/)){
+                print
+                if (/^<html>/) print "<hr>" # Separation line between present and next diff-section
+            }
+        }
+    }' "$1"
 }
 
 
@@ -301,10 +345,10 @@ if [[ $args == "directories" ]]; then
     while (( NUMBER <= max )); do
         makediff "$1" "$2" $NUMBER
         (( NUMBER += 1 ))
-    done
+    done | htmlcat -        # Send to stdout in case of option -o
 
     # Conclusion:
-    echo "READY! - Please find all results in $(pwd)/diff/" >&2
+    [[ $format != "html_stdout" ]] && echo "READY! - Please find all results in $(pwd)/diff/" >&2
 
 else
     # In case of files instead of directories as arguments:
@@ -315,5 +359,3 @@ else
         exit 1
     fi
 fi
-
-
