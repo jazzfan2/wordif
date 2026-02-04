@@ -12,7 +12,7 @@
 #     a. (default) one single comparison between given two text-files,
 # or:
 #     b. (optionally) multiple comparison of all pairs of text-files
-#         with equally numbered name, shared by given two directories.
+#        with equally numbered name, shared by given two directories.
 #
 # The results are stored as color-marked difference-files in HTML-,
 # or (optionally) PDF-format, or (optionally) sent to stdout in HTML-format.
