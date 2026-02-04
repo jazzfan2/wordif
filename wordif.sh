@@ -153,7 +153,7 @@ Usage:
 -p       Convert HTML-text and save to PDF-file; this option overrides option -o
 -z SIZE
 |        Character size in pts as a replacement for 12 pts.
-|        Also accepts values with decimal point. 
+|        Also accepts values with decimal point.
 EOF
 }
 
@@ -219,14 +219,17 @@ splitwords()
 }
 
 joinwords()
-# Place all words on the same line again and restore original newlines:
+# Place all words on the same line again, restore original newlines and remove temporarily added spaces:
 {
-    tr '\n' ' ' |             # Restore original space from each (temporary) newline
-    awk '{
-        gsub(/\b/, "\n")      # Restore original newline from each (temporary) backspace
-        gsub(/ \n/, "\n")     # Remove single trailing space
-        print
-    }' -
+    # Regex-group of a series of html color-tags as a string variable:
+    taggroup="((($delete_start|$insert_start|$end)?)*)"
+    # Restore original spaces from each temporary newline (adding some temporary spaces in the process):
+    tr '\n' ' ' |
+    # Restore original newlines from each temporary backspace:
+    awk '{ gsub(/\b/, "\n"); print }' - |
+    # Remove all temporarily added single spaces: around each tab and trailing:
+    sed -E $'s_ '"$taggroup"'\t'"$taggroup"' _\1\t\2_g;
+             s_ '"$taggroup"'$_\1_'
 }
 
 makediff()
