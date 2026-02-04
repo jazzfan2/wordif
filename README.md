@@ -48,7 +48,7 @@ Options:
     -o       Send HTML-text to stdout rather than to file
     -p       Output as PDF- instead of HTML-files; this option overrides option -o
     -z SIZE
-             Character size in pts
+             Character size in pts (default 12 pts). Also accepts values with decimal point. 
 
 
 # Author:

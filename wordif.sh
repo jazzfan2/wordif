@@ -152,7 +152,8 @@ Usage:
 -o       Send HTML-text to stdout rather than to file
 -p       Convert HTML-text and save to PDF-file; this option overrides option -o
 -z SIZE
-|        Character size in pts
+|        Character size in pts as a replacement for 12 pts.
+|        Also accepts values with decimal point. 
 EOF
 }
 
@@ -295,7 +296,7 @@ htmlcat()
                 head = 0
             else if (! (head || /^<!DOCTYPE/)){
                 print
-                if (/^<html>/) print "<hr>" # Separation line between present and next diff-section
+                if (/^<html>/) print "<hr>" # Separation line between present & previous diff-section
             }
         }
     }' "$1"
