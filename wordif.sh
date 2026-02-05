@@ -231,8 +231,8 @@ joinwords()
     awk '{ gsub(/\b/, "\n"); print }' - |
 
     # Remove all temporarily added single spaces: around each tab and trailing:
-    sed -E $'s_ '"$taggroup"'\t'"$taggroup"' _\1\t\2_g;
-             s_ '"$taggroup"'$_\1_'
+    sed -E 's_ '"$taggroup"'	'"$taggroup"' _\1	\2_g;
+            s_ '"$taggroup"'$_\1_'
 }
 
 makediff()
