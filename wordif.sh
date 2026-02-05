@@ -222,7 +222,7 @@ joinwords()
 # Place all words on the same line again, restore original newlines and remove temporarily added spaces:
 {
     # Regex-group of a series of html color-tags as a string variable:
-    taggroup="((($delete_start|$insert_start|$end)?)*)"
+    taggroup="(($delete_start|$insert_start|$end)*)"
 
     # Restore original spaces from each temporary newline (adding some temporary spaces in the process):
     tr '\n' ' ' |
@@ -231,7 +231,7 @@ joinwords()
     awk '{ gsub(/\b/, "\n"); print }' -  |
 
     # Remove all temporarily added single spaces: around each tab and at line end:
-    sed -E 's_ '"$taggroup"'	'"$taggroup"' _\1	\4_g;
+    sed -E 's_ '"$taggroup"'	'"$taggroup"' _\1	\3_g;
             s_ '"$taggroup"'$_\1_'
 }
 
