@@ -230,7 +230,7 @@ joinwords()
     # Restore original newlines from each temporary backspace:
     awk '{ gsub(/\b/, "\n"); print }' -  |
 
-    # Remove all temporarily added single spaces: around each tab and trailing:
+    # Remove all temporarily added single spaces: around each tab and at line end:
     sed -E 's_ '"$taggroup"'	'"$taggroup"' _\1	\4_g;
             s_ '"$taggroup"'$_\1_'
 }
