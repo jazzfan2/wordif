@@ -133,13 +133,13 @@ Usage:
 |        wordif.sh   [OPTIONS]  FILE1       FILE2
 |        wordif.sh -d[OPTIONS]  DIRECTORY1  DIRECTORY2
 |
--h       Help (this output)
+-h       Help (this output).
 -c RGBHEX
-|        Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
+|        Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red]).
 -C RGBHEX
-|        Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
--d       Specify two directories as arguments rather than two files;
-|        Compare each file in directory2 to the equally unique-numbered file in directory1
+|        Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green]).
+-d       Specify two directories as arguments rather than two files.
+|        Compare each file in directory2 to the equally unique-numbered file in directory1.
 -f FONT
 |        Character-font instead of default Courier New:
 |        FONT  = H   Helvetica
@@ -149,11 +149,11 @@ Usage:
 |                p   Palatino
 |                T   Times New Roman
 |                t   Times
--o       Send HTML-text to stdout rather than to file
+-o       Send HTML-text to stdout rather than to file.
 -p       Convert HTML-text and save to PDF-file; this option overrides option -o
 -z SIZE
-|        Character size in pts as a replacement for 12 pts;
-|        Also accepts values with decimal point
+|        Character size in pts as a replacement for 12 pts.
+|        Also accepts values with decimal point.
 EOF
 }
 
