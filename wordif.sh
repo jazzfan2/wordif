@@ -135,7 +135,7 @@ Usage:
 |
 -h       Help (this output)
 -c RGBHEX
-|         Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
+|        Specify 'deleted-text' color by 6-digit rgb hex-value (default: ff0000 [red])
 -C RGBHEX
 |        Specify 'inserted-text' color by 6-digit rgb hex-value (default: 00ff00 [green])
 -d       Specify two directories as arguments rather than two files;
