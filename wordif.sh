@@ -1,7 +1,7 @@
 #!/bin/bash
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 7th Januari 2026
+# Date: 12th February 2026
 # Description: This program performs word-by-word comparison between
 # two plain-text-files.
 # It is a wrapper-script around 'diff()', and serves as an alternative
@@ -68,6 +68,9 @@ font="\"Courier New\", monospace"
 
 # Standard character size:
 size=12
+
+# Unique string to temporarily add to file2, forcing diff to output if files are equal:
+tempstring="$(date)"
 
 
 # FUNCTIONS:
@@ -211,11 +214,58 @@ splitwords()
 # Place all words on a separate line, while preserving original newlines, spaces and tabs:
 {
     awk '{
+        gsub(/\r/, "")        # Remove any carriage returns
         gsub(/^/, "\b")       # Place backspace at beginning of line as to mark original "new line"
         gsub(/ /, "\n")       # Replace space by newline, putting each word on a separate line
         gsub(/\t/, "\n\t\n")  # Put tab (tabulation) on a separate line as to treat it like a word
         print
     }' "$1"
+}
+
+convert_tags()
+# Replace '-' or '+' line tags by red and green html-color group tags, and remove leading space:
+{
+    tail -n +4 |
+    awk -v delstart="$delete_start" -v insstart="$insert_start" -v end="$end" -v sign="xx" '
+    {
+        if(substr($0, 1, 1) == sign)
+            qty += 1
+        else{
+            groups[++i, 0] = qty
+            groups[i,   1] = sign
+            sign = substr($0, 1, 1)
+            qty = 1
+        }
+        words[++j] = $0
+    }
+    END {
+        groups[++i, 0] = qty
+        groups[i,   1] = sign
+        j = 0
+        for (k = 2; k <= i; k++){
+            qty   = groups[k, 0]
+            sign  = groups[k, 1]
+            for (p = 1; p <= qty; p++){
+                word = words[++j]
+                if (sign == " ")
+                    print substr(word, 2)
+                else if (p == 1 || p == qty){
+                    if (p == 1){
+                        gsub(/^-/, delstart, word)
+                        gsub(/^\+/, insstart, word)
+                        printf word
+                        if (qty == 1)
+                            printf end
+                        printf "\n"
+                    }
+                    else if (p == qty)
+                        print substr(word, 2)""end
+                }
+                else
+                    print substr(word, 2)
+            }
+        }
+    }' -
 }
 
 joinwords()
@@ -232,7 +282,8 @@ joinwords()
 
     # Remove all temporarily added single spaces: around each tab and at line end:
     sed -E 's_ '"$taggroup"'	'"$taggroup"' _\1	\3_g;
-            s_ '"$taggroup"'$_\1_'
+            s_ '"$taggroup"'$_\1_
+            s/'"$tempstring"'//'
 }
 
 makediff()
@@ -261,13 +312,9 @@ makediff()
     (print_html_intro "$file2"
 
     # Compare both files to each other and generate color-marked difference-file:
-    diff -B --strip-trailing-cr                   \
-         --old-group-format="$delete_start%<$end" \
-         --new-group-format="$insert_start%>$end" \
-         --unchanged-group-format='%='            \
-          <(sed "$esc_html" "$file1" | splitwords - ) \
-          <(sed "$esc_html" "$file2" | splitwords - ) |
-
+    busybox diff -U 100000000 <( sed "$esc_html" "$file1" | splitwords - ) \
+                              <((sed "$esc_html" "$file2"; printf " $tempstring") | splitwords - ) |
+    convert_tags - |
     joinwords -
 
     echo "$html_coda") | store2file - $NUMBER
