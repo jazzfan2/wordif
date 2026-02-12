@@ -312,8 +312,8 @@ makediff()
     (print_html_intro "$file2"
 
     # Compare both files to each other and generate color-marked difference-file:
-    busybox diff -U 100000000 <( sed "$esc_html" "$file1" | splitwords - ) \
-                              <((sed "$esc_html" "$file2"; printf " $tempstring") | splitwords - ) |
+    diff -U 100000000 <( sed "$esc_html" "$file1" | splitwords - ) \
+                      <((sed "$esc_html" "$file2"; printf " $tempstring") | splitwords - ) |
     convert_tags - |
     joinwords -
 
