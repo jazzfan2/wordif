@@ -247,22 +247,18 @@ convert_tags()
             sign  = groups[k, 1]
             for (p = 1; p <= qty; p++){
                 word = words[++j]
-                if (sign == " ")
+                if (sign == " " || (p > 1 && p < qty))
                     print substr(word, 2)
-                else if (p == 1 || p == qty){
-                    if (p == 1){
-                        gsub(/^-/, delstart, word)
-                        gsub(/^\+/, insstart, word)
-                        printf word
-                        if (qty == 1)
-                            printf end
-                        printf "\n"
-                    }
-                    else if (p == qty)
-                        print substr(word, 2)""end
+                else if (p == 1){
+                    gsub(/^-/, delstart, word)
+                    gsub(/^\+/, insstart, word)
+                    if (qty == 1)
+                        print word end
+                    else
+                        print word
                 }
                 else
-                    print substr(word, 2)
+                    print substr(word, 2) end
             }
         }
     }' -
