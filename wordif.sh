@@ -172,14 +172,18 @@ numberlist()
 }
 
 checkrepeat()
-# Detect any repetitions in a sorted number list, and issue a warning if found:
+# Detect any repeating numbers in a sorted number list, and issue a warning if found:
 {
-    repeatnum="$(grep -oE "(\<[0-9]+\>) \1" <<< "$1")"
+    repeatnum="$(\
+    awk '{ for (f = 2; f <= NF; f++)
+               if ($f == $(f-1) && $f != prevprint){
+                   printf $f" "
+                   prevprint = $f
+               }
+    }' <<< "$1" )"
     if [[ -n "$repeatnum" ]]; then
-        qty=$(wc -w <<< "$repeatnum")
-        num=${repeatnum/ */}
-        echo "WARNING: Number $num appears in $qty file-names in the $2." >&2
-        echo "Only one file with $num was compared with a (possibly wrong) file in the $3." >&2
+        echo -n "WARNING: Number(s) "$repeatnum"found in more than one single file-name in directory $2. " >&2
+        echo    "Per mentioned number, most files compare to a wrong file in directory $3." >&2
     fi
 }
 
@@ -294,9 +298,9 @@ makediff()
         # Do nothing if a <NUMBER> is missing. and issue warning if it misses in one directory only:
         if ([[ -z "$file1" ]] || [[ -z "$file2" ]]); then
             if [[ -n "$file1" ]]; then
-                echo "WARNING: Number $NUMBER appears in 1st directory only, not in 2nd directory." >&2
+                echo "WARNING: Number $NUMBER appears in directory 1 only, not in directory 2." >&2
             elif [[ -n "$file2" ]]; then
-                echo "WARNING: Number $NUMBER appears in 2nd directory only, not in 1st directory." >&2
+                echo "WARNING: Number $NUMBER appears in directory 2 only, not in directory 1." >&2
             fi
             return
         fi
@@ -380,8 +384,8 @@ if [[ $args == "directories" ]]; then
     list2="$(numberlist "$2")"
 
     # Check if the <NUMBER>-lists contain any repetitions, and if so issue a warning:
-    checkrepeat "$list1" "1st directory" "2nd directory"
-    checkrepeat "$list2" "2nd directory" "1st directory"
+    checkrepeat "$list1" 1 2
+    checkrepeat "$list2" 2 1
 
     # Determine the maximum <NUMBER> value appearing in any of the sorted lists:
     max1=${list1/* /}
