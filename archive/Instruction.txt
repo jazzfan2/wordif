@@ -1,7 +1,7 @@
 Installatie van WORDIF:
 =======================
-1. Plaats het archiefbestand 'WORDIF.zip' op het Bureaublad;
-2. Pak 'WORDIF.zip' daar uit;
+1. Plaats het archiefbestand 'WORDIF.tar.gz' op het Bureaublad;
+2. Dubbelklik op 'WORDIF.tar.gz' om het daar uit te pakken;
 3. In de resulterende map 'WORDIF' vind je:
 - de twee mappen 'oud/' en 'nieuw/', deze zijn bedoeld om de te vergelijken tekstbestanden in te plaatsen;
 - het bestand 'wordif.sh', het vergelijkingsprogramma;
@@ -18,7 +18,7 @@ Procedure vergelijking platte tekstbestanden:
 6. In een derde map 'diff/' worden nu automatisch de resultaten geplaatst van de vergelijking tussen de versies in 'oud/' en 'nieuw/' van alle bestanden;
 7. Van elk resultaat-bestand is de naam als volgt opgebouwd: [code]
 
-	DATUM_TIJD_'diff'_NUMMER'.html'
+	DATUM_TIJD_'diff'_NUMMER.'html'
 
 [/code]
 
