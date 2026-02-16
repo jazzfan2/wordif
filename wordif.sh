@@ -160,6 +160,14 @@ Usage:
 EOF
 }
 
+checknumberless()
+# Check on any unnumbered file names in a given directory, and if so issue a warning:
+{
+    if ls "$1" | grep -qv "^[0-9]\+_" ; then
+        echo "WARNING: Directory $2 contains unnumbered files that are excluded from comparison." >&2
+    fi
+}
+
 numberlist()
 # Print a ('horizontal') list of the leading numbers in the file names in given directory:
 {
@@ -363,7 +371,7 @@ htmlcat()
 options "$@"
 shift $(( OPTIND - 1 ))
 
-[[ $# < 2 ]] && echo "Not enough arguments given"  >&2 && exit 1
+[[ $# < 2 ]] && echo "Not enough arguments given" >&2 && exit 1
 
 # The HTML deletion- and insertion-tags:
 delete_start="<span style=\"font-weight:bold;color:#$delhex;\">"
@@ -373,11 +381,15 @@ end="</span>"
 if [[ $args == "directories" ]]; then
 
     # Check if given directories exist:
-    ([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Specify existing directories."  >&2 && exit 1
+    ([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Specify existing directories." >&2 && exit 1
 
     # Create the ./diff/-directory, unless it already exists:
     [[ ! -d ./diff ]] && mkdir ./diff
     outputdir="./diff"
+
+    # Check on any unnumbered file names in either directory, and if so issue a warning:
+    checknumberless "$1" 1
+    checknumberless "$2" 2
 
     # Create a list with all <NUMBER> values for each of the two directories:
     list1="$(numberlist "$1")"
