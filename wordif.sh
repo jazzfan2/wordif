@@ -222,6 +222,16 @@ pre {
     echo "$intro"
 }
 
+non_plain()
+# Detect any non-plain-text contents, and if so issue an warning:
+{
+    if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
+        echo "WARNING: Other than plain text in $1 and/or $2, skipping..." >&2
+        return 0
+    fi
+    return 1
+}
+
 splitwords()
 # Place all words on a separate line, while preserving original newlines, spaces and tabs:
 {
@@ -315,6 +325,10 @@ makediff()
     else
         file1="$1"
         file2="$2"
+    fi
+
+    if non_plain "$file1" "$file2"; then
+        return
     fi
 
     (print_html_intro "$file2"
