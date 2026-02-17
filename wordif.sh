@@ -223,7 +223,7 @@ pre {
 }
 
 non_plain()
-# Detect any non-plain-text contents, and if so issue an warning:
+# Detect any non-plain-text contents, and if so issue a warning:
 {
 #   if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
     if file -b "$1" | grep -qv "text" || file -b "$2" | grep -qv "text"; then
