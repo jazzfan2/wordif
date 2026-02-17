@@ -300,8 +300,8 @@ makediff()
     NUMBER="$3"
     if  [[ $args == "directories" ]]; then
         # If option = -d (directories), derive both file names from given directories and <NUMBER>:
-        file1="$(ls $1/$NUMBER"_"* 2>/dev/null | head -n 1)"
-        file2="$(ls $2/$NUMBER"_"* 2>/dev/null | head -n 1)"
+        file1="$(find "$1" -maxdepth 1 -type f | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
+        file2="$(find "$2" -maxdepth 1 -type f | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
 
         # Do nothing if a <NUMBER> is missing. and issue warning if it misses in one directory only:
         if ([[ -z "$file1" ]] || [[ -z "$file2" ]]); then
