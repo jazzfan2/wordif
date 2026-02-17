@@ -225,7 +225,8 @@ pre {
 non_plain()
 # Detect any non-plain-text contents, and if so issue an warning:
 {
-    if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
+#   if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
+    if file "$1" | grep -qv ":[^:]*text" || file "$1" | grep -qv ":[^:]*text"; then
         echo "WARNING: Other than plain text in $1 and/or $2, skipping..." >&2
         return 0
     fi
