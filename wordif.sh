@@ -95,7 +95,7 @@ options(){
             d) args="directories"
                ;;
             f) if   [[ $OPTARG == H ]]; then font="\"Helvetica\", sans-serif"
-               elif [[ $OPTARG == h ]]; then font="\"Helvetica Narrow\", sans-serif" 
+               elif [[ $OPTARG == h ]]; then font="\"Helvetica Narrow\", sans-serif"
                elif [[ $OPTARG == c ]]; then font="\"Courier\", monospace"
                elif [[ $OPTARG == n ]]; then font="\"New Century Schoolbook\", serif"
                elif [[ $OPTARG == p ]]; then font="\"Palatino\", serif"
