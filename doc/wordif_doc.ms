@@ -46,10 +46,11 @@ Leid nu platte-tekstbestanden af van de te vergel\[ij]ken bronteksten (in b.v. I
 b\[ij] voorkeur één bestand per hoofdstuk of artikel.
 .LP
 B.v. tekst van een InDesign-artikel selecteren met `Ctrl-A', kopiëren met
-`Ctrl-C' en in een platte editor plakken met `Ctrl-V'.
+`Ctrl-C' en in een PLATTE editor plakken met `Ctrl-V'.
 .LP
-Sla deze platte-tekstbestanden zodanig op in `oud/\:' en `nieuw/\:' dat voor elk bestand
-in `oud' er een daarmee te vergel\[ij]ken bestand bestaat in `nieuw'.
+Sla deze PLATTE-tekstbestanden (tekstcodering Unicode [UTF-8])
+zodanig op in `oud/\:' en `nieuw/\:' dat voor elk bestand in `oud'
+er een daarmee te vergel\[ij]ken bestand bestaat in `nieuw'.
 .LP
 Om twee bestanden in verschillende mappen aan elkaar te kunnen relateren moeten
 hun bestandsnamen beginnen met hetzelfde NUMMER gevolgd door een UNDERSCORE,
