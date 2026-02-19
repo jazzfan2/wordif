@@ -10,10 +10,11 @@ Leid nu platte-tekstbestanden af van de te vergelijken bronteksten (in b.v. InDe
 bij voorkeur één bestand per hoofdstuk of artikel.
 
 B.v. tekst van een InDesign-artikel selecteren met 'Ctrl-A', kopiëren met
-'Ctrl-C' en in een platte editor plakken met 'Ctrl-V'.
+'Ctrl-C' en in een PLATTE editor plakken met 'Ctrl-V'.
 
-Sla deze platte-tekstbestanden zodanig op in 'oud/' en 'nieuw/' dat voor elk bestand
-in 'oud' er een daarmee te vergelijken bestand bestaat in 'nieuw'.
+Sla deze PLATTE-tekstbestanden (tekstcodering Unicode [UTF-8])
+zodanig op in 'oud/' en 'nieuw/' dat voor elk bestand in 'oud'
+er een daarmee te vergelijken bestand bestaat in 'nieuw'.
 
 Om twee bestanden in verschillende mappen aan elkaar te kunnen relateren moeten
 hun bestandsnamen beginnen met hetzelfde NUMMER gevolgd door een UNDERSCORE,
