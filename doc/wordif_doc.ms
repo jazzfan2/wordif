@@ -133,7 +133,7 @@ Deze worden elk als apart HTML-bestand in de map `diff/\:' geplaatst.
 De bestandsnaam is als volgt opgebouwd:
 .DS I 3
 .CW
-DATUM_TIJD_'diff'_NUMMER'.html'
+DATUM_TIJD_'diff'_NUMMER.'html'
 .DE
 Het NUMMER in de namen van de verschil-bestanden komt overeen met dat van de
 vergeleken tekstbestanden.
