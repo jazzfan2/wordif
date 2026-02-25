@@ -226,7 +226,7 @@ non_plain()
 # Detect any non-plain-text contents, and if so issue a warning:
 {
 #   if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
-    if file -b "$1" | grep -qv "text" || file -b "$2" | grep -qv "text"; then   # or: grep -qiv
+    if file -bL "$1" | grep -qv "text" || file -bL "$2" | grep -qv "text"; then   # or: grep -qiv
         echo "WARNING: Other than plain text in $1 and/or $2, skipping..." >&2
         return 0
     fi
@@ -311,8 +311,8 @@ makediff()
     NUMBER="$3"
     if  [[ $args == "directories" ]]; then
         # If option = -d (directories), derive both file names from given directories and <NUMBER>:
-        file1="$(find "$1" -maxdepth 1 -type f | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
-        file2="$(find "$2" -maxdepth 1 -type f | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
+        file1="$(find "$1" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
+        file2="$(find "$2" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
 
         # Do nothing if a <NUMBER> is missing. and issue warning if it misses in one directory only:
         if ([[ -z "$file1" ]] || [[ -z "$file2" ]]); then
