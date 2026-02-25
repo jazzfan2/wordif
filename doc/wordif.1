@@ -36,9 +36,10 @@ inserted text \(en i.e.: present in \fIfile2\fP and not present (there) in \fIfi
 or of any desired color (per option \fB-C\fP);
 .LP
 With option -d, wordif acts on two directories instead of two text-files,
-It then compares each text-file in \fIdirectory2\fP to its equivalent in \fIdirectory1\fP.
+It then compares each plain-text-file in \fIdirectory2\fP to its equivalent in \fIdirectory1\fP.
+Plain-text files within subdirectories and those pointed to by symlinks are ignored.
 To correctly associate each pair of files shared by both directories,
-their file names must start with same unique number, followed by an underscore.
+their file names must start with the same unique non-negative integer number, followed by an underscore (_).
 .LP
 The resulting difference-files are collected in a directory named \fCdiff/\fP,
 which is either newly created \(en on the same level as both given directories \(en or re-used,
