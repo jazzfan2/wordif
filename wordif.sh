@@ -393,7 +393,7 @@ if [[ $args == "directories" ]]; then
         # Prefix first (option -o) or each comparison (otherwise) by an html-intro including header:
         (( counter += 1 ))
         ( if ([[ $counter == 1 ]] || [[ $format != "html_stdout" ]]); then
-             print_html_intro "$2"
+             print_html_intro "$file2"
         fi
 
         # Generate diff output:
@@ -412,7 +412,7 @@ if [[ $args == "directories" ]]; then
         (( NUMBER += 1 ))
     done
 
-    # Finish with a html-coda (option -o) or a notification where to find results (otherwise):
+    # Finish off with an html-coda (option -o) or a notification where to find results (otherwise):
     if [[ $format == "html_stdout" ]]; then
         echo "$html_coda"
     else
