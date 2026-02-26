@@ -1,7 +1,7 @@
 #!/bin/bash
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 12th February 2026
+# Date: 28th February 2026
 # Description: This program performs word-by-word comparison between
 # two plain-text-files.
 # It is a wrapper-script around 'diff()', and serves as an alternative
@@ -107,7 +107,7 @@ options(){
             h) helptext
                exit 0
                ;;
-            o) if [[ $format !=  "pdf_file" ]]; then
+            o) if [[ $format != "pdf_file" ]]; then
                    format="html_stdout"
                fi
                ;;
@@ -223,11 +223,9 @@ pre {
 }
 
 non_plain()
-# Detect any non-plain-text contents, and if so issue a warning:
+# Detect any non-plain-text contents:
 {
-#   if LC_ALL=C.UTF-8 grep -avxq '.*' "$1" || LC_ALL=C.UTF-8 grep -avxq '.*' "$2"; then
-    if file -bL "$1" | grep -qv "text" || file -bL "$2" | grep -qv "text"; then   # or: grep -qiv
-        echo "WARNING: Other than plain text in $1 and/or $2, skipping..." >&2
+    if file -bL "$1" | grep -qiv "text" || file -bL "$2" | grep -qiv "text"; then
         return 0
     fi
     return 1
@@ -306,76 +304,26 @@ joinwords()
 }
 
 makediff()
-# Perform text comparison between two text files, and store the output in desired format:
+# Perform text comparison between two text files, and generate color-marked difference-file:
 {
-    NUMBER="$3"
-    if  [[ $args == "directories" ]]; then
-        # If option = -d (directories), derive both file names from given directories and <NUMBER>:
-        file1="$(find "$1" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
-        file2="$(find "$2" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
-
-        # Do nothing if a <NUMBER> is missing. and issue warning if it misses in one directory only:
-        if ([[ -z "$file1" ]] || [[ -z "$file2" ]]); then
-            if [[ -n "$file1" ]]; then
-                echo "WARNING: Number $NUMBER appears in directory 1 only, not in directory 2." >&2
-            elif [[ -n "$file2" ]]; then
-                echo "WARNING: Number $NUMBER appears in directory 2 only, not in directory 1." >&2
-            fi
-            return
-        fi
-    else
-        file1="$1"
-        file2="$2"
-    fi
-
-    if non_plain "$file1" "$file2"; then
-        return
-    fi
-
-    (print_html_intro "$file2"
-
-    # Compare both files to each other and generate color-marked difference-file:
-    diff -U 100000000 <( sed "$esc_html" "$file1" | splitwords - ) \
-                      <((sed "$esc_html" "$file2"; printf " $tempstring") | splitwords - ) |
+    diff -U 100000000 <( sed "$esc_html" "$1" | splitwords - ) \
+                      <((sed "$esc_html" "$2"; printf " $tempstring") | splitwords - ) |
     convert_tags - |
     joinwords -
-
-    echo "$html_coda") | store2file - $NUMBER
 }
 
-store2file()
-# Save HTML-text-stream to file, or (option -o) catenate, or (option -p) convert to PDF-file:
+output()
+# Save HTML-text-stream to file, convert to PDF-file (option -p), or catenate to stdout (option -o):
 {
     file="$1"
     NUMBER="$2"
     if [[ $format == "html_file" ]]; then
         cat "$file" >| "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.html"
-    elif [[ $format == "html_stdout" ]]; then
-        cat "$file"
     elif [[ $format == "pdf_file" ]]; then
         wkhtmltopdf "$file" "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.pdf" 2>/dev/null
+    elif [[ $format == "html_stdout" ]]; then
+        cat "$file"   # Could be piped to e.g. 'bcat()' or any other "pipe2browser" program
     fi
-}
-
-htmlcat()
-# Send html text-stream to stdout (option -o) while removing all headers except the first one:
-{
-    awk -v first=1 '{
-        if (first){
-            print
-            if (/^<\/head>/) first = 0
-        }
-        else{                               # If not the first header
-            if (/^<head>/)
-                head = 1
-            else if (/^<\/head>/)
-                head = 0
-            else if (! (head || /^<!DOCTYPE/)){
-                print
-                if (/^<html>/) print "<hr>" # Separation line between present & previous diff-section
-            }
-        }
-    }' "$1"
 }
 
 
@@ -392,6 +340,8 @@ shift $(( OPTIND - 1 ))
 delete_start="<span style=\"font-weight:bold;color:#$delhex;\">"
 insert_start="<span style=\"font-weight:bold;color:#$inshex;\">"
 end="</span>"
+
+counter=0
 
 if [[ $args == "directories" ]]; then
 
@@ -422,19 +372,61 @@ if [[ $args == "directories" ]]; then
     # While incrementing from 0 to max value, call makediff() function with <NUMBER> argument:
     NUMBER=0
     while (( NUMBER <= max )); do
-        makediff "$1" "$2" $NUMBER
+
+        # Derive both file names from given directories and <NUMBER>:
+        file1="$(find "$1" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
+        file2="$(find "$2" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
+
+        # Issue warning and skip if <NUMBER> appears in one directory only, or file is not plain-text:
+        if [[ -z "$file1" ]] || [[ -z "$file2" ]]; then
+            if [[ -n "$file1" ]]; then
+                echo "WARNING: Number $NUMBER appears in directory 1 only, not in directory 2." >&2
+            elif [[ -n "$file2" ]]; then
+                echo "WARNING: Number $NUMBER appears in directory 2 only, not in directory 1." >&2
+            fi
+            (( NUMBER += 1 )) && continue
+        elif non_plain "$file1" "$file2"; then
+            echo "WARNING: Other than plain text in $1 and/or $2, skipping..." >&2
+            (( NUMBER += 1 )) && continue
+        fi
+
+        # Prefix first (option -o) or each comparison (otherwise) by an html-intro including header:
+        (( counter += 1 ))
+        ( if ([[ $counter == 1 ]] || [[ $format != "html_stdout" ]]); then
+             print_html_intro "$2"
+        fi
+
+        # Generate diff output:
+        makediff "$file1" "$file2"
+
+        # Postfix each comparison by a separation line (option -o) or html-coda (otherwise):
+        if [[ $format == "html_stdout" ]]; then
+            echo -e "\n<hr>"
+        else
+            echo "$html_coda"
+        fi ) |
+
+       # Send comparison result to output:
+        output - $NUMBER
+
         (( NUMBER += 1 ))
-    done | htmlcat -        # Send to stdout in case of option -o to be handled further by
-                            # e.g. 'bcat()' or any other "pipe2browser" program.
-    # Conclusion:
-    [[ $format != "html_stdout" ]] && echo "READY! - Please find all results in $(pwd)/diff/" >&2
+    done
+
+    # Finish with a html-coda (option -o) or a notification where to find results (otherwise):
+    if [[ $format == "html_stdout" ]]; then
+        echo "$html_coda"
+    else
+        echo "READY! - Please find all results in $(pwd)/diff/" >&2
+    fi
 
 else
     # In case of files instead of directories as arguments:
     if [[ -f  "$1" ]] && [[ -f "$2" ]]; then
+        print_html_intro "$2"
         makediff "$1" "$2"
+        echo "$html_coda"
     else
         echo "ERROR: Specify existing files and no directories" >&2
         exit 1
-    fi
+    fi | output -
 fi
