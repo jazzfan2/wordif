@@ -352,30 +352,38 @@ if [[ $args == "directories" ]]; then
     [[ ! -d ./diff ]] && mkdir ./diff
     outputdir="./diff"
 
+    # Create a list of files and symlinks within either input directory:
+    list1="$(find "$1" -maxdepth 1 -type f,l)"
+    list2="$(find "$2" -maxdepth 1 -type f,l)"
+
     # Check on any unnumbered file names in either directory, and if so issue a warning:
     checknumberless "$1" 1
     checknumberless "$2" 2
 
     # Create a list with all <NUMBER> values for each of the two directories:
-    list1="$(numberlist "$1")"
-    list2="$(numberlist "$2")"
+    numbers1="$(numberlist "$1")"
+    numbers2="$(numberlist "$2")"
 
     # Check if the <NUMBER>-lists contain any repetitions, and if so issue a warning:
-    checkrepeat "$list1" 1 2
-    checkrepeat "$list2" 2 1
+    checkrepeat "$numbers1" 1 2
+    checkrepeat "$numbers2" 2 1
 
     # Determine the maximum <NUMBER> value appearing in any of the sorted lists:
-    max1=${list1/* /}
-    max2=${list2/* /}
+    max1=${numbers1/* /}
+    max2=${numbers2/* /}
     (( max1 > max2 )) && max=$max1 || max=$max2
 
-    # While incrementing from 0 to max value, call makediff() function with <NUMBER> argument:
+    # While incrementing from 0 to max value, call makediff() function on each appropriate file pair:
     NUMBER=0
     while (( NUMBER <= max )); do
 
-        # Derive both file names from given directories and <NUMBER>:
-        file1="$(find "$1" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
-        file2="$(find "$2" -maxdepth 1 -type f,l | grep "\/"$NUMBER"_[^/]*$" | head -n 1)"
+        # Derive both file names from directory listings and <NUMBER>:
+        if echo "$numbers1" "$numbers2" | grep -q "\<$NUMBER\>"; then
+            file1="$(for i in "$list1"; do echo "$i"; done | grep -m 1 "\/"$NUMBER"_[^/]*$")"
+            file2="$(for i in "$list2"; do echo "$i"; done | grep -m 1 "\/"$NUMBER"_[^/]*$")"
+        else
+            (( NUMBER += 1 )) && continue
+        fi
 
         # Issue warning and skip if <NUMBER> appears in one directory only, or file is not plain-text:
         if [[ -z "$file1" ]] || [[ -z "$file2" ]]; then
