@@ -100,11 +100,8 @@ Also accepts values with decimal point.
 .
 .SH COMPATIBILITY
 .IP -
-wordif can be run by the Bash shell, on the condition that diff(1) accepts process-substitution.
-.IP -
-wordif_posix is identical in behavior to wordif -\(en
-with the addition that it can also be run by strictly POSIX-only shells like \fCash\fP and Dash
-and doesn't require diff(1) to accept process-substitution.
+wordif has been tested on MacOS and GNU/Linux (Debian, Alpine and Tiny Core with Busybox)
+and can be run by both Bash, \fCash\fP and Dash shells.
 .IP -
 The program 'wkhtmltopdf(1)' must be installed on the system if output to PDF per option \fB-p\fP is desired.
 .

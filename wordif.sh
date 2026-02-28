@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 # Name: wordif.sh
 # Author: Rob Toscani
 # Date: 28th February 2026
 # Description: This program performs word-by-word comparison between
 # two plain-text-files.
+#
 # It is a wrapper-script around 'diff()', and serves as an alternative
 # for wdiff() (https://www.gnu.org/software/wdiff/).
 #
@@ -48,8 +49,17 @@ args="files"
 delhex="ff0000"
 inshex="00ff00"
 
+# Standard character font:
+font="\"Courier New\", monospace"
+
+# Standard character size:
+size=12
+
 # Escape < and > to prevent interpretation as HTML-syntax (tags):
 esc_html="s/</\&lt;/g; s/>/\&gt;/g"
+
+# Unique string to temporarily add to file2, forcing diff to output if files are equal:
+tempstring="$(date)"
 
 # The HTML-tags to be pasted underneath the text:
 html_coda="
@@ -57,20 +67,24 @@ html_coda="
 </body>
 </html>"
 
+# Create directory for the temporary files:
+if [ -d /tmp/ramdisk/ ]; then
+    location="/tmp/ramdisk"
+elif [ -d /dev/shm/ ]; then
+    location="/dev/shm"
+else
+    location="."
+fi
+tempdir="$location/temp$(date | tr -d ' ')"
+mkdir "$tempdir"
+
+trap "\rm -rf $tempdir; exit" INT
+
 # Standard output-directory:
 outputdir="./"
 
 # Standard output-format:
 format="html_file"
-
-# Standard character font:
-font="\"Courier New\", monospace"
-
-# Standard character size:
-size=12
-
-# Unique string to temporarily add to file2, forcing diff to output if files are equal:
-tempstring="$(date)"
 
 
 # FUNCTIONS:
@@ -80,13 +94,13 @@ options(){
 # Specify options:
     while getopts "c:C:df:hopz:" OPTION; do
         case $OPTION in
-            c) if grep -qE "^[0-9a-fA-F]{6}$" <(echo "$OPTARG"); then
+            c) if printf %s\\n "$OPTARG" | grep -qE "^[0-9a-fA-F]{6}$" -; then
                    delhex="$OPTARG"
                else
                    helptext && exit 1
                fi
                ;;
-            C) if grep -qE "^[0-9a-fA-F]{6}$" <(echo "$OPTARG"); then
+            C) if printf %s\\n "$OPTARG" | grep -qE "^[0-9a-fA-F]{6}$" -; then
                    inshex="$OPTARG"
                else
                    helptext && exit 1
@@ -94,26 +108,26 @@ options(){
                ;;
             d) args="directories"
                ;;
-            f) if   [[ $OPTARG == H ]]; then font="\"Helvetica\", sans-serif"
-               elif [[ $OPTARG == h ]]; then font="\"Helvetica Narrow\", sans-serif"
-               elif [[ $OPTARG == c ]]; then font="\"Courier\", monospace"
-               elif [[ $OPTARG == n ]]; then font="\"New Century Schoolbook\", serif"
-               elif [[ $OPTARG == p ]]; then font="\"Palatino\", serif"
-               elif [[ $OPTARG == T ]]; then font="\"Times New Roman\", serif"
-               elif [[ $OPTARG == t ]]; then font="\"Times\", serif"
-               else                          font="\"Courier New\", monospace"
+            f) if   [ $OPTARG = H ]; then font="\"Helvetica\", sans-serif"
+               elif [ $OPTARG = h ]; then font="\"Helvetica Narrow\", sans-serif"
+               elif [ $OPTARG = c ]; then font="\"Courier\", monospace"
+               elif [ $OPTARG = n ]; then font="\"New Century Schoolbook\", serif"
+               elif [ $OPTARG = p ]; then font="\"Palatino\", serif"
+               elif [ $OPTARG = T ]; then font="\"Times New Roman\", serif"
+               elif [ $OPTARG = t ]; then font="\"Times\", serif"
+               else                       font="\"Courier New\", monospace"
                fi
                ;;
             h) helptext
                exit 0
                ;;
-            o) if [[ $format != "pdf_file" ]]; then
+            o) if [ $format != "pdf_file" ]; then
                    format="html_stdout"
                fi
                ;;
             p) format="pdf_file"
                ;;
-            z) if grep -qE "^[[:digit:]]*\.?[[:digit:]]+$" <<<"$OPTARG"; then
+            z) if printf %s\\n "$OPTARG" | grep -qE "^[[:digit:]]*\.?[[:digit:]]+$" -; then
                    size=$OPTARG
                else
                    helptext && exit 1
@@ -130,11 +144,11 @@ helptext()
 # Text printed if -h option (help) or a non-existent option has been given:
 {
     while read "line"; do
-        echo "$line" >&2         # print to standard error (stderr)
+        printf %s\\n "$line" >&2         # print to standard error (stderr)
     done << EOF
 Usage:
-|        wordif.sh   [OPTIONS]  FILE1       FILE2
-|        wordif.sh -d[OPTIONS]  DIRECTORY1  DIRECTORY2
+|        wordif_posix.sh   [OPTIONS]  FILE1       FILE2
+|        wordif_posix.sh -d[OPTIONS]  DIRECTORY1  DIRECTORY2
 |
 -h       Help (this output).
 -c RGBHEX
@@ -164,7 +178,7 @@ checknumberless()
 # Check on any unnumbered file names in a given directory, and if so issue a warning:
 {
     if ls "$1" | grep -qv "^[0-9]\+_" ; then
-        echo "WARNING: Directory $2 contains unnumbered files that are excluded from comparison." >&2
+        printf %s\\n "WARNING: Directory $2 contains unnumbered files that are excluded from comparison." >&2
     fi
 }
 
@@ -182,16 +196,16 @@ numberlist()
 checkrepeat()
 # Detect any repeating numbers in a sorted number list, and issue a warning if found:
 {
-    repeatnum="$(\
+    repeatnum="$(printf %s\\n "$1" |
     awk '{ for (f = 2; f <= NF; f++)
                if ($f == $(f-1) && $f != prevprint){
                    printf $f" "
                    prevprint = $f
                }
-    }' <<< "$1" )"
-    if [[ -n "$repeatnum" ]]; then
-        echo -n "WARNING: Number(s) "$repeatnum"found in more than one single file-name in directory $2. " >&2
-        echo    "Per mentioned number, most files compare to a wrong file in directory $3." >&2
+    }' - )"
+    if [ -n "$repeatnum" ]; then
+        printf %s    "WARNING: Number(s) "$repeatnum"found in more than one single file-name in directory $2. " >&2
+        printf %s\\n "Per mentioned number, most files compare to a wrong file in directory $3." >&2
     fi
 }
 
@@ -219,7 +233,7 @@ pre {
 </head>
 <body>
 <pre>"
-    echo "$intro"
+    printf %s\\n "$intro"
 }
 
 non_plain()
@@ -253,7 +267,7 @@ convert_tags()
             qty += 1
         else{
             groups[++i, 0] = qty
-            groups[i,   1] = sign
+            groups[  i, 1] = sign
             sign = substr($0, 1, 1)
             qty = 1
         }
@@ -306,8 +320,13 @@ joinwords()
 makediff()
 # Perform text comparison between two text files, and generate color-marked difference-file:
 {
-    diff -U 100000000 <( sed "$esc_html" "$1" | splitwords - ) \
-                      <((sed "$esc_html" "$2"; printf " $tempstring") | splitwords - ) |
+
+    sed "$esc_html" "$1" | splitwords - >| "$tempdir"/file1_temp.txt
+    sed "$esc_html" "$2" | splitwords - >| "$tempdir"/file2_temp.txt
+    printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt   # Force diff -U to also output in case of no difference
+
+    diff -U 100000000 "$tempdir/file1_temp.txt" "$tempdir/file2_temp.txt" |
+
     convert_tags - |
     joinwords -
 }
@@ -317,11 +336,11 @@ output()
 {
     file="$1"
     NUMBER="$2"
-    if [[ $format == "html_file" ]]; then
+    if [ $format = "html_file" ]; then
         cat "$file" >| "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.html"
-    elif [[ $format == "pdf_file" ]]; then
+    elif [ $format = "pdf_file" ]; then
         wkhtmltopdf "$file" "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.pdf" 2>/dev/null
-    elif [[ $format == "html_stdout" ]]; then
+    elif [ $format = "html_stdout" ]; then
         cat "$file"   # Could be piped to e.g. 'bcat()' or any other "pipe2browser" program
     fi
 }
@@ -334,7 +353,7 @@ output()
 options "$@"
 shift $(( OPTIND - 1 ))
 
-[[ $# < 2 ]] && echo "Not enough arguments given" >&2 && exit 1
+[ $# -lt 2 ] && printf %s\\n "Not enough arguments given" >&2 && exit 1
 
 # The HTML deletion- and insertion-tags:
 delete_start="<span style=\"font-weight:bold;color:#$delhex;\">"
@@ -343,18 +362,18 @@ end="</span>"
 
 counter=0
 
-if [[ $args == "directories" ]]; then
+if [ $args = "directories" ]; then
 
     # Check if given directories exist:
-    ([[ ! -d "$1" ]] || [[ ! -d "$2" ]]) && echo "Specify existing directories." >&2 && exit 1
+    ([ ! -d "$1" ] || [ ! -d "$2" ]) && printf %s\\n "Specify existing directories." >&2 && exit 1
 
     # Create the ./diff/-directory, unless it already exists:
-    [[ ! -d ./diff ]] && mkdir ./diff
+    [ ! -d ./diff ] && mkdir ./diff
     outputdir="./diff"
 
     # Create a list of files and symlinks within either input directory:
-    list1="$(find "$1" -maxdepth 1 -type f,l)"
-    list2="$(find "$2" -maxdepth 1 -type f,l)"
+    list1="$(find "$1" -maxdepth 1 -type f ; find "$1" -maxdepth 1 -type l)"
+    list2="$(find "$2" -maxdepth 1 -type f ; find "$2" -maxdepth 1 -type l)"
 
     # Check on any unnumbered file names in either directory, and if so issue a warning:
     checknumberless "$1" 1
@@ -369,38 +388,38 @@ if [[ $args == "directories" ]]; then
     checkrepeat "$numbers2" 2 1
 
     # Determine the maximum <NUMBER> value appearing in any of the sorted lists:
-    max1=${numbers1/* /}
-    max2=${numbers2/* /}
-    (( max1 > max2 )) && max=$max1 || max=$max2
+    max1=$(printf %s\\n "$numbers1" | awk '{ print $NF }')
+    max2=$(printf %s\\n "$numbers2" | awk '{ print $NF }')
+    [ $max1 -gt $max2 ] && max=$max1 || max=$max2
 
     # While incrementing from 0 to max value, call makediff() function on each appropriate file pair:
     NUMBER=0
-    while (( NUMBER <= max )); do
+    while [ "$NUMBER" -le "$max" ]; do
 
         # Derive both file names from directory listings and <NUMBER>:
-        if echo "$numbers1" "$numbers2" | grep -q "\<$NUMBER\>"; then
-            file1="$(echo "$list1" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
-            file2="$(echo "$list2" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
+        if printf %s\\n "$numbers1" "$numbers2" | grep -q "\<$NUMBER\>"; then
+            file1="$(printf %s\\n "$list1" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
+            file2="$(printf %s\\n "$list2" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
         else
-            (( NUMBER += 1 )) && continue
+            NUMBER=$(( $NUMBER + 1 )) && continue
         fi
 
         # Issue warning and skip if <NUMBER> appears in one directory only, or file is not plain-text:
-        if [[ -z "$file1" ]] || [[ -z "$file2" ]]; then
-            if [[ -n "$file1" ]]; then
-                echo "WARNING: Number $NUMBER appears in directory 1 only, not in directory 2." >&2
-            elif [[ -n "$file2" ]]; then
-                echo "WARNING: Number $NUMBER appears in directory 2 only, not in directory 1." >&2
+        if [ -z "$file1" ] || [ -z "$file2" ]; then
+            if [ -n "$file1" ]; then
+                printf %s\\n "WARNING: Number $NUMBER appears in directory 1 only, not in directory 2." >&2
+            elif [ -n "$file2" ]; then
+                printf %s\\n "WARNING: Number $NUMBER appears in directory 2 only, not in directory 1." >&2
             fi
-            (( NUMBER += 1 )) && continue
+            NUMBER=$(( $NUMBER + 1 )) && continue
         elif non_plain "$file1" "$file2"; then
-            echo "WARNING: Other than plain text in $1 and/or $2, skipping..." >&2
-            (( NUMBER += 1 )) && continue
+            printf %s\\n "WARNING: Other than plain text in $1 and/or $2, skipping..." >&2
+            NUMBER=$(( $NUMBER + 1 )) && continue
         fi
 
         # Prefix first (option -o) or each comparison (otherwise) by an html-intro including header:
-        (( counter += 1 ))
-        ( if ([[ $counter == 1 ]] || [[ $format != "html_stdout" ]]); then
+        counter=$(( $counter + 1 ))
+        ( if ([ $counter = 1 ] || [ $format != "html_stdout" ]); then
              print_html_intro "$file2"
         fi
 
@@ -408,33 +427,35 @@ if [[ $args == "directories" ]]; then
         makediff "$file1" "$file2"
 
         # Postfix each comparison by a separation line (option -o) or html-coda (otherwise):
-        if [[ $format == "html_stdout" ]]; then
-            echo -e "\n<hr>"
+        if [ $format = "html_stdout" ]; then
+            printf \\n%s\\n "<hr>"
         else
-            echo "$html_coda"
+            printf %s\\n "$html_coda"
         fi ) |
 
        # Send comparison result to output:
         output - $NUMBER
 
-        (( NUMBER += 1 ))
+        NUMBER=$(( $NUMBER + 1 ))
     done
 
     # Finish off with an html-coda (option -o) or a notification where to find results (otherwise):
-    if [[ $format == "html_stdout" ]]; then
-        echo "$html_coda"
+    if [ $format = "html_stdout" ]; then
+        printf %s\\n "$html_coda"
     else
-        echo "READY! - Please find all results in $(pwd)/diff/" >&2
+        printf %s\\n "READY! - Please find all results in $(pwd)/diff/" >&2
     fi
 
 else
     # In case of files instead of directories as arguments:
-    if [[ -f  "$1" ]] && [[ -f "$2" ]]; then
+    if [ -f "$1" ] && [ -f "$2" ]; then
         print_html_intro "$2"
         makediff "$1" "$2"
-        echo "$html_coda"
+        printf %s\\n "$html_coda"
     else
-        echo "ERROR: Specify existing files and no directories" >&2
+        printf %s\\n "ERROR: Specify existing files and no directories" >&2
         exit 1
     fi | output -
 fi
+
+\rm -rf "$tempdir"
