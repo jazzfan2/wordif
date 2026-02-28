@@ -78,7 +78,7 @@ fi
 tempdir="$location/temp$(date | tr -d ' ')"
 mkdir "$tempdir"
 
-trap "\rm -rf $tempdir; exit" INT
+trap "\rm -rf $tempdir; exit" INT PIPE
 
 # Standard output-directory:
 outputdir="./"
