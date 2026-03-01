@@ -75,7 +75,7 @@ elif [ -d /dev/shm/ ]; then
 else
     location="."
 fi
-tempdir="$location/temp$(date | tr -d ' ')"
+tempdir="$location/temp$(date | tr ' ' '_')"
 mkdir "$tempdir"
 
 trap "\rm -rf $tempdir; exit" INT PIPE
