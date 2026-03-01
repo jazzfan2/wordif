@@ -337,9 +337,9 @@ output()
     file="$1"
     NUMBER="$2"
     if [ $format = "html_file" ]; then
-        cat "$file" >| "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.html"
+        cat "$file" >| "$outputdir"/"$(date +"%Y%m%d_%H%M%S")_diff_$NUMBER.html"
     elif [ $format = "pdf_file" ]; then
-        wkhtmltopdf "$file" "$outputdir"/"$(date +"%Y%m%d_%H%M")_diff_$NUMBER.pdf" 2>/dev/null
+        wkhtmltopdf "$file" "$outputdir"/"$(date +"%Y%m%d_%H%M%S")_diff_$NUMBER.pdf" 2>/dev/null
     elif [ $format = "html_stdout" ]; then
         cat "$file"   # Could be piped to e.g. 'bcat()' or any other "pipe2browser" program
     fi
