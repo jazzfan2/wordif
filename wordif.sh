@@ -199,12 +199,12 @@ checkrepeat()
     repeatnum="$(printf %s\\n "$1" |
     awk '{ for (f = 2; f <= NF; f++)
                if ($f == $(f-1) && $f != prevprint){
-                   printf $f" "
+                   printf ("%s ", $f)
                    prevprint = $f
                }
     }' - )"
     if [ -n "$repeatnum" ]; then
-        printf %s    "WARNING: Number(s) "$repeatnum"found in more than one single file-name in directory $2. " >&2
+        printf %s    "WARNING: Number(s) $repeatnum""found in more than one single file-name in directory $2. " >&2
         printf %s\\n "Per mentioned number, most files compare to a wrong file in directory $3." >&2
     fi
 }
