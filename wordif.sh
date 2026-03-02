@@ -204,7 +204,7 @@ checkrepeat()
                }
     }' - )"
     if [ -n "$repeatnum" ]; then
-        printf "WARNING: Number(s) $repeatnum" "found in more than one single file-name in directory $2. " >&2
+        printf %s%s  "WARNING: Number(s) $repeatnum" "found in more than one single file-name in directory $2. " >&2
         printf %s\\n "Per mentioned number, most files compare to a wrong file in directory $3." >&2
     fi
 }
