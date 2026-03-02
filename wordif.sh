@@ -75,7 +75,7 @@ elif [ -d /dev/shm/ ]; then
 else
     location="."
 fi
-tempdir="$location/temp$(date | tr ' ' '_')"
+tempdir="$location/temp_$(date | tr ' ' '_')"
 mkdir "$tempdir"
 
 trap "\rm -rf $tempdir; exit" INT PIPE
@@ -94,13 +94,13 @@ options(){
 # Specify options:
     while getopts "c:C:df:hopz:" OPTION; do
         case $OPTION in
-            c) if printf %s\\n "$OPTARG" | grep -qE "^[0-9a-fA-F]{6}$" -; then
+            c) if printf "$OPTARG" | grep -qE "^[0-9a-fA-F]{6}$" -; then
                    delhex="$OPTARG"
                else
                    helptext && exit 1
                fi
                ;;
-            C) if printf %s\\n "$OPTARG" | grep -qE "^[0-9a-fA-F]{6}$" -; then
+            C) if printf "$OPTARG" | grep -qE "^[0-9a-fA-F]{6}$" -; then
                    inshex="$OPTARG"
                else
                    helptext && exit 1
@@ -127,7 +127,7 @@ options(){
                ;;
             p) format="pdf_file"
                ;;
-            z) if printf %s\\n "$OPTARG" | grep -qE "^[[:digit:]]*\.?[[:digit:]]+$" -; then
+            z) if printf "$OPTARG" | grep -qE "^[[:digit:]]*\.?[[:digit:]]+$" -; then
                    size=$OPTARG
                else
                    helptext && exit 1
@@ -196,7 +196,7 @@ numberlist()
 checkrepeat()
 # Detect any repeating numbers in a sorted number list, and issue a warning if found:
 {
-    repeatnum="$(printf %s\\n "$1" |
+    repeatnum="$(printf "$1" |
     awk '{ for (f = 2; f <= NF; f++)
                if ($f == $(f-1) && $f != prevprint){
                    printf ("%s ", $f)
@@ -204,7 +204,7 @@ checkrepeat()
                }
     }' - )"
     if [ -n "$repeatnum" ]; then
-        printf %s    "WARNING: Number(s) $repeatnum""found in more than one single file-name in directory $2. " >&2
+        printf "WARNING: Number(s) $repeatnum" "found in more than one single file-name in directory $2. " >&2
         printf %s\\n "Per mentioned number, most files compare to a wrong file in directory $3." >&2
     fi
 }
@@ -388,8 +388,8 @@ if [ $args = "directories" ]; then
     checkrepeat "$numbers2" 2 1
 
     # Determine the maximum <NUMBER> value appearing in any of the sorted lists:
-    max1=$(printf %s\\n "$numbers1" | awk '{ print $NF }')
-    max2=$(printf %s\\n "$numbers2" | awk '{ print $NF }')
+    max1=$(printf "$numbers1" | awk '{ print $NF }')
+    max2=$(printf "$numbers2" | awk '{ print $NF }')
     [ $max1 -gt $max2 ] && max=$max1 || max=$max2
 
     # While incrementing from 0 to max value, call makediff() function on each appropriate file pair:
@@ -398,8 +398,8 @@ if [ $args = "directories" ]; then
 
         # Derive both file names from directory listings and <NUMBER>:
         if printf %s\\n "$numbers1" "$numbers2" | grep -q "\<$NUMBER\>"; then
-            file1="$(printf %s\\n "$list1" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
-            file2="$(printf %s\\n "$list2" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
+            file1="$(printf "$list1" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
+            file2="$(printf "$list2" | grep -m 1 "\/"$NUMBER"_[^/]*$")"
         else
             NUMBER=$(( $NUMBER + 1 )) && continue
         fi
