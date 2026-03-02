@@ -67,19 +67,6 @@ html_coda="
 </body>
 </html>"
 
-# Create directory for the temporary files:
-if [ -d /tmp/ramdisk/ ]; then
-    location="/tmp/ramdisk"
-elif [ -d /dev/shm/ ]; then
-    location="/dev/shm"
-else
-    location="."
-fi
-tempdir="$location/temp_$(date | tr ' ' '_')"
-mkdir "$tempdir"
-
-trap "\rm -rf $tempdir; exit" INT PIPE
-
 # Standard output-directory:
 outputdir="./"
 
@@ -345,6 +332,12 @@ output()
     fi
 }
 
+rm_tempdir()
+# Remove temporary directory:
+{
+    \rm -rf $tempdir
+}
+
 
 # MAIN FUNCTION:
 # ==============
@@ -354,6 +347,19 @@ options "$@"
 shift $(( OPTIND - 1 ))
 
 [ $# -lt 2 ] && printf %s\\n "Not enough arguments given" >&2 && exit 1
+
+# Create directory for the temporary files:
+if [ -d /tmp/ramdisk/ ]; then
+    location="/tmp/ramdisk"
+elif [ -d /dev/shm/ ]; then
+    location="/dev/shm"
+else
+    location="."
+fi
+tempdir="$location/temp_$(date | tr ' ' '_')"
+mkdir "$tempdir"
+
+trap "rm_tempdir; exit 1" INT PIPE
 
 # The HTML deletion- and insertion-tags:
 delete_start="<span style=\"font-weight:bold;color:#$delhex;\">"
@@ -365,7 +371,8 @@ counter=0
 if [ $args = "directories" ]; then
 
     # Check if given directories exist:
-    ([ ! -d "$1" ] || [ ! -d "$2" ]) && printf %s\\n "Specify existing directories." >&2 && exit 1
+    ([ ! -d "$1" ] || [ ! -d "$2" ]) && printf %s\\n "Specify existing directories." >&2 &&
+    rm_tempdir && exit 1
 
     # Create the ./diff/-directory, unless it already exists:
     [ ! -d ./diff ] && mkdir ./diff
@@ -454,8 +461,9 @@ else
         printf %s\\n "$html_coda"
     else
         printf %s\\n "ERROR: Specify existing files and no directories" >&2
+        rm_tempdir
         exit 1
     fi | output -
 fi
 
-\rm -rf "$tempdir"
+rm_tempdir
