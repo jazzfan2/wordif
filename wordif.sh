@@ -335,7 +335,7 @@ output()
 rm_tempdir()
 # Remove temporary directory:
 {
-    \rm -rf $tempdir
+    \rm -rf "$tempdir"
 }
 
 
