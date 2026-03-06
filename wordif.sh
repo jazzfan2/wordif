@@ -250,7 +250,7 @@ convert_tags()
     tail -n +4 |
     awk -v delstart="$delete_start" -v insstart="$insert_start" -v end="$end" -v sign="xx" '
     {
-        if(substr($0, 1, 1) == sign)
+        if (substr($0, 1, 1) == sign)
             qty += 1
         else{
             groups[++i, 0] = qty
@@ -262,7 +262,7 @@ convert_tags()
     }
     END {
         groups[++i, 0] = qty
-        groups[i,   1] = sign
+        groups[  i, 1] = sign
         j = 0
         for (k = 2; k <= i; k++){
             qty   = groups[k, 0]
