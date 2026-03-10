@@ -255,8 +255,8 @@ convert_tags()
         else{
             groups[++i, 0] = qty
             groups[  i, 1] = sign
-            sign = substr($0, 1, 1)
             qty = 1
+            sign = substr($0, 1, 1)
         }
         words[++j] = $0
     }
