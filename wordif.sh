@@ -346,7 +346,7 @@ rm_tempdir()
 options "$@"
 shift $(( OPTIND - 1 ))
 
-[ $# -lt 2 ] && printf %s\\n "Not enough arguments given" >&2 && exit 1
+[ $# -lt 2 ] && printf %s\\n "ERROR: Not enough arguments given" >&2 && exit 1
 
 # Create directory for the temporary files:
 if [ -d /tmp/ramdisk/ ]; then
@@ -371,7 +371,7 @@ counter=0
 if [ $args = "directories" ]; then
 
     # Check if given directories exist:
-    ([ ! -d "$1" ] || [ ! -d "$2" ]) && printf %s\\n "Specify existing directories." >&2 &&
+    ([ ! -d "$1" ] || [ ! -d "$2" ]) && printf %s\\n "ERROR: Specify existing directories." >&2 &&
     rm_tempdir && exit 1
 
     # Create the ./diff/-directory, unless it already exists:
