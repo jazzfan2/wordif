@@ -307,7 +307,6 @@ joinwords()
 makediff()
 # Perform text comparison between two text files, and generate color-marked difference-file:
 {
-
     sed "$esc_html" "$1" | splitwords - >| "$tempdir"/file1_temp.txt
     sed "$esc_html" "$2" | splitwords - >| "$tempdir"/file2_temp.txt
     printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt   # Force diff -U to also output in case of no difference
