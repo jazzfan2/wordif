@@ -57,7 +57,7 @@ hun bestandsnamen beginnen met hetzelfde NUMMER gevolgd door een UNDERSCORE,
 eventueel gevolgd door een vr\[ij] te kiezen gedeelte (dat onderling verschillend
 mag z\[ij]n).
 .LP
-Het programma zal tekstbestanden in die in `oud/\:' z\[ij]n opgeslagen vergel\[ij]ken
+Het programma zal tekstbestanden die in `oud/\:' z\[ij]n opgeslagen vergel\[ij]ken
 met die in `nieuw/\:' waarvan de naam met hetzelfde NUMMER begint, b\[ij]voorbeeld:
 .LP
 .nr table_nr +1
@@ -102,7 +102,7 @@ T}
 .TE
 .LP
 .LP
-De laatste deel van de namen kan dus verschillend z\[ij]n.
+Het laatste deel van de namen kan dus verschillend z\[ij]n.
 .LP
 Let op:
 .IP "\m[blue]\(en" 3
@@ -152,8 +152,8 @@ in BEIDE vergeleken bestanden in `oud/\:' en `nieuw/\:'
 Rode tekst:   WEL aanwezig in het bestand in `oud/\:';
 NIET op die plaats in het vergeleken bestand in `nieuw/\:';
 .IP "\m[blue]\(en" 3
-Groene tekst: WEL in het vergeleken bestand in `nieuw/\:';
-NIET op die plaats aanwezig in het bestand in `oud/\:'.
+Groene tekst: WEL aanwezig in het bestand in `nieuw/\:';
+NIET op die plaats in het vergeleken bestand in `oud/\:'.
 .LP
 Vanuit elk van deze html-bestanden kan b.v. geprint worden naar PDF.
 Verder z\[ij]n er nog de volgende mogel\[ij]kheden:
