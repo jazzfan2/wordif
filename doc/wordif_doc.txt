@@ -21,14 +21,14 @@ hun bestandsnamen beginnen met hetzelfde NUMMER gevolgd door een UNDERSCORE,
 eventueel gevolgd door een vrij te kiezen gedeelte (dat onderling verschillend
 mag zijn).
 
-Het programma zal tekstbestanden in die in 'oud/' zijn opgeslagen vergelijken 
+Het programma zal tekstbestanden die in 'oud/' zijn opgeslagen vergelijken 
 met die in 'nieuw/' waarvan de naam met hetzelfde NUMMER begint, bijvoorbeeld:
 	oud/				-							nieuw/
 	1_voorwoord.txt		wordt vergeleken met:		1_inleiding.txt
 	2_highlights.txt	wordt vergeleken met:		2_highlights.txt
 	3_tips.txt			wordt vergeleken met:		3_tips&tricks.txt
 
-De laatste deel van de namen kan dus verschillend zijn.
+Het laatste deel van de namen kan dus verschillend zijn.
 
 Let op:
 - Het aantal genummerde bestanden in 'oud/' moet gelijk zijn aan dat in 'nieuw/'.
@@ -73,8 +73,8 @@ In elk van de resulterende .html-bestanden in de map 'diff/' is:
 - Rode tekst:   WEL aanwezig in het bestand in 'oud/';
                 NIET op die plaats in het vergeleken bestand in 'nieuw/';
 
-- Groene tekst: WEL in het vergeleken bestand in 'nieuw/';
-                NIET op die plaats aanwezig in het bestand in 'oud/'.
+- Groene tekst: WEL aanwezig in het bestand in 'nieuw/';
+                NIET op die plaats in het vergeleken bestand in 'oud/'.
 
 Vanuit elk van deze html-bestanden kan b.v. geprint worden naar PDF.
 Verder zijn er nog de volgende mogelijkheden:
