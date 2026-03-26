@@ -51,6 +51,18 @@ Options:
              Character size in pts (default 12 pts). Also accepts values with decimal point. 
 
 
+# Example
+
+In case of following texts, the first one being a original text fragment from Shakespeare's 
+'All's Well That Ends Well', and the second one a translation into modern English:
+
+First text file:
+	So please your majesty, my master hath been an honourable gentleman: tricks he hath had in him, which gentlemen have. 
+Second text file:
+	If it please your majesty, my master has been an honorable gentleman. He's only done things that gentlemen do.
+
+The resulting difference file in html-format looks as follows in a browser: 
+
 ![alt text](images/shakespeare_diff_text.png)
 
 
