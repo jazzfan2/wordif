@@ -54,7 +54,7 @@ Options:
 # Example
 
 In case of following texts, the first one being a original text fragment from Shakespeare's 
-'All's Well That Ends Well', and the second one a translation into modern English:
+"All's Well That Ends Well", and the second one a translation into modern English:
 
 First plain-text-file:
 
