@@ -56,15 +56,15 @@ Options:
 In case of following texts, the first one being a original text fragment from Shakespeare's 
 'All's Well That Ends Well', and the second one a translation into modern English:
 
-First text file:
+First plain-text-file:
 
 	So please your majesty, my master hath been an honourable gentleman: tricks he hath had in him, which gentlemen have. 
 
-Second text file:
+Second plain-text-file:
 
 	If it please your majesty, my master has been an honorable gentleman. He's only done things that gentlemen do.
 
-The resulting difference file in html-format looks as follows in a browser: 
+The resulting difference file looks as follows in a html-browser: 
 
 ![alt text](images/shakespeare_diff_text.png)
 
