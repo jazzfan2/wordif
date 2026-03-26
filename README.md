@@ -58,8 +58,8 @@ In case of following texts, the first being an original text fragment from Shake
 
 First plain-text-file:
 
-	If you shall prove This ring was ever hers, you shall as easy Prove that
-	I husbanded her bed in Florence, Where yet she never was.
+	If you shall prove This ring was ever hers, you shall as easy Prove
+	that I husbanded her bed in Florence, Where yet she never was.
 
 Second plain-text-file:
 
