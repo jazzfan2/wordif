@@ -98,7 +98,7 @@ The resulting difference file is as follows:
 	</html>
 
 and looks as follows in an html-browser or (with option -p) as a PDF: 
-![alt text](images/shakespeare_diff_text.png)
+![alt text](images/shakespeare_diff_text2.png)
 
 
 
