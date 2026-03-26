@@ -66,7 +66,7 @@ Second plain-text-file:
 	If you can prove that the ring was ever hers, you can prove as easily
 	that I slept with her in bed in Florence, where she's never been.
 
-The resulting difference file looks as follows in an html-browser: 
+The resulting difference file looks as follows in an html-browser or (with option -p) as a PDF: 
 ![alt text](images/shakespeare_diff_text.png)
 
 
