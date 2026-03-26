@@ -64,8 +64,7 @@ Second plain-text-file:
 
 	If it please your majesty, my master has been an honorable gentleman. He's only done things that gentlemen do.
 
-The resulting difference file looks as follows in a html-browser: 
-
+The resulting difference file looks as follows in an html-browser: 
 ![alt text](images/shakespeare_diff_text.png)
 
 
