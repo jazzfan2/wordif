@@ -58,11 +58,13 @@ In case of following texts, the first one being a original text fragment from Sh
 
 First plain-text-file:
 
-	So please your majesty, my master hath been an honourable gentleman: tricks he hath had in him, which gentlemen have. 
+	So please your majesty, my master hath been an honourable gentleman:
+	tricks he hath had in him, which gentlemen have. 
 
 Second plain-text-file:
 
-	If it please your majesty, my master has been an honorable gentleman. He's only done things that gentlemen do.
+	If it please your majesty, my master has been an honorable gentleman.
+	He's only done things that gentlemen do.
 
 The resulting difference file looks as follows in an html-browser: 
 ![alt text](images/shakespeare_diff_text.png)
