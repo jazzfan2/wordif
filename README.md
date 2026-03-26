@@ -95,7 +95,7 @@ The resulting difference file is as follows:
 	as easy Prove</span> <span style="font-weight:bold;color:#00ff00;">can
 	prove as easily</span> that I <span style="font-weight:bold;color:#ff0000;">husbanded</span> <span style="font-weight:bold;color:#00ff00;">slept with</span> her <span style="font-weight:bold;color:#00ff00;">in</span> bed in Florence,<span style="font-weight:bold;color:#ff0000;">
 	Where yet she</span><span style="font-weight:bold;color:#00ff00;">
-	where she's</span> never <span style="font-weight:bold;color:#ff0000;">was.</span> <span style="font-weight:bold;color:#00ff00;">been.</span>  <span style="font-weight:bold;color:#00ff00;"> </span>
+	where she's</span> never <span style="font-weight:bold;color:#ff0000;">was.</span> <span style="font-weight:bold;color:#00ff00;">been.  </span>
 
 	</pre>
 	</body>
