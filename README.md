@@ -58,13 +58,15 @@ In case of following texts, the first being an original text fragment from Shake
 
 First plain-text-file:
 
-	If you shall prove This ring was ever hers, you shall as easy Prove
-	that I husbanded her bed in Florence, Where yet she never was.
+	If you shall prove This ring was ever hers, you shall
+	as easy Prove that I husbanded her bed in Florence,
+	Where yet she never was.
 
 Second plain-text-file:
 
-	If you can prove that the ring was ever hers, you can prove as easily
-	that I slept with her in bed in Florence, where she's never been.
+	If you can prove that the ring was ever hers, you can
+	prove as easily that I slept with her in bed in Florence,
+	where she's never been.
 
 The resulting difference file looks as follows in an html-browser or (with option -p) as a PDF: 
 ![alt text](images/shakespeare_diff_text.png)
