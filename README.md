@@ -91,11 +91,7 @@ The resulting difference file is as follows:
 	<body>
 	<pre>
 
-	If you <span style="font-weight:bold;color:#ff0000;">shall</span> <span style="font-weight:bold;color:#00ff00;">can</span> prove <span style="font-weight:bold;color:#ff0000;">This</span> <span style="font-weight:bold;color:#00ff00;">that the</span> ring was ever hers, you <span style="font-weight:bold;color:#ff0000;">shall
-	as easy Prove</span> <span style="font-weight:bold;color:#00ff00;">can
-	prove as easily</span> that I <span style="font-weight:bold;color:#ff0000;">husbanded</span> <span style="font-weight:bold;color:#00ff00;">slept with</span> her <span style="font-weight:bold;color:#00ff00;">in</span> bed in Florence,<span style="font-weight:bold;color:#ff0000;">
-	Where yet she</span><span style="font-weight:bold;color:#00ff00;">
-	where she's</span> never <span style="font-weight:bold;color:#ff0000;">was.</span> <span style="font-weight:bold;color:#00ff00;">been.  </span>
+	If you <span style="font-weight:bold;color:#ff0000;">shall</span> <span style="font-weight:bold;color:#00ff00;">can</span> prove <span style="font-weight:bold;color:#ff0000;">This</span> <span style="font-weight:bold;color:#00ff00;">that the</span> ring was ever hers, you <span style="font-weight:bold;color:#ff0000;">shall</span> <span style="font-weight:bold;color:#00ff00;">can prove</span> as <span style="font-weight:bold;color:#ff0000;">easy Prove</span> <span style="font-weight:bold;color:#00ff00;">easily</span> that I <span style="font-weight:bold;color:#ff0000;">husbanded</span> <span style="font-weight:bold;color:#00ff00;">slept with</span> her <span style="font-weight:bold;color:#00ff00;">in</span> bed in Florence, <span style="font-weight:bold;color:#ff0000;">Where yet she</span> <span style="font-weight:bold;color:#00ff00;">where she's</span> never <span style="font-weight:bold;color:#ff0000;">was.</span> <span style="font-weight:bold;color:#00ff00;">been.  </span>
 
 	</pre>
 	</body>
