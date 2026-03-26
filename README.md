@@ -68,7 +68,7 @@ Second plain-text-file:
 	prove as easily that I slept with her in bed in Florence,
 	where she's never been.
 
-The resulting difference file is as follows
+The resulting difference file is as follows:
 
 	<!DOCTYPE html>
 	<html>
