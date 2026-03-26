@@ -68,7 +68,40 @@ Second plain-text-file:
 	prove as easily that I slept with her in bed in Florence,
 	where she's never been.
 
-The resulting difference file looks as follows in an html-browser or (with option -p) as a PDF: 
+The resulting difference file is as follows
+
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset="utf8">
+	<style type="text/css">
+	pre {
+	  font-family: "Courier New", monospace;
+	  font-size:   12pt;
+	  white-space: pre-wrap;
+	  white-space: -moz-pre-wrap;
+	  white-space: -pre-wrap;
+	  white-space: -o-pre-wrap;
+	  white-space: -webkit-pre-wrap;
+	  word-wrap:   break-word;
+	}
+	</style>
+	<title>nieuw/2_shakespeare.txt</title>
+	</head>
+	<body>
+	<pre>
+
+	If you <span style="font-weight:bold;color:#ff0000;">shall</span> <span style="font-weight:bold;color:#00ff00;">can</span> prove <span style="font-weight:bold;color:#ff0000;">This</span> <span style="font-weight:bold;color:#00ff00;">that the</span> ring was ever hers, you <span style="font-weight:bold;color:#ff0000;">shall
+	as easy Prove</span> <span style="font-weight:bold;color:#00ff00;">can
+	prove as easily</span> that I <span style="font-weight:bold;color:#ff0000;">husbanded</span> <span style="font-weight:bold;color:#00ff00;">slept with</span> her <span style="font-weight:bold;color:#00ff00;">in</span> bed in Florence,<span style="font-weight:bold;color:#ff0000;">
+	Where yet she</span><span style="font-weight:bold;color:#00ff00;">
+	where she's</span> never <span style="font-weight:bold;color:#ff0000;">was.</span> <span style="font-weight:bold;color:#00ff00;">been.</span>  <span style="font-weight:bold;color:#00ff00;"> </span>
+
+	</pre>
+	</body>
+	</html>
+
+and looks as follows in an html-browser or (with option -p) as a PDF: 
 ![alt text](images/shakespeare_diff_text.png)
 
 
