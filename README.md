@@ -51,6 +51,10 @@ Options:
              Character size in pts (default 12 pts). Also accepts values with decimal point. 
 
 
+![alt text](images/shakespeare_diff_text.png)
+
+
+
 # Author:
 wordif.sh has been written by Rob Toscani (rob_toscani@yahoo.com).
 If you find any bugs or want to comment otherwise, please let me know.
