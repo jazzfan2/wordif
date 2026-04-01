@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-# Naam: GETDIFF.py
-# Opgesteld: Rob Toscani
-# Datum: 21-01-2026
-# Beschrijving:
-# Voer het lokale programma 'wordif.sh' uit op de lokale directories 'oud/' en 'nieuw/'
-# ('knop'-onderdeel in de directory 'WORDIF')
+# Name: GETDIFF.py
+# Author: Rob Toscani
+# Date: 21-01-2026
+# Description:
+# Run the local program 'wordif.sh' on local directories 'oud/' and 'nieuw/'
+# ('button'-component within the 'WORDIF' directory).
 #
 #######################################################################################
 
 import os
 
-dirpath = os.path.dirname( __file__ )    # De locatie van dit python-script
+dirpath = os.path.dirname( __file__ )    # The location of this Python script
 
 print(dirpath)
 
