@@ -6,14 +6,14 @@ Create two (sub)folders in the project folder in advance, and name them for exam
 
 Now derive plain text files from the source texts to be compared (in e.g. InDesign), preferably one file per chapter or article.
 
-For example, select text from an InDesign article with 'Ctrl-A', copy with 'Ctrl-C', and paste into a PLAIN editor with 'Ctrl-V'.
+For example, select text from an InDesign article with 'Ctrl-A', copy with 'Ctrl-C', and paste into a PLAIN text editor with 'Ctrl-V'.
 
 Save these PLAIN text files (Unicode text encoding [UTF-8]) in 'old/' and 'new/' in such a way that for every file in 'old'
 there is a file to compare with it in 'new'. To relate two files in different folders to each other,
 their filenames must start with the same NUMBER followed by an UNDERSCORE,
 optionally followed by a freely chosen part (which may be different from each other).
 
-The program will compare text files stored in 'old/' with those in 'new/' whose names start with the same NUMBER, for example:
+The program will compare text files stored in 'old/' with those in 'new/' which names start with the same NUMBER, for example:
 
 old/				-					new/
 1_voorwoord.txt		is compared with:	1_inleiding.txt
