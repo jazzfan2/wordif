@@ -1,0 +1,68 @@
+HOW TO USE THE PROGRAM 'WORDIF.SH':
+
+1. Preparation:
+===============
+Create two (sub)folders in the project folder in advance, and name them for example, 'old' and 'new' (other names are also allowed.)
+
+Now derive plain text files from the source texts to be compared (in e.g. InDesign), preferably one file per chapter or article.
+
+For example, select text from an InDesign article with 'Ctrl-A', copy with 'Ctrl-C', and paste into a PLAIN editor with 'Ctrl-V'.
+
+Save these PLAIN text files (Unicode text encoding [UTF-8]) in 'old/' and 'new/' in such a way that for every file in 'old'
+there is a file to compare with it in 'new'. To relate two files in different folders to each other,
+their filenames must start with the same NUMBER followed by an UNDERSCORE,
+optionally followed by a freely chosen part (which may be different from each other).
+
+The program will compare text files stored in 'old/' with those in 'new/' whose names start with the same NUMBER, for example:
+
+old/				-					new/
+1_voorwoord.txt		is compared with:	1_inleiding.txt
+2_highlights.txt	is compared with:	2_highlights.txt
+3_tips.txt			is compared with:	3_tips&tricks.txt
+The last part of the names can therefore be different.
+
+Note:
+- The number of numbered files in 'old/' must be equal to that in 'new/'.
+- Each NUMBER value may only appear once per folder.
+- Spaces may appear after the '_' in filenames, but preferably avoid them.
+
+
+2. Operation of the program:
+============================
+To start the program, type the following command in a terminal,
+and then press <ENTER>: [code]
+
+	wordif.sh -d old new
+
+[/code]
+The '-d' option implies that two folders are specified - as above - not two text files.
+
+The program now processes all pairs of text files in the mentioned folders one by one and generates difference files from them.
+
+These are each placed as a separate HTML file in the 'diff/' folder.
+
+The filename is structured as follows: [code]
+
+	DATE_TIME_'diff'_NUMBER.'html'
+
+[/code]
+The NUMBER in the names of the difference files corresponds to that of the compared text files.
+
+If the program encounters duplicates and/or missing values ​​of NUMBER in a single folder, it will display warnings regarding this in the terminal, but will continue its task as best as possible.
+
+As soon as the program is finished, it will display a notification in the same terminal.
+
+In each of the resulting .html files in the 'diff/' folder:
+- Black text: PRESENT at that location
+              in BOTH compared files in 'old/' and 'new/'
+- Red text:   PRESENT in the file in 'old/';
+              NOT at that location in the compared file in 'new/';
+- Green text: PRESENT in the file in 'new/';
+              NOT at that location in the compared file in 'old/'.
+
+From each of these html files, it is possible to print to PDF, for example. Furthermore, the following options are available:
+
+* If the '-p' option is also specified between 'wordif.sh' and 'oud', then
+the difference files will be written directly to PDF instead of HTML.
+
+* If the '-d' option is omitted, then two text files must be specified instead of two folders. Only one comparison will then follow instead of a series of comparisons, and one difference file.

@@ -38,7 +38,6 @@ Let op:
 
 2. Werking van het programma:
 =============================
-
 Om het programma te starten, typ in een terminal het volgende commando in,
 en druk daarna op <ENTER>: [code]
 

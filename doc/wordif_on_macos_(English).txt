@@ -1,0 +1,22 @@
+Step-by-step guide for wordif.sh on a MacOS laptop
+==================================================
+
+1. Create the folder 'WORDIF/' under 'Desktop/', containing the subdirectories: 'oud/' and 'nieuw/'
+2. Create the folder 'scripts/' under 'Desktop/' or directly under '$HOME' (= /Users/<user>/)
+3. Place the file 'wordif.sh' in the folder 'scripts/'
+4. Open a terminal, navigate to the folder 'scripts/', and make the file 'wordif.sh' executable with the command: [code]
+
+	chmod u+x wordif.sh
+
+[/code]
+5. Optionally, also place a copy (adapted to the folder structure) of '.bashrc', '.profile', and '.bash_aliases' in '$HOME',
+   as to make it easier to call scripts in the terminal and use aliases for frequently used commands
+6. Create a 'Launch Wordif App' launcher (/bin/bash program) using 'Automator' with the following content: [code]
+
+	cd /Users/<user>/Desktop/WORDIF
+	/Users/<user>/Desktop/scripts/wordif.sh -d oud nieuw
+
+[/code] and save this to 'Desktop/'
+7. Place the text files to be compared in the 'oud/' and 'nieuw/' folders, following the instructions in 'wordif_doc.pdf'
+8. A (double) click on 'Launch Wordif App' will now create a 'diff/' folder (if it did not already exist),
+   and place the difference files for the contents of 'oud/' and 'nieuw/' inside it.

@@ -1,0 +1,31 @@
+Installation of WORDIF:
+==============================
+1. Place the archive file 'WORDIF.tar.gz' on the Desktop;
+2. Double-click 'WORDIF.tar.gz' to extract it;
+3. In the resulting 'WORDIF' folder you will find:
+- the two folders 'oud/' and 'nieuw/', these are intended for placing the text files to be compared;
+- the file 'wordif.sh', the comparison program;
+- the file 'GETDIFF.py', the 'button' used to start 'wordif.sh'; 'GETDIFF.sh' is an alternative;
+- this manual 'Instruction.pdf'
+
+Procedure for comparing plain text files:
+=========================================
+1. Open the 'WORDIF' folder;
+2. For each PLAIN text file to be compared (Unicode text encoding [UTF-8]), place one old version in the 'oud/' folder,
+   and one new version in the 'nieuw/' folder;
+3. The names of both versions of a file must start with the same UNIQUE NUMBER, followed by an underscore; spaces are allowed after that;
+4. There is no upper limit on the number of text files to be compared;
+5. Now double-click on the file 'GETDIFF.py' to start the program;
+6. The results of the comparison between the versions in 'oud/' and 'nieuw/' of all files are now automatically placed
+   in a third folder 'diff/';
+7. The name of each result file is structured as follows: [code]
+
+	DATE_TIME_'diff'_NUMBER.'html'
+
+[/code]
+
+Notes:
+======
+- The folder 'diff/' and/or its contents can be deleted at will, as well as the CONTENTS of 'oud/' and 'nieuw/';
+- If 'diff/' already contains results from previous comparisons, the new results will be added to it;
+- In the absence of 'diff/', it will be recreated with current content upon the next double-click of 'GETDIFF.py'.

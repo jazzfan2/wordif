@@ -5,7 +5,7 @@ Installatie van WORDIF:
 3. In de resulterende map 'WORDIF' vind je:
 - de twee mappen 'oud/' en 'nieuw/', deze zijn bedoeld om de te vergelijken tekstbestanden in te plaatsen;
 - het bestand 'wordif.sh', het vergelijkingsprogramma;
-- het bestand 'GETDIFF.py', de 'knop' waarmee 'wordif.sh' wordt gestart;
+- het bestand 'GETDIFF.py', de 'knop' waarmee 'wordif.sh' wordt gestart; 'GETDIFF.sh' is een alternatief;
 - deze handleiding 'Instruction.pdf'
 
 Procedure vergelijking platte tekstbestanden:
