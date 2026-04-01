@@ -245,7 +245,7 @@ splitwords()
 }
 
 convert_tags()
-# Replace '-' or '+' line tags by red and green html-color group tags, and remove leading space:
+# Replace '-' and '+' line tags by red and green html-color group tags, and remove leading space:
 {
     tail -n +4 |
     awk -v delstart="$delete_start" -v insstart="$insert_start" -v end="$end" -v sign="xx" '
