@@ -1,7 +1,7 @@
 #!/bin/sh
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 28th February 2026
+# Date: 15th June 2026
 # Description: This program performs word-by-word comparison between
 # two plain-text-files.
 #
@@ -184,7 +184,8 @@ checkrepeat()
 # Detect any repeating numbers in a sorted number list, and issue a warning if found:
 {
     repeatnum="$(printf "$1" |
-    awk '{ for (f = 2; f <= NF; f++)
+    awk 'BEGIN { prevprint = -1 }
+         { for (f = 2; f <= NF; f++)
                if ($f == $(f-1) && $f != prevprint){
                    printf ("%s ", $f)
                    prevprint = $f

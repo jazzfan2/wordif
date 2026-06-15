@@ -40,6 +40,7 @@ It then compares each plain-text-file in \fIdirectory2\fP to its equivalent in \
 Plain-text-files within subdirectories of \fIdirectory1\fP and \fIdirectory2\fP are ignored.
 To correctly associate each pair of files shared by both directories,
 their file names must start with the same unique non-negative integer number, followed by an underscore (_).
+Numbers with prefixed zero(s) are ignored.
 .LP
 The resulting difference-files are collected in a directory named \fCdiff/\fP,
 which is either newly created \(en on the same level as both given directories \(en or re-used,
