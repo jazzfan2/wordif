@@ -125,6 +125,7 @@ options(){
                ;;
         esac
     done
+#  (Suggestion: an additional option could be introduced for showing 'deleted-text' in 'strikethrough' mode.)
 }
 
 helptext()
