@@ -1,7 +1,7 @@
 #!/bin/sh
 # Name: GETDIFF.sh
 # Author: Rob Toscani
-# Date: 21-03-2026
+# Date: 14-08-2026
 # Description:
 # Run the local program 'wordif.sh' on local directories 'oud/' and 'nieuw/'
 # ('button'-component within the 'WORDIF' directory).
@@ -23,4 +23,4 @@ myloc="$( ( OLDPWD=- CDPATH= cd -P -- "$(dirname $0)" && pwd ) )"
 
 cd "$myloc"
 
-./wordif.sh -d oud nieuw
+./wordif.sh -dr oud nieuw

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 15th June 2026
+# Date: 8th August 2026
 # Description: This program performs word-by-word comparison between
 # two plain-text-files.
 #
@@ -49,6 +49,9 @@ args="files"
 delhex="ff0000"
 inshex="00ff00"
 
+# Default behaviour in case of word breaks at end of line - do not reunite:
+reunite=false
+
 # Standard character font:
 font="\"Courier New\", monospace"
 
@@ -79,7 +82,7 @@ format="html_file"
 
 options(){
 # Specify options:
-    while getopts "c:C:df:hopz:" OPTION; do
+    while getopts "c:C:df:hoprz:" OPTION; do
         case $OPTION in
             c) if printf "$OPTARG" | grep -qE "^[0-9a-fA-F]{6}$" -; then
                    delhex="$OPTARG"
@@ -113,6 +116,8 @@ options(){
                fi
                ;;
             p) format="pdf_file"
+               ;;
+            r) reunite=true
                ;;
             z) if printf "$OPTARG" | grep -qE "^[[:digit:]]*\.?[[:digit:]]+$" -; then
                    size=$OPTARG
@@ -156,6 +161,7 @@ Usage:
 |                t   Times
 -o       Send HTML-text to stdout rather than to file.
 -p       Convert HTML-text and save to PDF-file; this option overrides option -o
+-r       Reunite words that are broken off at the end of a text line
 -z SIZE
 |        Character size in pts as a replacement for 12 pts.
 |        Also accepts values with decimal point.
@@ -234,11 +240,31 @@ non_plain()
     return 1
 }
 
+cut_invisible()
+# Remove invisible characters from input text-file:
+{
+    # https://stackoverflow.com/questions/27052194/how-to-replace-unicode-characters-with-ascii
+    # https://thetexttool.com/blog/remove-invisible-unicode-characters
+    # \x-codes obtained through: echo "$(printf '\u00AD')" | hexdump -C
+    awk '{
+        gsub(/\xc2\xad/,     "")    # Remove Soft Hyphen               U+00AD
+        gsub(/\xe2\x80\x8b/, "")    # "      Zero-Width Space          U+200B
+        gsub(/\xe2\x80\x8c/, "")    # "      Zero-Width Joiner         U+200C
+        gsub(/\xc2\xa0/,     "")    # "      Non-Breaking Space        U+00A0
+        gsub(/\xe2\x81\xa0/, "")    # "      Word Joiner               U+2060
+        gsub(/\xef\xbb\xbf/, "")    # "      Zero-Width No-Break Space U+FEFF
+        gsub(/\xe2\x80\x89/, "")    # "      Thin Space                U+2009
+        gsub(/\xe2\x80\x8a/, "")    # "      Hair Space                U+200A
+        gsub(/\r/,  "")             # "      Carriage Return
+        gsub(/ *$/, "")             # "      Trailing Space(s)
+        print
+    }' "$1"
+}
+
 splitwords()
 # Place all words on a separate line, while preserving original newlines, spaces and tabs:
 {
     awk '{
-        gsub(/\r/, "")        # Remove any carriage returns
         gsub(/^/, "\b")       # Place backspace at beginning of line as to mark original "new line"
         gsub(/ /, "\n")       # Replace space by newline, putting each word on a separate line
         gsub(/\t/, "\n\t\n")  # Put tab (tabulation) on a separate line as to treat it like a word
@@ -246,10 +272,59 @@ splitwords()
     }' "$1"
 }
 
+unbreak_words()
+# In case of option -r, reunite words broken off at the end of a text line, otherwise don't:
+{
+    awk -v reunite=$reunite 'BEGIN {
+        prev = ""
+    }
+    {
+        if (prev ~ "[^	\b\n ]-$" && $0 ~ "\b" && reunite == "true"){
+            sub(/-$/, "", prev)
+            sub(/\b/, "", $0)
+            prev = prev""$0
+        }
+        else{
+            print prev
+            prev = $0
+        }
+    }
+    END {
+        print prev
+    }' "$1"
+}
+
+untag_newlines()
+# Remove tags caused by differences in newline placement:
+{
+    awk 'BEGIN {
+        prev = ""
+    }
+    {
+        prev_nobackspace = prev
+        sub(/^[+-]/, " ", prev_nobackspace)
+        sub(/\b/,     "", prev_nobackspace)
+        pres_nobackspace = $0
+        sub(/^[+-]/, " ", pres_nobackspace)
+        sub(/\b/,     "", pres_nobackspace)
+        if (pres_nobackspace == prev_nobackspace && prev ~ "^-" && $0 ~ "^+"){
+            prev = $0
+            sub(/^+/, " ", prev)
+        }
+        else{
+            print prev
+            prev = $0
+        }
+    }
+    END {
+        print prev
+    }' "$1"
+}
+
 convert_tags()
 # Replace '-' and '+' line tags by red and green html-color group tags, and remove leading space:
 {
-    tail -n +4 |
+    tail -n +5 |
     awk -v delstart="$delete_start" -v insstart="$insert_start" -v end="$end" -v sign="xx" '
     {
         if (substr($0, 1, 1) == sign)
@@ -309,13 +384,18 @@ joinwords()
 makediff()
 # Perform text comparison between two text files, and generate color-marked difference-file:
 {
-    sed "$esc_html" "$1" | splitwords - >| "$tempdir"/file1_temp.txt
-    sed "$esc_html" "$2" | splitwords - >| "$tempdir"/file2_temp.txt
-    printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt   # Force diff -U to also output in case of no difference
+    # Preprocessing steps:
+    cut_invisible "$1" | sed "$esc_html" | splitwords - | unbreak_words ->| "$tempdir"/file1_temp.txt
+    cut_invisible "$2" | sed "$esc_html" | splitwords - | unbreak_words ->| "$tempdir"/file2_temp.txt
 
+    # Force diff -U to also output in case of no difference:
+    printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt
+
+    # Do the actual 'diff -U'-operation, followed by the postprocessing steps:
     diff -U 100000000 "$tempdir/file1_temp.txt" "$tempdir/file2_temp.txt" |
 
-    convert_tags - |
+    untag_newlines - |
+    convert_tags -   |
     joinwords -
 }
 
