@@ -47,6 +47,7 @@ Options:
                      t   Times
     -o       Send HTML-text to stdout rather than to file.
     -p       Output as PDF- instead of HTML-files; this option overrides option -o
+    -r       Reunite words that are broken off at the end of a text line.
     -z SIZE
              Character size in pts (default 12 pts). Also accepts values with decimal point. 
 
