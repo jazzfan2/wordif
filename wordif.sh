@@ -1,7 +1,7 @@
 #!/bin/sh
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 8th August 2026
+# Date: 25th August 2026
 # Description: This program performs word-by-word comparison between
 # two plain-text-files.
 #
@@ -161,7 +161,7 @@ Usage:
 |                t   Times
 -o       Send HTML-text to stdout rather than to file.
 -p       Convert HTML-text and save to PDF-file; this option overrides option -o
--r       Reunite words that are broken off at the end of a text line
+-r       Reunite words that are broken off at the end of a text line.
 -z SIZE
 |        Character size in pts as a replacement for 12 pts.
 |        Also accepts values with decimal point.
@@ -240,34 +240,17 @@ non_plain()
     return 1
 }
 
-cut_invisible()
-# Remove invisible characters from input text-file:
-{
-    # https://stackoverflow.com/questions/27052194/how-to-replace-unicode-characters-with-ascii
-    # https://thetexttool.com/blog/remove-invisible-unicode-characters
-    # \x-codes obtained through: echo "$(printf '\u00AD')" | hexdump -C
-    awk '{
-        gsub(/\xc2\xad/,     "")    # Remove Soft Hyphen               U+00AD
-        gsub(/\xe2\x80\x8b/, "")    # "      Zero-Width Space          U+200B
-        gsub(/\xe2\x80\x8c/, "")    # "      Zero-Width Joiner         U+200C
-        gsub(/\xc2\xa0/,     "")    # "      Non-Breaking Space        U+00A0
-        gsub(/\xe2\x81\xa0/, "")    # "      Word Joiner               U+2060
-        gsub(/\xef\xbb\xbf/, "")    # "      Zero-Width No-Break Space U+FEFF
-        gsub(/\xe2\x80\x89/, "")    # "      Thin Space                U+2009
-        gsub(/\xe2\x80\x8a/, "")    # "      Hair Space                U+200A
-        gsub(/\r/,  "")             # "      Carriage Return
-        gsub(/ *$/, "")             # "      Trailing Space(s)
-        print
-    }' "$1"
-}
-
 splitwords()
 # Place all words on a separate line, while preserving original newlines, spaces and tabs:
 {
     awk '{
-        gsub(/^/, "\b")       # Place backspace at beginning of line as to mark original "new line"
-        gsub(/ /, "\n")       # Replace space by newline, putting each word on a separate line
-        gsub(/\t/, "\n\t\n")  # Put tab (tabulation) on a separate line as to treat it like a word
+        gsub(/\r/,  "")          # Remove Carriage Return
+        gsub(/ *$/, "")          # Remove Trailing Space(s)
+        gsub(/\xe2\x80\xaf/, "") # Remove Narrow No-Break Space (U+202F)
+        gsub(/^/, "\b")          # Place backspace at beginning of line as to mark original "new line"
+        gsub(/ /, "\n")          # Replace Space by newline, putting each word on a separate line
+        gsub(/\xc2\xa0/, "\n")   # Replace Non-Breaking Space (U+00A0) by newline, for same reason
+        gsub(/\t/, "\n\t\n")     # Put tab (tabulation) on a separate line as to treat it like a word
         print
     }' "$1"
 }
@@ -279,8 +262,9 @@ unbreak_words()
         prev = ""
     }
     {
-        if (prev ~ "[^	\b\n ]-$" && $0 ~ "\b" && reunite == "true"){
-            sub(/-$/, "", prev)
+        if (prev ~ "[^	\b\n ](-|\xc2\xad|\xe2\x80\x86|\xe2\x80\x89|\xe2\x80\x8a|\xe2\x80\x8b|\xe2\x80\x8c)$" &&
+            $0 ~ "\b" && reunite == "true"){
+            sub(/.$/, "", prev)
             sub(/\b/, "", $0)
             prev = prev""$0
         }
@@ -291,6 +275,26 @@ unbreak_words()
     }
     END {
         print prev
+    }' "$1"
+}
+
+cut_invisible()
+# Remove invisible characters from input text-file:
+{
+    # https://stackoverflow.com/questions/27052194/how-to-replace-unicode-characters-with-ascii
+    # https://thetexttool.com/blog/remove-invisible-unicode-characters
+    # https://en.wikipedia.org/wiki/Whitespace_character#Unicode
+    # \x-codes obtained through: echo "$(printf '\u00AD')" | hexdump -C
+    awk '{
+        gsub(/\xc2\xad/,     "")    # Remove Soft Hyphen               U+00AD
+        gsub(/\xe2\x80\x86/, "")    # "      Six-per-Em Space          U+2006
+        gsub(/\xe2\x80\x89/, "")    # "      Thin Space                U+2009
+        gsub(/\xe2\x80\x8a/, "")    # "      Hair Space                U+200A
+        gsub(/\xe2\x80\x8b/, "")    # "      Zero-Width Space          U+200B
+        gsub(/\xe2\x80\x8c/, "")    # "      Zero-Width Non-Joiner     U+200C
+        gsub(/\xef\xbb\xbf/, "")    # "      Zero-Width No-Break Space U+FEFF
+        gsub(/\xe2\x81\xa0/, "")    # "      Zero-Width Word Joiner    U+2060
+        print
     }' "$1"
 }
 
@@ -385,8 +389,8 @@ makediff()
 # Perform text comparison between two text files, and generate color-marked difference-file:
 {
     # Preprocessing steps:
-    cut_invisible "$1" | sed "$esc_html" | splitwords - | unbreak_words ->| "$tempdir"/file1_temp.txt
-    cut_invisible "$2" | sed "$esc_html" | splitwords - | unbreak_words ->| "$tempdir"/file2_temp.txt
+    sed "$esc_html" "$1" | splitwords - | unbreak_words - | cut_invisible - ->| "$tempdir"/file1_temp.txt
+    sed "$esc_html" "$2" | splitwords - | unbreak_words - | cut_invisible - ->| "$tempdir"/file2_temp.txt
 
     # Force diff -U to also output in case of no difference:
     printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt
