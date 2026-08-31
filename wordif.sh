@@ -311,9 +311,9 @@ untag_newlines()
         pres_nobackspace = $0
         sub(/^[+-]/, " ", pres_nobackspace)
         sub(/\b/,     "", pres_nobackspace)
-        if (pres_nobackspace == prev_nobackspace && prev ~ "^-" && $0 ~ "^+"){
+        if (pres_nobackspace == prev_nobackspace && prev ~ "^-" && $0 ~ "^\+"){
             prev = $0
-            sub(/^+/, " ", prev)
+            sub(/^\+/, " ", prev)
         }
         else{
             print prev
