@@ -322,7 +322,7 @@ untag_newlines()
     }
     END {
         print prev
-    }' "$1"
+    }' "$1" 2>/dev/null
 }
 
 convert_tags()
