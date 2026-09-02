@@ -256,8 +256,8 @@ splitwords()
 }
 
 unbreak_words()
-# Only in case of option -r, reunite word-parts that are broken off at line end, by either (soft)hyphen or space
-# with unicode U+2006-, U+2009-, U+200A- U+200B- or U+200C. If option -r isn't given, don't:
+# Only in case of option -r, reunite word-parts that are broken off at line end by either a (soft)hyphen or a space
+# with unicode U+2006-, U+2009-, U+200A- U+200B- or U+200C. If option -r isn't given, don't reunite:
 {
     awk -v reunite=$reunite 'BEGIN {
         prev = ""
