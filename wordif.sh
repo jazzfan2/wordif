@@ -246,17 +246,18 @@ splitwords()
     awk '{
         gsub(/\r/,  "")          # Remove Carriage Return
         gsub(/ *$/, "")          # Remove Trailing Space(s)
-        gsub(/\xe2\x80\xaf/, "") # Remove Narrow No-Break Space (U+202F)
         gsub(/^/, "\b")          # Place backspace at beginning of line as to mark original "new line"
         gsub(/ /, "\n")          # Replace Space by newline, putting each word on a separate line
-        gsub(/\xc2\xa0/, "\n")   # Replace Non-Breaking Space (U+00A0) by newline, for same reason
+        gsub(/\xc2\xa0/, "\n")   # Replace Non-Breaking Space    (U+00A0) by newline, for same reason
+        gsub(/\xe2\x80\xaf/, "") # Replace Narrow No-Break Space (U+202F) by newline, for same reason
         gsub(/\t/, "\n\t\n")     # Put tab (tabulation) on a separate line as to treat it like a word
         print
     }' "$1"
 }
 
 unbreak_words()
-# In case of option -r, reunite words broken off at the end of a text line, otherwise don't:
+# Only in case of option -r, reunite word-parts that are broken off at line end, by either (soft)hyphen or space
+# with unicode U+2006-, U+2009-, U+200A- U+200B- or U+200C. If option -r isn't given, don't:
 {
     awk -v reunite=$reunite 'BEGIN {
         prev = ""
