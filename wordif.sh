@@ -244,13 +244,13 @@ splitwords()
 # Place all words on a separate line, while preserving original newlines, spaces and tabs:
 {
     awk '{
-        gsub(/\r/,  "")          # Remove Carriage Return
-        gsub(/ *$/, "")          # Remove Trailing Space(s)
-        gsub(/^/, "\b")          # Place backspace at beginning of line as to mark original "new line"
-        gsub(/ /, "\n")          # Replace Space by newline, putting each word on a separate line
-        gsub(/\xc2\xa0/, "\n")   # Replace Non-Breaking Space    (U+00A0) by newline, for same reason
-        gsub(/\xe2\x80\xaf/, "") # Replace Narrow No-Break Space (U+202F) by newline, for same reason
-        gsub(/\t/, "\n\t\n")     # Put tab (tabulation) on a separate line as to treat it like a word
+        gsub(/\r/,  "")            # Remove Carriage Return
+        gsub(/ *$/, "")            # Remove Trailing Space(s)
+        gsub(/^/, "\b")            # Place backspace at beginning of line as to mark original "new line"
+        gsub(/ /, "\n")            # Replace Space by newline, putting each word on a separate line
+        gsub(/\xc2\xa0/,     "\n") # Replace Non-Breaking Space    (U+00A0) by newline, for same reason
+        gsub(/\xe2\x80\xaf/, "\n") # Replace Narrow No-Break Space (U+202F) by newline, for same reason
+        gsub(/\t/, "\n\t\n")       # Put tab (tabulation) on a separate line as to treat it like a word
         print
     }' "$1"
 }
