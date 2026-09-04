@@ -250,7 +250,7 @@ splitwords()
         gsub(/ /, "\n")            # Replace Space by newline, putting each word on a separate line
         gsub(/\xc2\xa0/,     "\n") # Replace Non-Breaking Space    (U+00A0) by newline, for same reason
         gsub(/\xe2\x80\xaf/, "\n") # Replace Narrow No-Break Space (U+202F) by newline, for same reason
-        gsub(/\t/, "\n\t\n")       # Put tab (tabulation) on a separate line as to treat it like a word
+        gsub(/\t/,       "\n\t\n") # Put tab (tabulation) on a separate line as to treat it like a word
         print
     }' "$1"
 }
