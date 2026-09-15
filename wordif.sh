@@ -1,7 +1,7 @@
 #!/bin/sh
 # Name: wordif.sh
 # Author: Rob Toscani
-# Date: 25th August 2026
+# Date: 15th September 2026
 # Description: This program performs word-by-word comparison between
 # two plain-text-files.
 #
@@ -61,7 +61,7 @@ size=12
 # Escape < and > to prevent interpretation as HTML-syntax (tags):
 esc_html="s/</\&lt;/g; s/>/\&gt;/g"
 
-# Unique string to temporarily add to file2, forcing diff to output if files are equal:
+# Unique string to temporarily add to file2, forcing diff to output even if files are equal:
 tempstring="$(date)"
 
 # The HTML-tags to be pasted underneath the text:
@@ -240,96 +240,142 @@ non_plain()
     return 1
 }
 
-splitwords()
-# Place all words on a separate line, while preserving original newlines, spaces and tabs:
-{
-    awk '{
-        gsub(/\r/,  "")            # Remove Carriage Return
-        gsub(/ *$/, "")            # Remove Trailing Space(s)
-        gsub(/^/, "\b")            # Place backspace at beginning of line as to mark original "new line"
-        gsub(/ /, "\n")            # Replace Space by newline, putting each word on a separate line
-        gsub(/\xc2\xa0/,     "\n") # Replace Non-Breaking Space    (U+00A0) by newline, for same reason
-        gsub(/\xe2\x80\xaf/, "\n") # Replace Narrow No-Break Space (U+202F) by newline, for same reason
-        gsub(/\t/,       "\n\t\n") # Put tab (tabulation) on a separate line as to treat it like a word
-        print
-    }' "$1"
-}
-
-unbreak_words()
-# Only in case of option -r, reunite word-parts that are broken off at line end by either a (soft)hyphen or a space
-# with unicode U+2006-, U+2009-, U+200A- U+200B- or U+200C. If option -r isn't given, don't reunite:
-{
-    awk -v reunite=$reunite 'BEGIN {
-        prev = ""
-    }
-    {
-        if (prev ~ "[^	\b\n ](-|\xc2\xad|\xe2\x80\x86|\xe2\x80\x89|\xe2\x80\x8a|\xe2\x80\x8b|\xe2\x80\x8c)$" &&
-            $0 ~ "\b." && reunite == "true"){
-            sub(/.$/, "", prev)
-            sub(/\b/, "", $0)
-            prev = prev""$0
-        }
-        else{
-            print prev
-            prev = $0
-        }
-    }
-    END {
-        print prev
-    }' "$1"
-}
-
-cut_invisible()
-# Remove invisible characters from input text-file:
+normalize()
+# Standardize the text by neutralizing elements not supposed to be subject to diff-comparison:
 {
     # https://stackoverflow.com/questions/27052194/how-to-replace-unicode-characters-with-ascii
     # https://thetexttool.com/blog/remove-invisible-unicode-characters
     # https://en.wikipedia.org/wiki/Whitespace_character#Unicode
     # \x-codes obtained through: echo "$(printf '\u00AD')" | hexdump -C
-    awk '{
-        gsub(/\xc2\xad/,     "")    # Remove Soft Hyphen               U+00AD
-        gsub(/\xe2\x80\x86/, "")    # "      Six-per-Em Space          U+2006
-        gsub(/\xe2\x80\x89/, "")    # "      Thin Space                U+2009
-        gsub(/\xe2\x80\x8a/, "")    # "      Hair Space                U+200A
-        gsub(/\xe2\x80\x8b/, "")    # "      Zero-Width Space          U+200B
-        gsub(/\xe2\x80\x8c/, "")    # "      Zero-Width Non-Joiner     U+200C
-        gsub(/\xef\xbb\xbf/, "")    # "      Zero-Width No-Break Space U+FEFF
-        gsub(/\xe2\x81\xa0/, "")    # "      Zero-Width Word Joiner    U+2060
-        print
-    }' "$1"
-}
 
-untag_newlines()
-# Remove tags caused by differences in newline placement:
-{
-    awk 'BEGIN {
+    awk -v reunite=$reunite '\
+    BEGIN {
         prev = ""
     }
     {
-        prev_nobackspace = prev
-        sub(/^[+-]/, " ", prev_nobackspace)
-        sub(/\b/,     "", prev_nobackspace)
-        pres_nobackspace = $0
-        sub(/^[+-]/, " ", pres_nobackspace)
-        sub(/\b/,     "", pres_nobackspace)
-        if (pres_nobackspace == prev_nobackspace && prev ~ "^-" && $0 ~ "^\+"){
-            prev = $0
-            sub(/^\+/, " ", prev)
+        gsub(/\r/,           "" )     # Remove  Carriage Return
+        gsub(/ *$/,          "" )     # Remove  Trailing Space(s)
+        gsub(/\xef\xbb\xbf/, "" )     # Remove  Zero-Width No-Break Space U+FEFF
+        gsub(/\xe2\x81\xa0/, "" )     # Remove  Zero-Width Word Joiner    U+2060
+        gsub(/\xc2\xa0/,     " ")     # Replace Non-Breaking Space        U+00A0 by Space
+        gsub(/\xe2\x80\xaf/, " ")     # Replace Narrow No-Break Space     U+202F by Space
+
+        # Breaking symbols are: (soft)hyphen or Unicode 2006-, 2009-, 200A-, 200B- or 200C space:
+        breaksymbol = "[^\t\b\n ](-|\xc2\xad|\xe2\x80\x86|\xe2\x80\x89|\xe2\x80\x8a|\xe2\x80\x8b|\xe2\x80\x8c)$"
+
+        # If present line is empty, determine whether to skip or else what to print:
+        if ($0 == "") {
+            # If the previous line ends with a breaking symbol and "reunite" = true ...
+            # ... skip the empty line and wait for the next non-empty line:
+            if (prev ~ breaksymbol && reunite == "true") {
+                # Do nothing, wait for the next non-empty line:
+            } else {
+                # Print the previous line if not empty:
+                if (prev != "") {
+                    print prev
+                    prev = ""
+                }
+                # Print empty line if "reunite" = false or previous line doesnt end w/ breaking symbol:
+                print ""
+            }
+            next
         }
-        else{
-            print prev
+
+        # With -r option: re-unite words broken off at the end of a line, otherwise dont:
+        if (prev ~ breaksymbol && reunite == "true") {
+            sub(/.$/, "", prev)
+            prev = prev $0
+        } else {
+            if (prev != "") {
+                print prev
+            }
             prev = $0
         }
     }
     END {
-        print prev
-    }' "$1" 2>/dev/null
+        if (prev != "") print prev
+    }' "$1"
+}
+
+cut_invisible()
+# Remove invisible characters from input text-file (new empty lines wont emerge by this,
+# since each character is supposed to be part of a word):
+{
+    awk '{
+        gsub(/\xc2\xad/,     "")      # Remove Soft Hyphen               U+00AD
+        gsub(/\xe2\x80\x86/, "")      # "      Six-per-Em Space          U+2006
+        gsub(/\xe2\x80\x89/, "")      # "      Thin Space                U+2009
+        gsub(/\xe2\x80\x8a/, "")      # "      Hair Space                U+200A
+        gsub(/\xe2\x80\x8b/, "")      # "      Zero-Width Space          U+200B
+        gsub(/\xe2\x80\x8c/, "")      # "      Zero-Width Non-Joiner     U+200C
+        gsub(/\xef\xbb\xbf/, "")      # "      Zero-Width No-Break Space U+FEFF
+        gsub(/\xe2\x81\xa0/, "")      # "      Zero-Width Word Joiner    U+2060
+        print
+    }' "$1"
+}
+
+split_words()
+# Place all words and tabs on a separate line, preserving space(s) after each word and tab:
+{
+    # Insert a newline before each (group of) non-(space or tab) characters, and before each tab:
+    # https://unix.stackexchange.com/questions/140763/replace-n-by-a-newline-in-sed-portably
+    sed -E 's/([^ 	]+)/\
+\1/g; s/	/\
+	/g' | grep -v "^$"              # Remove empty lines to exclude them from diff-comparison
+}
+
+store_newlines()
+# Preserve all newlines (marked by backspaces) separately, remembering their original placement:
+{
+    awk '\
+    {
+        if ($0 ~ /^$/){
+           printf ("\b")            # If the line is empty, print a backspace to mark a newline
+           next
+        }
+        qty = NF                    # Else count the number of words in the text line
+        if ($0 ~ /^ /)              # If line starts with space(s) ( = after "empty word"), increment by 1
+            qty += 1
+        gsub(/[^	]/, "")         # Remove all characters except tabs
+        qty += length               # Count number of tabs, and add to total number of words
+        for (i = 1; i <= qty; i++){ # Iterate through the word count per line
+            if (i == 1)
+                printf ("\b")       # Print a backspace, to mark a newline before 1st space(s), word or tab
+            print ""                # Print an empty string ( = a newline) for each word or tab
+        }
+    }' "$1"
+}
+
+insert_newlines()
+# Re-insert newlines (marked by a backspace, otherwise by an empty string) before the corresponding words:
+{
+    awk -v newlines1="$tempdir/newlines1_temp.txt" -v newlines2="$tempdir/newlines2_temp.txt" '\
+    BEGIN {
+        while (getline < newlines1)
+            bs1[++i] = $0
+        close(newlines1)
+        while (getline < newlines2)
+            bs2[++j] = $0
+        close(newlines2)
+        i = j = 0
+    }
+    {
+        prefix = substr($0, 1, 1)
+        word   = substr($0, 2)
+        if (prefix == " "){
+            print prefix bs1[++i] word
+            ++j
+        }
+        else if (prefix == "-")
+            print prefix bs1[++i] word
+        else if (prefix == "+")
+            print prefix bs2[++j] word
+    }' "$1"
 }
 
 convert_tags()
 # Replace '-' and '+' line tags by red and green html-color group tags, and remove leading space:
 {
-    tail -n +5 |
     awk -v delstart="$delete_start" -v insstart="$insert_start" -v end="$end" -v sign="xx" '
     {
         if (substr($0, 1, 1) == sign)
@@ -365,43 +411,47 @@ convert_tags()
                     print substr(word, 2) end
             }
         }
-    }' -
+    }' "$1"
 }
 
-joinwords()
-# Place all words on the same line again, restore original newlines and remove temporarily added spaces:
+join_words()
+# Place all words on the same line again, and restore original spaces and newlines:
 {
     # Regex-group of a series of html color-tags as a string variable:
-    taggroup="(($delete_start|$insert_start|$end)*)"
-
-    # Restore original spaces from each temporary newline (adding some temporary spaces in the process):
-    tr '\n' ' ' |
+    taggroup="($delete_start|$insert_start|$end)"
 
     # Restore original newlines from each temporary backspace:
-    awk '{ gsub(/\b/, "\n"); print }' -  |
+    cat $1 | tr -d '\n'                 |
+    awk '{ gsub(/\b/, "\n"); print }' - |
 
-    # Remove all temporarily added single spaces: around each tab and at line end:
-    sed -E 's_ '"$taggroup"'	'"$taggroup"' _\1	\3_g;
-            s_ '"$taggroup"'$_\1_
+    # Add missing space in case of differences if one word is at line end, and remove tempstring:
+    sed -E 's_([^ >])'"$taggroup""$taggroup"'?([^ <])_\1 \2\3\4_g
             s/'"$tempstring"'//'
 }
 
-makediff()
+make_diff()
 # Perform text comparison between two text files, and generate color-marked difference-file:
 {
     # Preprocessing steps:
-    sed "$esc_html" "$1" | splitwords - | unbreak_words - | cut_invisible - >| "$tempdir"/file1_temp.txt
-    sed "$esc_html" "$2" | splitwords - | unbreak_words - | cut_invisible - >| "$tempdir"/file2_temp.txt
+    sed "$esc_html" "$1" | normalize - | cut_invisible - >| "$tempdir"/normalized1_temp.txt
+    sed "$esc_html" "$2" | normalize - | cut_invisible - >| "$tempdir"/normalized2_temp.txt
+
+    split_words < "$tempdir"/normalized1_temp.txt        >| "$tempdir"/file1_temp.txt
+    split_words < "$tempdir"/normalized2_temp.txt        >| "$tempdir"/file2_temp.txt
+
+    store_newlines "$tempdir"/normalized1_temp.txt       >| "$tempdir"/newlines1_temp.txt
+    store_newlines "$tempdir"/normalized2_temp.txt       >| "$tempdir"/newlines2_temp.txt
 
     # Force diff -U to also output in case of no difference:
     printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt
 
     # Do the actual 'diff -U'-operation, followed by the postprocessing steps:
-    diff -U 100000000 "$tempdir/file1_temp.txt" "$tempdir/file2_temp.txt" |
+    diff -b -B -U 100000000 "$tempdir/file1_temp.txt" "$tempdir/file2_temp.txt" |
+    tail -n +4 >| "$tempdir"/diff_temp.txt
 
-    untag_newlines - |
+    insert_newlines "$tempdir"/diff_temp.txt |
     convert_tags -   |
-    joinwords -
+    join_words -
 }
 
 output()
@@ -485,7 +535,7 @@ if [ $args = "directories" ]; then
     max2=$(printf "$numbers2" | awk '{ print $NF }')
     [ $max1 -gt $max2 ] && max=$max1 || max=$max2
 
-    # While incrementing from 0 to max value, call makediff() function on each appropriate file pair:
+    # While incrementing from 0 to max value, call make_diff() function on each appropriate file pair:
     NUMBER=0
     while [ "$NUMBER" -le "$max" ]; do
 
@@ -517,7 +567,7 @@ if [ $args = "directories" ]; then
         fi
 
         # Generate diff output:
-        makediff "$file1" "$file2"
+        make_diff "$file1" "$file2"
 
         # Postfix each comparison by a separation line (option -o) or html-coda (otherwise):
         if [ $format = "html_stdout" ]; then
@@ -543,7 +593,7 @@ else
     # In case of files instead of directories as arguments:
     if [ -f "$1" ] && [ -f "$2" ]; then
         print_html_intro "$2"
-        makediff "$1" "$2"
+        make_diff "$1" "$2"
         printf %s\\n "$html_coda"
     else
         printf %s\\n "ERROR: Specify existing files and no directories" >&2
