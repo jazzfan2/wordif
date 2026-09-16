@@ -446,7 +446,7 @@ make_diff()
     printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt
 
     # Do the actual 'diff -U'-operation, followed by the postprocessing steps:
-    diff -b -B -U 100000000 "$tempdir/file1_temp.txt" "$tempdir/file2_temp.txt" |
+    diff -b -U 100000000 "$tempdir/file1_temp.txt" "$tempdir/file2_temp.txt" |
     tail -n +4 >| "$tempdir"/diff_temp.txt
 
     insert_newlines "$tempdir"/diff_temp.txt |
