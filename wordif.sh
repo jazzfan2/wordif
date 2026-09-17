@@ -61,7 +61,7 @@ size=12
 # Escape < and > to prevent interpretation as HTML-tag or collision with newline marker:
 esc_html="s/</\&lt;/g; s/>/\&gt;/g"
 
-# Marker string for storing original newline positions after word splitting:
+# Marker string for storing original newline positions prior to word splitting:
 newlinemark='<>'
 
 # Unique string to temporarily add to file2, forcing diff to output even if files are equal:
@@ -317,16 +317,6 @@ cut_invisible()
     }' "$1"
 }
 
-split_words()
-# Place all words and tabs on a separate line, preserving space(s) after each word and tab:
-{
-    # Insert a newline before each (group of) non-(space or tab) characters, and before each tab:
-    # https://unix.stackexchange.com/questions/140763/replace-n-by-a-newline-in-sed-portably
-    sed -E 's/([^ 	]+)/\
-\1/g; s/	/\
-	/g' | grep -v "^$"              # Remove empty lines to exclude them from diff-comparison
-}
-
 store_newlines()
 # Preserve all newlines by markers, in correspondence with original placement within word sequence:
 {
@@ -347,6 +337,16 @@ store_newlines()
             print ""                  # At all word or tab positions: print an empty string
         }
     }' "$1"
+}
+
+split_words()
+# Place all words and tabs on a separate line, preserving space(s) after each word and tab:
+{
+    # Insert a newline before each (group of) non-(space or tab) characters, and before each tab:
+    # https://unix.stackexchange.com/questions/140763/replace-n-by-a-newline-in-sed-portably
+    sed -E 's/([^ 	]+)/\
+\1/g; s/	/\
+	/g' | grep -v "^$"              # Remove empty lines to exclude them from diff-comparison
 }
 
 insert_newlines()
@@ -441,11 +441,11 @@ make_diff()
     sed "$esc_html" "$1" | normalize - | cut_invisible - >| "$tempdir"/normalized1_temp.txt
     sed "$esc_html" "$2" | normalize - | cut_invisible - >| "$tempdir"/normalized2_temp.txt
 
-    split_words < "$tempdir"/normalized1_temp.txt        >| "$tempdir"/file1_temp.txt
-    split_words < "$tempdir"/normalized2_temp.txt        >| "$tempdir"/file2_temp.txt
-
     store_newlines "$tempdir"/normalized1_temp.txt       >| "$tempdir"/newlines1_temp.txt
     store_newlines "$tempdir"/normalized2_temp.txt       >| "$tempdir"/newlines2_temp.txt
+
+    split_words <  "$tempdir"/normalized1_temp.txt       >| "$tempdir"/file1_temp.txt
+    split_words <  "$tempdir"/normalized2_temp.txt       >| "$tempdir"/file2_temp.txt
 
     # Force diff -U to also output in case of no difference:
     printf %s\\n " $tempstring" >> "$tempdir"/file2_temp.txt
