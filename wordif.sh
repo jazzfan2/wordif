@@ -605,4 +605,4 @@ else
     fi | output -
 fi
 
-# rm_tempdir
+rm_tempdir
