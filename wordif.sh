@@ -428,7 +428,7 @@ join_words()
     awk -v newlinemark=$newlinemark '{ gsub(newlinemark, "\n"); print }' - |
 
     # Add missing space in case of differences if one word is at line end, and remove tempstring:
-    sed -E 's_([^ >	])'"$taggroup""$taggroup"'?([^ <	])_\1 \2\3\4_g
+    sed -E 's_([^	> ])'"$taggroup""$taggroup"'?([^	< ])_\1 \2\3\4_g
             s/'"$tempstring"'//'
 }
 
