@@ -58,8 +58,11 @@ font="\"Courier New\", monospace"
 # Standard character size:
 size=12
 
-# Escape < and > to prevent interpretation as HTML-syntax (tags):
+# Escape < and > to prevent interpretation as HTML-tag or collision with newline marker:
 esc_html="s/</\&lt;/g; s/>/\&gt;/g"
+
+# Marker string for storing original newline positions after word splitting:
+newlinemark='<>'
 
 # Unique string to temporarily add to file2, forcing diff to output even if files are equal:
 tempstring="$(date)"
@@ -325,23 +328,23 @@ split_words()
 }
 
 store_newlines()
-# Preserve all newlines (marked by backspaces) separately, remembering their original placement:
+# Preserve all newlines by markers, in correspondence with original placement within word sequence:
 {
-    awk '\
+    awk -v newlinemark=$newlinemark '\
     {
         if ($0 ~ /^$/){
-           printf ("\b")            # If the line is empty, print a backspace to mark a newline
+           printf (newlinemark)       # If the line is empty, print a newline marker
            next
         }
-        qty = NF                    # Else count the number of words in the text line
-        if ($0 ~ /^ /)              # If line starts with space(s) ( = after "empty word"), increment by 1
+        qty = NF                      # Else count the number of words in the text line
+        if ($0 ~ /^ /)                # If line starts with space(s) (word is "empty"), increment by 1
             qty += 1
-        gsub(/[^	]/, "")         # Remove all characters except tabs
-        qty += length               # Count number of tabs, and add to total number of words
-        for (i = 1; i <= qty; i++){ # Iterate through the word count per line
-            if (i == 1)
-                printf ("\b")       # Print a backspace, to mark a newline before 1st space(s), word or tab
-            print ""                # Print an empty string ( = a newline) for each word or tab
+        gsub(/[^	]/, "")           # Remove all characters except tabs
+        qty += length                 # Count number of tabs, and add to total number of words
+        for (i = 1; i <= qty; i++){   # Iterate through the word count per line
+            if (i == 1)               # Only at 1st word or tab position, at the beginning of the line ...
+                printf (newlinemark)  # ... print a newline marker
+            print ""                  # At all word or tab positions: print an empty string
         }
     }' "$1"
 }
@@ -420,9 +423,9 @@ join_words()
     # Regex-group of a series of html color-tags as a string variable:
     taggroup="($delete_start|$insert_start|$end)"
 
-    # Restore original newlines from each temporary backspace:
+    # Restore original newlines by replacing the markers:
     cat $1 | tr -d '\n'                 |
-    awk '{ gsub(/\b/, "\n"); print }' - |
+    awk -v newlinemark=$newlinemark '{ gsub(newlinemark, "\n"); print }' - |
 
     # Add missing space in case of differences if one word is at line end, and remove tempstring:
     sed -E 's_([^ >])'"$taggroup""$taggroup"'?([^ <])_\1 \2\3\4_g
@@ -602,4 +605,4 @@ else
     fi | output -
 fi
 
-rm_tempdir
+# rm_tempdir
