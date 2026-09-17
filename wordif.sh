@@ -350,15 +350,15 @@ store_newlines()
 }
 
 insert_newlines()
-# Re-insert newlines (marked by a backspace, otherwise by an empty string) before the corresponding words:
+# Re-insert newline markers before the corresponding 1st words, and empty strings before the other words:
 {
     awk -v newlines1="$tempdir/newlines1_temp.txt" -v newlines2="$tempdir/newlines2_temp.txt" '\
     BEGIN {
         while (getline < newlines1)
-            bs1[++i] = $0
+            mk1[++i] = $0
         close(newlines1)
         while (getline < newlines2)
-            bs2[++j] = $0
+            mk2[++j] = $0
         close(newlines2)
         i = j = 0
     }
@@ -366,13 +366,13 @@ insert_newlines()
         prefix = substr($0, 1, 1)
         word   = substr($0, 2)
         if (prefix == " "){
-            print prefix bs1[++i] word
+            print prefix mk1[++i] word
             ++j
         }
         else if (prefix == "-")
-            print prefix bs1[++i] word
+            print prefix mk1[++i] word
         else if (prefix == "+")
-            print prefix bs2[++j] word
+            print prefix mk2[++j] word
     }' "$1"
 }
 
