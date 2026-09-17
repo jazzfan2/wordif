@@ -261,7 +261,7 @@ normalize()
         gsub(/\xe2\x80\xaf/, " ")     # Replace Narrow No-Break Space     U+202F by Space
 
         # Breaking symbols are: (soft)hyphen or Unicode 2006-, 2009-, 200A-, 200B- or 200C space:
-        breaksymbol = "[^\t\b\n ](-|\xc2\xad|\xe2\x80\x86|\xe2\x80\x89|\xe2\x80\x8a|\xe2\x80\x8b|\xe2\x80\x8c)$"
+        breaksymbol = "[^\t\n ](-|\xc2\xad|\xe2\x80\x86|\xe2\x80\x89|\xe2\x80\x8a|\xe2\x80\x8b|\xe2\x80\x8c)$"
 
         # If present line is empty, determine whether to skip or else what to print:
         if ($0 == "") {
