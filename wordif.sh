@@ -418,13 +418,15 @@ convert_tags()
 }
 
 join_words()
-# Place all words on the same line again, and restore original spaces and newlines:
+# Place all words on the same line again, and restore original newlines:
 {
-    # Regex-group of a series of html color-tags as a string variable:
+    # Regex-group containing any html color-tag, as a string variable:
     taggroup="($delete_start|$insert_start|$end)"
 
+    # Put all words (and trailings spaces) on same line:
+    cat $1 | tr -d '\n' |
+
     # Restore original newlines by replacing the markers:
-    cat $1 | tr -d '\n'                 |
     awk -v newlinemark=$newlinemark '{ gsub(newlinemark, "\n"); print }' - |
 
     # Add missing space in case of differences if one word is at line end, and remove tempstring:
