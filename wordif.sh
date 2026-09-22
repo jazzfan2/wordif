@@ -342,7 +342,7 @@ store_newlines()
 split_words()
 # Place all words and tabs on a separate line, preserving space(s) after each word and tab:
 {
-    # Insert a newline before each (group of) non-space/-tab characters, and before each tab:
+    # Insert a newline before each group of non-space/-tab characters (= word), and before each tab:
     # https://unix.stackexchange.com/questions/140763/replace-n-by-a-newline-in-sed-portably
     sed -E 's/([^ 	]+)/\
 \1/g; s/	/\
